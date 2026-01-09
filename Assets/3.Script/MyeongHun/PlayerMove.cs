@@ -5,30 +5,30 @@ using UnityEngine;
 
 public class PlayerMove : MonoBehaviour
 {
-    [Header("Move")]
+    [Header("이동 관련 변수")]
     [SerializeField] private float moveSpeed = 5f;
 
-    [Header("Jump")]
+    [Header("점수 관련 변수")]
     [SerializeField] private float jumpForce = 50f;
     [SerializeField] private float airSpeed = 1f;
     [SerializeField] private int jumpCnt = 1;
+    
+    [Header("충돌 관련 변수")]
     [SerializeField] private bool isGround = false;
 
-    [Header("Return")]
+    [Header("리턴 위치")]
     [SerializeField] private Transform returnPos;
 
     private Rigidbody2D rb;
     private Animator animator;
     private SpriteRenderer spriteRenderer;
-    private Vector2 moveInput;
+    [SerializeField] private Vector2 moveInput;
 
     private void Awake()
     {
         TryGetComponent(out rb);
         TryGetComponent(out animator);
         TryGetComponent(out spriteRenderer);
-
-        rb.interpolation = RigidbodyInterpolation2D.Interpolate; // 해당 기능 알아보기
     }
 
     private void FixedUpdate()
@@ -101,34 +101,23 @@ public class PlayerMove : MonoBehaviour
 
     private void OnCollisionStay2D(Collision2D collision)
     {
-        if(collision.gameObject.CompareTag("Floor"))
+        if(collision.gameObject.CompareTag("Floor") || collision.gameObject.CompareTag("Player"))
         {
             // 위에서 아래 방향으로 충돌시에만, 착지 판정
             if (collision.contacts[0].normal.y > 0.7f)
             {
                 isGround = true;
             }
-        }
-
-        if (collision.gameObject.CompareTag("Player"))
-        {
-            // 위에서 아래 방향으로 충돌시에만, 착지 판정
-            if (collision.contacts[0].normal.y > 0.7f)
-            {
-                isGround = true;
-            }
-            // 옆면으로 충돌시, 밀림 제거
-            else if (Mathf.Abs(collision.contacts[0].normal.x) > 0.7f)
-            {
-
-            }
-
         }
     }
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Floor") || collision.gameObject.CompareTag("Player"))
+        if (collision.gameObject.CompareTag("Floor"))
+        {
+            isGround = false;
+        }
+        else if (collision.gameObject.CompareTag("Player"))
         {
             isGround = false;
         }
