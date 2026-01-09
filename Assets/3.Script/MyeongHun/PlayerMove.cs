@@ -11,18 +11,16 @@ public class PlayerMove : MonoBehaviour
     [Header("Jump")]
     [SerializeField] private float jumpForce = 50f;
     [SerializeField] private float airSpeed = 1f;
-    [SerializeField] private bool isGround = false;
     [SerializeField] private int jumpCnt = 1;
-    [SerializeField] private float longPressTime = 0.3f; // 길게누름 판정값
+    [SerializeField] private bool isGround = false;
 
-    [SerializeField] private Vector2 moveInput;
-    
+    [Header("Return")]
+    [SerializeField] private Transform returnPos;
+
     private Rigidbody2D rb;
     private Animator animator;
     private SpriteRenderer spriteRenderer;
-    private Coroutine holdRoutine;
-
-    [SerializeField] private bool isReadyJump = false;      // 점프 버튼이 눌린 상태
+    private Vector2 moveInput;
 
     private void Awake()
     {
@@ -40,12 +38,18 @@ public class PlayerMove : MonoBehaviour
 
     private void CalculateMovePosition()
     {
-        if (!isGround) return;
+        if (isGround)
+        {
+            float moveX = moveInput.x * moveSpeed * Time.fixedDeltaTime;
+            Vector2 nextPos = rb.position + new Vector2(moveX, 0f);
 
-        float moveX = moveInput.x * moveSpeed * Time.fixedDeltaTime;
-        Vector2 nextPos = rb.position + new Vector2(moveX, 0f);
-
-        rb.MovePosition(nextPos);
+            rb.MovePosition(nextPos);
+        }
+        else
+        {
+            float moveX = moveInput.x * airSpeed;
+            rb.linearVelocityX = moveX;
+        }
     }
 
     public void SetMove(Vector2 input)
@@ -66,57 +70,65 @@ public class PlayerMove : MonoBehaviour
         if (jumpCnt < 1 || !isGround) return;
 
         isGround = false;
-        isReadyJump = true;
+        rb.linearVelocityY = jumpForce;
 
-        if (holdRoutine != null)
-        {
-            StopCoroutine(holdRoutine);
-        }
-        holdRoutine = StartCoroutine(LongPressCheck());
-    }
-
-    private IEnumerator LongPressCheck()
-    {
-        float t = 0f;
-
-        while (isReadyJump && t < longPressTime)
-        {
-            t += Time.deltaTime;
-            yield return null;
-        }
-
-        if (isReadyJump)
-        {
-            // 상승 중일 때만 추가 점프력 적용
-            Vector2 velocity = rb.linearVelocity;
-
-            if (velocity.y > 0f)
-            {
-                Debug.Log("추가 점프 실행");
-                rb.linearVelocity = new Vector2(moveInput.x * airSpeed, jumpForce);
-            }
-        }
+        animator.SetTrigger("Jump");
     }
 
     public void JumpStop()
     {
-        isReadyJump = false;
+        Vector2 velocity = rb.linearVelocity;
 
-        rb.linearVelocity = new Vector2(moveInput.x * airSpeed * 0.5f, jumpForce);
+        if (velocity.y > 0f)
+        {
+            velocity.y *= 0.5f;
+            rb.linearVelocity = velocity;
+        }
+
+        animator.SetTrigger("Land");
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        if (collision.gameObject.CompareTag("DeadLine"))
+        {
+            if (returnPos != null)
+            {
+                transform.position = returnPos.position;
+            }
+        }
+    }
+
+    private void OnCollisionStay2D(Collision2D collision)
+    {
         if(collision.gameObject.CompareTag("Floor"))
         {
-            isGround = true;
-            jumpCnt = 1;
+            // 위에서 아래 방향으로 충돌시에만, 착지 판정
+            if (collision.contacts[0].normal.y > 0.7f)
+            {
+                isGround = true;
+            }
+        }
+
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            // 위에서 아래 방향으로 충돌시에만, 착지 판정
+            if (collision.contacts[0].normal.y > 0.7f)
+            {
+                isGround = true;
+            }
+            // 옆면으로 충돌시, 밀림 제거
+            else if (Mathf.Abs(collision.contacts[0].normal.x) > 0.7f)
+            {
+
+            }
+
         }
     }
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Floor"))
+        if (collision.gameObject.CompareTag("Floor") || collision.gameObject.CompareTag("Player"))
         {
             isGround = false;
         }
