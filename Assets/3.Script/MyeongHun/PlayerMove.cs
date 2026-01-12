@@ -46,6 +46,7 @@ public class PlayerMove : MonoBehaviour
 
     private void FixedUpdate()
     {
+
         Move();
         CheckPush();
     }
@@ -53,7 +54,6 @@ public class PlayerMove : MonoBehaviour
     private void Move()
     {
         float moveX = moveInput.x * moveSpeed;
-
         rb.linearVelocity = new Vector2(moveX, rb.linearVelocity.y);
     }
 
@@ -99,16 +99,20 @@ public class PlayerMove : MonoBehaviour
         }
     }
 
+    //밀기 체크
     private void CheckPush()
     {
         isPushing = false;
+        if (Mathf.Abs(moveInput.x) < 0.01f) return;//안움지이면 나가
 
-        if (Mathf.Abs(moveInput.x) < 0.01f) return;
+        Vector2 dir = new Vector2(Mathf.Sign(moveInput.x), 0f); //바라보는 방향
 
-        Vector2 dir = new Vector2(Mathf.Sign(moveInput.x), 0f);
-        Vector2 pos = rb.position;
+        // 자기 콜라이더 밖에서 레이 시작
+        BoxCollider2D Col = GetComponent<BoxCollider2D>(); //내 콜라이더
+        float offset = Col.size.x / 2f + 0.05f; // 콜라이더 절반 + 살짝 앞에서 발사(자기감지방지)
+        Vector2 pos = rb.position + dir * offset;
 
-        RaycastHit2D hit = Physics2D.Raycast(pos, dir, 0.01f, blockLayer);
+        RaycastHit2D hit = Physics2D.Raycast(pos, dir, 0.3f, blockLayer);
 
         if (hit.collider != null && isGround)
         {
@@ -118,16 +122,18 @@ public class PlayerMove : MonoBehaviour
         animator.SetBool("IsPush", isPushing);
     }
 
+    //자시자신 콜라이더 무시
     private void IgnoreSelfCollision()
     {
-        Collider2D[] parentCols = GetComponents<Collider2D>();
-        Collider2D[] childCols = GetComponentsInChildren<Collider2D>(true);
+        Collider2D[] Cols = GetComponents<Collider2D>(); // 내 콜라이더
+        Collider2D[] childCols = GetComponentsInChildren<Collider2D>(); //자식들 콜라이더
 
+        //자식 콜라이더 갯수만큼 가져와서 무시하기
         foreach (var child in childCols)
         {
             if (child.transform == transform) continue; // 자기 자신 제외
 
-            foreach (var parent in parentCols)
+            foreach (var parent in Cols)
             {
                 Physics2D.IgnoreCollision(parent, child, true);
             }
