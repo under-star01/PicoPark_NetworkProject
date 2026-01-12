@@ -30,9 +30,9 @@ public class UserInfo
     public string UserPassword { get; private set; }
     public string UserNickName { get; private set; }
 
-    public UserInfo(string _name, string _pwd, string _nickName)
+    public UserInfo(string _id, string _pwd, string _nickName)
     {
-        UserId = _name;
+        UserId = _id;
         UserPassword = _pwd;
         UserNickName = _nickName;
     }
