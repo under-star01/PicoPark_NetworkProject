@@ -1,22 +1,37 @@
-using System;
+ï»¿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerMove : MonoBehaviour
 {
-    [Header("ÀÌµ¿ °ü·Ã º¯¼ö")]
+    [Header("ì´ë™ ê´€ë ¨ ë³€ìˆ˜")]
     [SerializeField] private float moveSpeed = 5f;
 
-    [Header("Á¡¼ö °ü·Ã º¯¼ö")]
+    [Header("ì ìˆ˜ ê´€ë ¨ ë³€ìˆ˜")]
     [SerializeField] private float jumpForce = 50f;
     [SerializeField] private float airSpeed = 1f;
     [SerializeField] private int jumpCnt = 1;
     
-    [Header("Ãæµ¹ °ü·Ã º¯¼ö")]
-    [SerializeField] private bool isGround = false;
+    [Header("ì¶©ëŒ ê´€ë ¨ ë³€ìˆ˜")]
+    [SerializeField] private HashSet<Collider2D> groundSet = new HashSet<Collider2D>(); // ì¤‘ë³µë°©ì§€, ë¹ ë¥¸ ê²€ìƒ‰ì„ ìœ„í•´ì„œ HashSetë¥¼ ì‚¬ìš©í–ˆì–´!
+    [SerializeField] private bool isGround = false; 
+    private bool IsGround
+    {
+        get => isGround;
+        set
+        {
+            // ê°’ ë³€ê²½ì‹œì—ë§Œ ì ìš©
+            if (isGround == value) return;
+            
+            isGround = value;
 
-    [Header("¸®ÅÏ À§Ä¡")]
+            // ì°©ì§€ ìƒíƒœì— ë”°ë¼ ìƒíƒœ ë³€ê²½
+            if (isGround) animator.SetTrigger("Land");
+        }
+    }
+
+    [Header("ë¦¬í„´ ìœ„ì¹˜")]
     [SerializeField] private Transform returnPos;
 
     private Rigidbody2D rb;
@@ -38,7 +53,7 @@ public class PlayerMove : MonoBehaviour
 
     private void CalculateMovePosition()
     {
-        if (isGround)
+        if (IsGround)
         {
             float moveX = moveInput.x * moveSpeed * Time.fixedDeltaTime;
             Vector2 nextPos = rb.position + new Vector2(moveX, 0f);
@@ -67,9 +82,9 @@ public class PlayerMove : MonoBehaviour
 
     public void JumpStart()
     {
-        if (jumpCnt < 1 || !isGround) return;
+        if (jumpCnt < 1 || !IsGround) return;
 
-        isGround = false;
+        IsGround = false;
         rb.linearVelocityY = jumpForce;
 
         animator.SetTrigger("Jump");
@@ -83,13 +98,26 @@ public class PlayerMove : MonoBehaviour
         {
             velocity.y *= 0.5f;
             rb.linearVelocity = velocity;
-        }
 
-        animator.SetTrigger("Land");
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        if(collision.gameObject.CompareTag("Floor") || collision.gameObject.CompareTag("Player"))
+        {
+            // ìœ„ì—ì„œ ì•„ë˜ ë°©í–¥ìœ¼ë¡œ ì¶©ëŒì‹œì—ë§Œ, ì°©ì§€ íŒì •
+            foreach(var col in collision.contacts)
+            {
+                if (col.normal.y > 0.7f)
+                {
+                    // ì¶©ëŒì¤‘ì¸ ë°”ë‹¥ ì½œë¼ì´ë” ì €ì¥
+                    groundSet.Add(col.collider);
+                    IsGround = true;
+                }
+            }
+        }
+
         if (collision.gameObject.CompareTag("DeadLine"))
         {
             if (returnPos != null)
@@ -99,27 +127,18 @@ public class PlayerMove : MonoBehaviour
         }
     }
 
-    private void OnCollisionStay2D(Collision2D collision)
-    {
-        if(collision.gameObject.CompareTag("Floor") || collision.gameObject.CompareTag("Player"))
-        {
-            // À§¿¡¼­ ¾Æ·¡ ¹æÇâÀ¸·Î Ãæµ¹½Ã¿¡¸¸, ÂøÁö ÆÇÁ¤
-            if (collision.contacts[0].normal.y > 0.7f)
-            {
-                isGround = true;
-            }
-        }
-    }
-
     private void OnCollisionExit2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Floor"))
+        if (collision.gameObject.CompareTag("Floor") || collision.gameObject.CompareTag("Player"))
         {
-            isGround = false;
-        }
-        else if (collision.gameObject.CompareTag("Player"))
-        {
-            isGround = false;
+            // ì¶©ëŒì¤‘ì¸ ë°”ë‹¥ ì½œë¼ì´ë” ì‚­ì œ
+            groundSet.Remove(collision.collider);
+
+            // ì¶©ëŒí•˜ê³  ìˆëŠ” ì˜¤ë¸Œì íŠ¸ê°€ ì—†ì„ ê²½ìš° ë³€ê²½
+            if (groundSet.Count <= 0)
+            {
+                IsGround = false;
+            }
         }
     }
 }
