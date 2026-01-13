@@ -117,15 +117,15 @@ public class PlayerMove : MonoBehaviour
         {
             collision.gameObject.TryGetComponent(out PlayerMove playerMove);
 
-            //if (playerMove.wallScript != null)
-            //{
-            //    if (playerMove.isPushing)
-            //    {
-            //        wallScript = playerMove.wallScript;
-            //        wallScript.moveCount++;
-            //        Debug.Log("올라가유");
-            //    }
-            //}
+            if (playerMove.wallScript != null)
+            {
+                Debug.Log("wall 스크립트 가져왔어용");
+                if (playerMove.isPushing)
+                {
+                    wallScript = playerMove.wallScript;
+                    wallScript.moveCount++;
+                }
+            }
         }
 
         if (collision.gameObject.CompareTag("MovingWall"))
@@ -138,12 +138,18 @@ public class PlayerMove : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            //collision.gameObject.TryGetComponent(out PlayerMove playerMove);
+            collision.gameObject.TryGetComponent(out PlayerMove playerMove);
 
-            //if (playerMove.wallScript != null && playerMove.isPushing)
-            //{
-            //    playerMove.wallScript.moveCount--;
-            //}
+            if (playerMove.wallScript != null)
+            {
+                Debug.Log("wall 스크립트 없앴어용");
+
+                if (playerMove.isPushing)
+                {
+                    playerMove.wallScript.moveCount--;
+                    wallScript = null;
+                }
+            }
         }
         if (collision.gameObject.CompareTag("MovingWall"))
         {
