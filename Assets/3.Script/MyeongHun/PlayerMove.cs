@@ -11,14 +11,16 @@ public class PlayerMove : MonoBehaviour
     [Header("점수 관련 변수")]
     [SerializeField] private float jumpForce = 50f;
     
-    [Header("충돌 관련 변수")]
+    [Header("착지 관련 변수")]
     [SerializeField] private bool isGround = false;
     [SerializeField] private LayerMask blockLayer;
 
-    [SerializeField] private bool isWallContect;
-    public MovingWall wallScript;
-    public bool isPushing;
-
+    [Header("벽 밀기 관련 변수")]
+    public bool isPushing;           
+    public MovingWall wallScript;    
+    public PlayerMove frontPlayer;
+    public PlayerMove backPlayer;
+    private PlayerMove tempPlayer;
 
     [Header("리턴 위치")]
     [SerializeField] private Transform returnPos;
@@ -26,14 +28,11 @@ public class PlayerMove : MonoBehaviour
     [Header("어부바")]
     [SerializeField] private LayerMask PlayerLayer;
     
-
     private Rigidbody2D rb;
     private Animator animator;
     private SpriteRenderer spriteRenderer;
-
-
-    [SerializeField] private GroundCheck groundCheck;
-    [SerializeField] private Vector2 moveInput;
+    private GroundCheck groundCheck;
+    private Vector2 moveInput;
 
     private void Awake()
     {
@@ -111,44 +110,73 @@ public class PlayerMove : MonoBehaviour
                 transform.position = returnPos.position;
             }
         }
+    }
 
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
         if (collision.gameObject.CompareTag("Player"))
         {
-            collision.gameObject.TryGetComponent(out PlayerMove playerMove);
+            tempPlayer = collision.gameObject.GetComponentInParent<PlayerMove>();
+        }
+    }
 
-            //if (playerMove.wallScript != null)
-            //{
-            //    if (playerMove.isPushing)
-            //    {
-            //        wallScript = playerMove.wallScript;
-            //        wallScript.moveCount++;
-            //        Debug.Log("올라가유");
-            //    }
-            //}
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        // 밀격 상태가 아닐 경우 리턴
+        if (!isPushing) return;
+
+        // 플레이어와 충돌할 경우, 미는 인원 추가
+        if (collision.gameObject.CompareTag("Player") && tempPlayer != null)
+        {
+            // 내가 밀고 있는 방향에 상대가 있는지
+            float dir = Mathf.Sign(moveInput.x);
+            float delta = tempPlayer.transform.position.x - transform.position.x;
+
+            if (Mathf.Sign(delta) == dir)
+            {
+                frontPlayer = tempPlayer;
+                tempPlayer.backPlayer = this;
+
+                // 앞사람이 이미 벽과 연결돼 있다면 공유
+                if (tempPlayer.wallScript != null)
+                {
+                    wallScript = tempPlayer.wallScript;
+                    wallScript.AddPusher(this);
+                }
+            }
         }
 
         if (collision.gameObject.CompareTag("MovingWall"))
         {
             wallScript = collision.gameObject.GetComponent<MovingWall>();
+            wallScript.AddPusher(this);
         }
     }
-
-    private void OnCollisionExit2D(Collision2D collision)
+    private void OnTriggerExit2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            //collision.gameObject.TryGetComponent(out PlayerMove playerMove);
+            if (frontPlayer == tempPlayer)
+            {
+                frontPlayer.backPlayer = null;
+                frontPlayer = null;
 
-            //if (playerMove.wallScript != null && playerMove.isPushing)
-            //{
-            //    playerMove.wallScript.moveCount--;
-            //}
+                if (wallScript != null)
+                {
+                    wallScript.RemovePusher(this);
+                    wallScript = null;
+                }
+            }
         }
         if (collision.gameObject.CompareTag("MovingWall"))
         {
-            wallScript = null;
+            if (wallScript != null)
+            {
+                wallScript.RemovePusher(this);
+                wallScript = null;
+            }
         }
-
     }
 
     //밀기 체크
