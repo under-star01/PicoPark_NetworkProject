@@ -23,7 +23,7 @@ public class RelayManager : MonoBehaviour
 
     public async void StartRelayHost(int maxPlayers = 6)
     {
-        try
+        try 
         {
             Allocation allocation = await RelayService.Instance.CreateAllocationAsync(maxPlayers);
             string code = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
