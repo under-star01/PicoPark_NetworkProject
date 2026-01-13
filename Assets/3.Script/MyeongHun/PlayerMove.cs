@@ -14,7 +14,11 @@ public class PlayerMove : MonoBehaviour
     [Header("충돌 관련 변수")]
     [SerializeField] private bool isGround = false;
     [SerializeField] private LayerMask blockLayer;
-    private bool isPushing;
+
+    [SerializeField] private bool isWallContect;
+    public MovingWall wallScript;
+    public bool isPushing;
+
 
     [Header("리턴 위치")]
     [SerializeField] private Transform returnPos;
@@ -97,6 +101,44 @@ public class PlayerMove : MonoBehaviour
                 transform.position = returnPos.position;
             }
         }
+
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            collision.gameObject.TryGetComponent(out PlayerMove playerMove);
+
+            //if (playerMove.wallScript != null)
+            //{
+            //    if (playerMove.isPushing)
+            //    {
+            //        wallScript = playerMove.wallScript;
+            //        wallScript.moveCount++;
+            //        Debug.Log("올라가유");
+            //    }
+            //}
+        }
+
+        if (collision.gameObject.CompareTag("MovingWall"))
+        {
+            wallScript = collision.gameObject.GetComponent<MovingWall>();
+        }
+    }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            //collision.gameObject.TryGetComponent(out PlayerMove playerMove);
+
+            //if (playerMove.wallScript != null && playerMove.isPushing)
+            //{
+            //    playerMove.wallScript.moveCount--;
+            //}
+        }
+        if (collision.gameObject.CompareTag("MovingWall"))
+        {
+            wallScript = null;
+        }
+
     }
 
     //밀기 체크
