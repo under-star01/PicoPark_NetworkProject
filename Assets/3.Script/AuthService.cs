@@ -66,7 +66,7 @@ public class AuthService : MonoBehaviour
         }
         else {
             if (!reader.IsClosed) reader.Close();
-            LogText_viewing("정확한 ID이나 PASSWORD를 다시 입력하세요");
+            LogText_viewing("정확한 ID이나 PASSWORD를\n 다시 입력하세요");
         }
     }
 
