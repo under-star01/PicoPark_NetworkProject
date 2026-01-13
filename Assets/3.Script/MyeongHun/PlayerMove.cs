@@ -25,7 +25,6 @@ public class PlayerMove : MonoBehaviour
 
     [Header("¾îºÎ¹Ù")]
     [SerializeField] private LayerMask PlayerLayer;
-    private Rigidbody2D under_rb;
     
 
     private Rigidbody2D rb;
