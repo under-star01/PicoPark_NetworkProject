@@ -2,18 +2,19 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
+
 
 public class TitleMenu : MonoBehaviour
 {
-    private int currentIndex = 0;
+    public int currentIndex = 0;
     [SerializeField] GameObject[] menu;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+
     void Start()
     {
         menu[currentIndex].SetActive(true);
     }
 
-    // Update is called once per frame
     public void MoveRight()
     {
         menu[currentIndex].SetActive(false);
