@@ -10,11 +10,11 @@ public class PlayerMove : MonoBehaviour
 
     [Header("점수 관련 변수")]
     [SerializeField] private float jumpForce = 50f;
-    [SerializeField] private float airSpeed = 1f;
-    [SerializeField] private int jumpCnt = 1;
     
     [Header("충돌 관련 변수")]
     [SerializeField] private bool isGround = false;
+    [SerializeField] private LayerMask blockLayer;
+    private bool isPushing;
 
     [Header("리턴 위치")]
     [SerializeField] private Transform returnPos;
@@ -22,6 +22,9 @@ public class PlayerMove : MonoBehaviour
     private Rigidbody2D rb;
     private Animator animator;
     private SpriteRenderer spriteRenderer;
+
+    [SerializeField] private GroundCheck groundCheck;
+
     [SerializeField] private Vector2 moveInput;
 
     private void Awake()
@@ -29,27 +32,29 @@ public class PlayerMove : MonoBehaviour
         TryGetComponent(out rb);
         TryGetComponent(out animator);
         TryGetComponent(out spriteRenderer);
+
+        groundCheck = GetComponentInChildren<GroundCheck>();
+
+        IgnoreSelfCollision();
+    }
+
+    private void Update()
+    {
+        isGround = groundCheck.IsGround;
+        animator.SetBool("IsGround", isGround);
     }
 
     private void FixedUpdate()
     {
-        CalculateMovePosition();
+
+        Move();
+        CheckPush();
     }
 
-    private void CalculateMovePosition()
+    private void Move()
     {
-        if (isGround)
-        {
-            float moveX = moveInput.x * moveSpeed * Time.fixedDeltaTime;
-            Vector2 nextPos = rb.position + new Vector2(moveX, 0f);
-
-            rb.MovePosition(nextPos);
-        }
-        else
-        {
-            float moveX = moveInput.x * airSpeed;
-            rb.linearVelocityX = moveX;
-        }
+        float moveX = moveInput.x * moveSpeed;
+        rb.linearVelocity = new Vector2(moveX, rb.linearVelocity.y);
     }
 
     public void SetMove(Vector2 input)
@@ -67,12 +72,9 @@ public class PlayerMove : MonoBehaviour
 
     public void JumpStart()
     {
-        if (jumpCnt < 1 || !isGround) return;
+        if (!isGround) return;
 
-        isGround = false;
         rb.linearVelocityY = jumpForce;
-
-        animator.SetTrigger("Jump");
     }
 
     public void JumpStop()
@@ -84,8 +86,6 @@ public class PlayerMove : MonoBehaviour
             velocity.y *= 0.5f;
             rb.linearVelocity = velocity;
         }
-
-        animator.SetTrigger("Land");
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -99,27 +99,44 @@ public class PlayerMove : MonoBehaviour
         }
     }
 
-    private void OnCollisionStay2D(Collision2D collision)
+    //밀기 체크
+    private void CheckPush()
     {
-        if(collision.gameObject.CompareTag("Floor") || collision.gameObject.CompareTag("Player"))
+        isPushing = false;
+        if (Mathf.Abs(moveInput.x) < 0.01f) return;//안움지이면 나가
+
+        Vector2 dir = new Vector2(Mathf.Sign(moveInput.x), 0f); //바라보는 방향
+
+        // 자기 콜라이더 밖에서 레이 시작
+        BoxCollider2D Col = GetComponent<BoxCollider2D>(); //내 콜라이더
+        float offset = Col.size.x / 2f + 0.05f; // 콜라이더 절반 + 살짝 앞에서 발사(자기감지방지)
+        Vector2 pos = rb.position + dir * offset;
+
+        RaycastHit2D hit = Physics2D.Raycast(pos, dir, 0.3f, blockLayer);
+
+        if (hit.collider != null && isGround)
         {
-            // 위에서 아래 방향으로 충돌시에만, 착지 판정
-            if (collision.contacts[0].normal.y > 0.7f)
-            {
-                isGround = true;
-            }
+            isPushing = true;
         }
+
+        animator.SetBool("IsPush", isPushing);
     }
 
-    private void OnCollisionExit2D(Collision2D collision)
+    //자시자신 콜라이더 무시
+    private void IgnoreSelfCollision()
     {
-        if (collision.gameObject.CompareTag("Floor"))
+        Collider2D[] Cols = GetComponents<Collider2D>(); // 내 콜라이더
+        Collider2D[] childCols = GetComponentsInChildren<Collider2D>(); //자식들 콜라이더
+
+        //자식 콜라이더 갯수만큼 가져와서 무시하기
+        foreach (var child in childCols)
         {
-            isGround = false;
-        }
-        else if (collision.gameObject.CompareTag("Player"))
-        {
-            isGround = false;
+            if (child.transform == transform) continue; // 자기 자신 제외
+
+            foreach (var parent in Cols)
+            {
+                Physics2D.IgnoreCollision(parent, child, true);
+            }
         }
     }
 }
