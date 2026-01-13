@@ -2604,7 +2604,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Dommy
   groundCheck: {fileID: 0}
   isGround: 0
-  animator: {fileID: 0}
 --- !u!1 &5922042660726142401
 GameObject:
   m_ObjectHideFlags: 0
@@ -2855,7 +2854,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Dommy
   groundCheck: {fileID: 0}
   isGround: 0
-  animator: {fileID: 0}
 --- !u!50 &7002780008119713001
 Rigidbody2D:
   serializedVersion: 5
@@ -3168,7 +3166,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Dommy
   groundCheck: {fileID: 0}
   isGround: 0
-  animator: {fileID: 0}
 --- !u!61 &8945902003618203330
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -3229,7 +3226,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Dommy
   groundCheck: {fileID: 0}
   isGround: 0
-  animator: {fileID: 0}
 --- !u!1 &9075039498091391062
 GameObject:
   m_ObjectHideFlags: 0
@@ -3320,7 +3316,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Dommy
   groundCheck: {fileID: 0}
   isGround: 0
-  animator: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
