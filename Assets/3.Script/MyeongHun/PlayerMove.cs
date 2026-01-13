@@ -19,12 +19,17 @@ public class PlayerMove : MonoBehaviour
     [Header("리턴 위치")]
     [SerializeField] private Transform returnPos;
 
+    [Header("어부바")]
+    [SerializeField] private LayerMask PlayerLayer;
+    private Rigidbody2D under_rb;
+    
+
     private Rigidbody2D rb;
     private Animator animator;
     private SpriteRenderer spriteRenderer;
 
-    [SerializeField] private GroundCheck groundCheck;
 
+    [SerializeField] private GroundCheck groundCheck;
     [SerializeField] private Vector2 moveInput;
 
     private void Awake()
@@ -46,15 +51,22 @@ public class PlayerMove : MonoBehaviour
 
     private void FixedUpdate()
     {
-
         Move();
         CheckPush();
+        //CheckUnderPlayer();
     }
 
     private void Move()
     {
         float moveX = moveInput.x * moveSpeed;
-        rb.linearVelocity = new Vector2(moveX, rb.linearVelocity.y);
+        float underMoveX = 0f;
+
+        if (groundCheck.UnderPlayerRb != null)
+        {
+            underMoveX = groundCheck.UnderPlayerRb.linearVelocity.x;
+        }
+
+        rb.linearVelocity = new Vector2(moveX + underMoveX, rb.linearVelocity.y); //더하기
     }
 
     public void SetMove(Vector2 input)
@@ -121,6 +133,28 @@ public class PlayerMove : MonoBehaviour
 
         animator.SetBool("IsPush", isPushing);
     }
+
+    //private void CheckUnderPlayer()
+    //{
+    //    BoxCollider2D col = GetComponent<BoxCollider2D>();
+    //    float offset = col.size.y / 2f + 0.01f; // 살짝 밑에서 발사(자기감지방지)
+    //    Vector2 pos = (Vector2)transform.position + Vector2.down * offset;
+    //
+    //    // 밑으로 짧게 쏴
+    //    RaycastHit2D hit = Physics2D.Raycast(pos, Vector2.down, 0.1f, PlayerLayer);
+    //
+    //    if (hit.collider != null && hit.collider.CompareTag("Player"))//플레이어 태크 확인
+    //    {
+    //        // 찾은 게 내가 아닌지 체크
+    //        if (hit.collider.gameObject != gameObject)
+    //        {
+    //            under_rb = hit.collider.GetComponent<Rigidbody2D>();
+    //            Debug.Log($"친구 찾았다 : {under_rb.name}");
+    //            return;
+    //        }
+    //    }
+    //    under_rb = null; //없으면 항상 초기화
+    //}
 
     //자시자신 콜라이더 무시
     private void IgnoreSelfCollision()
