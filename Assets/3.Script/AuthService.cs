@@ -19,6 +19,8 @@ public class AuthService : MonoBehaviour
 
     [SerializeField] private TMP_Text logText;
 
+    [SerializeField] private GameObject anykeyText;
+
     public UserInfo info { get; private set; }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -52,6 +54,7 @@ public class AuthService : MonoBehaviour
                     if (!reader.IsClosed) reader.Close();
                     //LogText_viewing("로그인 성공!");
                     AuthPanel.SetActive(false);
+                    anykeyText.SetActive(true);
                 }
                 else
                 {
