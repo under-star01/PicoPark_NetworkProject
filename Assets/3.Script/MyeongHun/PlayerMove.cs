@@ -57,7 +57,6 @@ public class PlayerMove : MonoBehaviour
     {
         Move();
         CheckPush();
-        //CheckUnderPlayer();
     }
 
     private void Move()
@@ -172,31 +171,8 @@ public class PlayerMove : MonoBehaviour
         {
             isPushing = true;
         }
-
         animator.SetBool("IsPush", isPushing);
     }
-
-    //private void CheckUnderPlayer()
-    //{
-    //    BoxCollider2D col = GetComponent<BoxCollider2D>();
-    //    float offset = col.size.y / 2f + 0.01f; // 살짝 밑에서 발사(자기감지방지)
-    //    Vector2 pos = (Vector2)transform.position + Vector2.down * offset;
-    //
-    //    // 밑으로 짧게 쏴
-    //    RaycastHit2D hit = Physics2D.Raycast(pos, Vector2.down, 0.1f, PlayerLayer);
-    //
-    //    if (hit.collider != null && hit.collider.CompareTag("Player"))//플레이어 태크 확인
-    //    {
-    //        // 찾은 게 내가 아닌지 체크
-    //        if (hit.collider.gameObject != gameObject)
-    //        {
-    //            under_rb = hit.collider.GetComponent<Rigidbody2D>();
-    //            Debug.Log($"친구 찾았다 : {under_rb.name}");
-    //            return;
-    //        }
-    //    }
-    //    under_rb = null; //없으면 항상 초기화
-    //}
 
     //자시자신 콜라이더 무시
     private void IgnoreSelfCollision()

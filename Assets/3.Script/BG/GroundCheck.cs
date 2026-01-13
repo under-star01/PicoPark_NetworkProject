@@ -11,7 +11,7 @@ public class GroundCheck : MonoBehaviour
 
     private int groundCount = 0;
 
-    private void OnTriggerStay2D(Collider2D other)
+    private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.isTrigger) return;
 
