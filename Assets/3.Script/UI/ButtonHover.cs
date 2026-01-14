@@ -16,7 +16,7 @@ public class ButtonHover : MonoBehaviour,IPointerEnterHandler, IPointerExitHandl
 
     public void OnPointerExit(PointerEventData e)
     {
-        Cursor.SetActive(false);
+        //Cursor.SetActive(false);
         
     }
 }
