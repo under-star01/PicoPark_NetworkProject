@@ -9,6 +9,7 @@ TagManager:
   - MovingWall
   - CanonBall
   - Key
+  - Trigger
   layers:
   - Default
   - TransparentFX
