@@ -159,6 +159,76 @@ public partial class @IA_Player: IInputActionCollection2, IDisposable
             ]
         },
         {
+            ""name"": ""SubPlayer"",
+            ""id"": ""300830cc-b84d-4468-8beb-3e0ddbe7ff28"",
+            ""actions"": [
+                {
+                    ""name"": ""Move"",
+                    ""type"": ""Value"",
+                    ""id"": ""9f1637d8-2f34-4e6b-b2f1-668b18dff141"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Jump"",
+                    ""type"": ""Button"",
+                    ""id"": ""e6106a71-0e98-4017-be90-120778bb7643"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": ""2D Vector"",
+                    ""id"": ""6f0c59da-2477-4e78-a714-7bc29b4e3028"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""f7f6e3c1-60ea-4485-b381-938c89325c5c"",
+                    ""path"": ""<Keyboard>/leftArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";PC"",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""6673936d-e29b-4e97-9f25-5048db68846c"",
+                    ""path"": ""<Keyboard>/rightArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";PC"",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""53e7869c-3cdd-4d95-90b9-47d81a3c2f68"",
+                    ""path"": ""<Keyboard>/upArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";PC"",
+                    ""action"": ""Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
+        },
+        {
             ""name"": ""Menu UI"",
             ""id"": ""ca6c03e1-9a33-4725-8c8c-9eeb1cd90e39"",
             ""actions"": [
@@ -301,6 +371,10 @@ public partial class @IA_Player: IInputActionCollection2, IDisposable
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
         m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
         m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
+        // SubPlayer
+        m_SubPlayer = asset.FindActionMap("SubPlayer", throwIfNotFound: true);
+        m_SubPlayer_Move = m_SubPlayer.FindAction("Move", throwIfNotFound: true);
+        m_SubPlayer_Jump = m_SubPlayer.FindAction("Jump", throwIfNotFound: true);
         // Menu UI
         m_MenuUI = asset.FindActionMap("Menu UI", throwIfNotFound: true);
         m_MenuUI_Enter = m_MenuUI.FindAction("Enter", throwIfNotFound: true);
@@ -313,6 +387,7 @@ public partial class @IA_Player: IInputActionCollection2, IDisposable
     ~@IA_Player()
     {
         UnityEngine.Debug.Assert(!m_Player.enabled, "This will cause a leak and performance issues, IA_Player.Player.Disable() has not been called.");
+        UnityEngine.Debug.Assert(!m_SubPlayer.enabled, "This will cause a leak and performance issues, IA_Player.SubPlayer.Disable() has not been called.");
         UnityEngine.Debug.Assert(!m_MenuUI.enabled, "This will cause a leak and performance issues, IA_Player.MenuUI.Disable() has not been called.");
     }
 
@@ -493,6 +568,113 @@ public partial class @IA_Player: IInputActionCollection2, IDisposable
     /// </summary>
     public PlayerActions @Player => new PlayerActions(this);
 
+    // SubPlayer
+    private readonly InputActionMap m_SubPlayer;
+    private List<ISubPlayerActions> m_SubPlayerActionsCallbackInterfaces = new List<ISubPlayerActions>();
+    private readonly InputAction m_SubPlayer_Move;
+    private readonly InputAction m_SubPlayer_Jump;
+    /// <summary>
+    /// Provides access to input actions defined in input action map "SubPlayer".
+    /// </summary>
+    public struct SubPlayerActions
+    {
+        private @IA_Player m_Wrapper;
+
+        /// <summary>
+        /// Construct a new instance of the input action map wrapper class.
+        /// </summary>
+        public SubPlayerActions(@IA_Player wrapper) { m_Wrapper = wrapper; }
+        /// <summary>
+        /// Provides access to the underlying input action "SubPlayer/Move".
+        /// </summary>
+        public InputAction @Move => m_Wrapper.m_SubPlayer_Move;
+        /// <summary>
+        /// Provides access to the underlying input action "SubPlayer/Jump".
+        /// </summary>
+        public InputAction @Jump => m_Wrapper.m_SubPlayer_Jump;
+        /// <summary>
+        /// Provides access to the underlying input action map instance.
+        /// </summary>
+        public InputActionMap Get() { return m_Wrapper.m_SubPlayer; }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Enable()" />
+        public void Enable() { Get().Enable(); }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Disable()" />
+        public void Disable() { Get().Disable(); }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.enabled" />
+        public bool enabled => Get().enabled;
+        /// <summary>
+        /// Implicitly converts an <see ref="SubPlayerActions" /> to an <see ref="InputActionMap" /> instance.
+        /// </summary>
+        public static implicit operator InputActionMap(SubPlayerActions set) { return set.Get(); }
+        /// <summary>
+        /// Adds <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+        /// </summary>
+        /// <param name="instance">Callback instance.</param>
+        /// <remarks>
+        /// If <paramref name="instance" /> is <c>null</c> or <paramref name="instance"/> have already been added this method does nothing.
+        /// </remarks>
+        /// <seealso cref="SubPlayerActions" />
+        public void AddCallbacks(ISubPlayerActions instance)
+        {
+            if (instance == null || m_Wrapper.m_SubPlayerActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_SubPlayerActionsCallbackInterfaces.Add(instance);
+            @Move.started += instance.OnMove;
+            @Move.performed += instance.OnMove;
+            @Move.canceled += instance.OnMove;
+            @Jump.started += instance.OnJump;
+            @Jump.performed += instance.OnJump;
+            @Jump.canceled += instance.OnJump;
+        }
+
+        /// <summary>
+        /// Removes <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+        /// </summary>
+        /// <remarks>
+        /// Calling this method when <paramref name="instance" /> have not previously been registered has no side-effects.
+        /// </remarks>
+        /// <seealso cref="SubPlayerActions" />
+        private void UnregisterCallbacks(ISubPlayerActions instance)
+        {
+            @Move.started -= instance.OnMove;
+            @Move.performed -= instance.OnMove;
+            @Move.canceled -= instance.OnMove;
+            @Jump.started -= instance.OnJump;
+            @Jump.performed -= instance.OnJump;
+            @Jump.canceled -= instance.OnJump;
+        }
+
+        /// <summary>
+        /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="SubPlayerActions.UnregisterCallbacks(ISubPlayerActions)" />.
+        /// </summary>
+        /// <seealso cref="SubPlayerActions.UnregisterCallbacks(ISubPlayerActions)" />
+        public void RemoveCallbacks(ISubPlayerActions instance)
+        {
+            if (m_Wrapper.m_SubPlayerActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        /// <summary>
+        /// Replaces all existing callback instances and previously registered input action callbacks associated with them with callbacks provided via <param cref="instance" />.
+        /// </summary>
+        /// <remarks>
+        /// If <paramref name="instance" /> is <c>null</c>, calling this method will only unregister all existing callbacks but not register any new callbacks.
+        /// </remarks>
+        /// <seealso cref="SubPlayerActions.AddCallbacks(ISubPlayerActions)" />
+        /// <seealso cref="SubPlayerActions.RemoveCallbacks(ISubPlayerActions)" />
+        /// <seealso cref="SubPlayerActions.UnregisterCallbacks(ISubPlayerActions)" />
+        public void SetCallbacks(ISubPlayerActions instance)
+        {
+            foreach (var item in m_Wrapper.m_SubPlayerActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_SubPlayerActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    /// <summary>
+    /// Provides a new <see cref="SubPlayerActions" /> instance referencing this action map.
+    /// </summary>
+    public SubPlayerActions @SubPlayer => new SubPlayerActions(this);
+
     // Menu UI
     private readonly InputActionMap m_MenuUI;
     private List<IMenuUIActions> m_MenuUIActionsCallbackInterfaces = new List<IMenuUIActions>();
@@ -651,6 +833,28 @@ public partial class @IA_Player: IInputActionCollection2, IDisposable
     /// <seealso cref="PlayerActions.AddCallbacks(IPlayerActions)" />
     /// <seealso cref="PlayerActions.RemoveCallbacks(IPlayerActions)" />
     public interface IPlayerActions
+    {
+        /// <summary>
+        /// Method invoked when associated input action "Move" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnMove(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Jump" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnJump(InputAction.CallbackContext context);
+    }
+    /// <summary>
+    /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "SubPlayer" which allows adding and removing callbacks.
+    /// </summary>
+    /// <seealso cref="SubPlayerActions.AddCallbacks(ISubPlayerActions)" />
+    /// <seealso cref="SubPlayerActions.RemoveCallbacks(ISubPlayerActions)" />
+    public interface ISubPlayerActions
     {
         /// <summary>
         /// Method invoked when associated input action "Move" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
