@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4385887694662211143}
   m_Layer: 0
   m_Name: Trigger
-  m_TagString: Player
+  m_TagString: Trigger
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
