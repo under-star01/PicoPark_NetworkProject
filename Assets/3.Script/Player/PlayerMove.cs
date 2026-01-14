@@ -108,6 +108,10 @@ public class PlayerMove : MonoBehaviour
                 transform.position = returnPos.position;
             }
         }
+        if (collision.gameObject.TryGetComponent<FlatForm>(out var platform) && collision.contacts[0].normal.y > 0.7f)
+        {
+            platform.AddRider(this);
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -160,6 +164,10 @@ public class PlayerMove : MonoBehaviour
                 wallScript.RemovePusher(this);
                 wallScript = null;
             }
+        }
+        if (collision.TryGetComponent<FlatForm>(out var platform))
+        {
+            platform.RemoveRider(this);
         }
     }
 
@@ -222,7 +230,7 @@ public class PlayerMove : MonoBehaviour
         }
     }
 
-    //자시자신 콜라이더 무시
+    //자시 자신 콜라이더 무시
     private void IgnoreSelfCollision()
     {
         Collider2D[] Cols = GetComponents<Collider2D>(); // 내 콜라이더

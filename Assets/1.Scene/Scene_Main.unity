@@ -1198,7 +1198,7 @@ GameObject:
   - component: {fileID: 1335216321}
   m_Layer: 9
   m_Name: FlatForm
-  m_TagString: MovingWall
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1362,7 +1362,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FlatForm
   targetMoveCnt: 2
-  pushCnt: 0
+  moveSpeed: 2
+  minY: -3.5
+  maxY: 3.5
+  lockTime: 0.5
 --- !u!1 &1509998256
 GameObject:
   m_ObjectHideFlags: 0
@@ -2157,6 +2160,14 @@ PrefabInstance:
     - target: {fileID: 1077388066812899517, guid: 9de328331ace5d24ca5e449cd7d4bbd3, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4241280350621560536, guid: 9de328331ace5d24ca5e449cd7d4bbd3, type: 3}
+      propertyPath: m_Size.y
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4241280350621560536, guid: 9de328331ace5d24ca5e449cd7d4bbd3, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5287936311857421588, guid: 9de328331ace5d24ca5e449cd7d4bbd3, type: 3}
       propertyPath: returnPos
@@ -2967,6 +2978,14 @@ PrefabInstance:
     - target: {fileID: 2039145504416437977, guid: 4e5be3f1acae3ce48962d4b34db28f03, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3022158005186030530, guid: 4e5be3f1acae3ce48962d4b34db28f03, type: 3}
+      propertyPath: m_Size.y
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3022158005186030530, guid: 4e5be3f1acae3ce48962d4b34db28f03, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8329271169500393567, guid: 4e5be3f1acae3ce48962d4b34db28f03, type: 3}
       propertyPath: m_Name
