@@ -241,15 +241,11 @@ MonoBehaviour:
   blockLayer:
     serializedVersion: 2
     m_Bits: 576
-  isWallContect: 0
-  wallScript: {fileID: 0}
   isPushing: 0
+  wallScript: {fileID: 0}
+  frontPlayer: {fileID: 0}
+  backPlayer: {fileID: 0}
   returnPos: {fileID: 0}
-  PlayerLayer:
-    serializedVersion: 2
-    m_Bits: 64
-  groundCheck: {fileID: 0}
-  moveInput: {x: 0, y: 0}
 --- !u!50 &2632694407424832625
 Rigidbody2D:
   serializedVersion: 5

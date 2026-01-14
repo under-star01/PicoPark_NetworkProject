@@ -10,13 +10,16 @@ namespace Mirror.Transports.Utp
 {
     public class UTPTransport : Transport
     {
-        private NetworkDriver m_Driver;
+        private NetworkDriver m_Driver; //통신의 핵심엔진(실제 데이터를 쏘고 받는 역할)
         private Unity.Networking.Transport.NetworkConnection m_ClientConn;
-        private Dictionary<int, Unity.Networking.Transport.NetworkConnection> m_ServerConns = new Dictionary<int, Unity.Networking.Transport.NetworkConnection>();
+
+        //서버가 접속한 여려명의 클라이언트 명단을 Mirror 형식에 맞게 배열에 저장(Mirror는 정수(int) 형태 아이디만 받음)
+        private Dictionary<int, Unity.Networking.Transport.NetworkConnection> m_ServerConns 
+            = new Dictionary<int, Unity.Networking.Transport.NetworkConnection>();
         private RelayServerData m_RelayData;
 
+        //Override를 통해 Transport의 정의된 틀을 재정의함
         public void SetRelayServerData(RelayServerData data) => m_RelayData = data;
-
         public override bool Available() => Application.platform != RuntimePlatform.WebGLPlayer;
         public override Uri ServerUri() => new Uri("utp://127.0.0.1");
 
