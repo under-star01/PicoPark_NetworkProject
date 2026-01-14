@@ -5,7 +5,6 @@ using UnityEngine.UI;
 public class UIMANAGER : MonoBehaviour
 {
     private IA_Player playerInput;
-    private TitleMenu titleMenu;
 
     private enum UIState
     {
@@ -25,6 +24,7 @@ public class UIMANAGER : MonoBehaviour
     [SerializeField] private Button loginButton;  // 로그인 실행 버튼
 
     [Header("TitleMenu")]
+    [SerializeField] private TitleMenu titleMenu;
     [SerializeField] private Button[] submitButtons; // 타이틀UI에서 실행 버튼
 
     private int currentIndex = 0; // 인덱스 번호(UI순서) 초기화
@@ -32,7 +32,7 @@ public class UIMANAGER : MonoBehaviour
     private void Awake()
     {
         playerInput = new IA_Player(); // 뉴인풋받기
-        TryGetComponent(out titleMenu); // 타이틀 메뉴 스크립트 참조
+
     }
 
     void Start()
@@ -116,8 +116,6 @@ public class UIMANAGER : MonoBehaviour
         {
             titleMenuUI.SetActive(true);
         }
-        currentIndex = 0;
-        // TitleMenu는 Start()에서 첫 항목 켜짐
     }
 
     // ========== 입력 처리 ==========
@@ -126,15 +124,10 @@ public class UIMANAGER : MonoBehaviour
     {
         if (state != UIState.TitleMenu) return;
 
-        currentIndex--;
-        if (currentIndex < 0)
-        {
-            currentIndex = (submitButtons != null ? submitButtons.Length : 3) - 1;
-        }
-
         if (titleMenu != null)
         {
             titleMenu.MoveLeft();
+            currentIndex = titleMenu.currentIndex;
         }
     }
 
@@ -143,15 +136,10 @@ public class UIMANAGER : MonoBehaviour
     {
         if (state != UIState.TitleMenu) return;
 
-        currentIndex++;
-        if (currentIndex >= (submitButtons != null ? submitButtons.Length : 3))
-        {
-            currentIndex = 0;
-        }
-
         if (titleMenu != null)
         {
             titleMenu.MoveRight();
+            currentIndex = titleMenu.currentIndex;
         }
     }
 
@@ -173,12 +161,13 @@ public class UIMANAGER : MonoBehaviour
                 if (loginButton != null)
                 {
                     loginButton.onClick.Invoke();
+                    OnLoginSuccess();
                 }
                 break;
 
             case UIState.TitleMenu:
                 // TitleMenu: Enter/Space 둘 다 현재 선택 실행
-                OnLoginSuccess();
+
                 SubmitCurrent();
                 break;
         }
