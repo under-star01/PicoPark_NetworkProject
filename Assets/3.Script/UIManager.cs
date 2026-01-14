@@ -43,7 +43,7 @@ public class UIMANAGER : MonoBehaviour
     private void OnEnable()
     {
         playerInput.MenuUI.Left.performed += MoveLeft;
-        playerInput.MenuUI.Right.performed += MoveRight_input;
+        playerInput.MenuUI.Right.performed += MoveRight;
 
         playerInput.MenuUI.Enter.performed += Select;
         playerInput.MenuUI.Space.performed += Select;
@@ -56,7 +56,7 @@ public class UIMANAGER : MonoBehaviour
     private void OnDisable()
     {
         playerInput.MenuUI.Left.performed -= MoveLeft;
-        playerInput.MenuUI.Right.performed -= MoveRight_input;
+        playerInput.MenuUI.Right.performed -= MoveRight;
 
         playerInput.MenuUI.Enter.performed -= Select;
         playerInput.MenuUI.Space.performed -= Select;
@@ -178,6 +178,7 @@ public class UIMANAGER : MonoBehaviour
 
             case UIState.TitleMenu:
                 // TitleMenu: Enter/Space 둘 다 현재 선택 실행
+                OnLoginSuccess();
                 SubmitCurrent();
                 break;
         }
