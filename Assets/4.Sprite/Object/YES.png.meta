@@ -1,10 +1,16 @@
 fileFormatVersion: 2
-guid: c08afd4c9df33444eb8f4dc13c7c591c
+guid: 91faa57e884bcb640abac14460984160
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 1623922610036867698
-    second: "\uC2A4\uD06C\uB9B0\uC0F7 2026-01-12 160016_0"
+      213: 1968381097245904912
+    second: YES_0
+  - first:
+      213: -740292791687772565
+    second: YES_1
+  - first:
+      213: 1409088731856209506
+    second: YES_2
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -46,7 +52,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -139,13 +145,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: "\uC2A4\uD06C\uB9B0\uC0F7 2026-01-12 160016_0"
+      name: YES_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 489
-        height: 156
+        x: 14
+        y: 18
+        width: 26
+        height: 43
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -154,8 +160,52 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 27209f98205598610800000000000000
-      internalID: 1623922610036867698
+      spriteID: 0109fe3dd28115b10800000000000000
+      internalID: 1968381097245904912
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YES_1
+      rect:
+        serializedVersion: 2
+        x: 50
+        y: 18
+        width: 26
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b660ba1d0a3f9b5f0800000000000000
+      internalID: -740292791687772565
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YES_2
+      rect:
+        serializedVersion: 2
+        x: 86
+        y: 18
+        width: 26
+        height: 43
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2668b476cb61e8310800000000000000
+      internalID: 1409088731856209506
       vertices: []
       indices: 
       edges: []
@@ -174,7 +224,9 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      "\uC2A4\uD06C\uB9B0\uC0F7 2026-01-12 160016_0": 1623922610036867698
+      YES_0: 1968381097245904912
+      YES_1: -740292791687772565
+      YES_2: 1409088731856209506
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
