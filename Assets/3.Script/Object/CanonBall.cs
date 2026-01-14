@@ -44,8 +44,8 @@ public class CanonBall : MonoBehaviour
             PlayerMove playerMove = collision.gameObject.GetComponent<PlayerMove>();
             if (playerMove != null)
             {
-                // 충돌 방향 계산
-                float pushDirection = Mathf.Sign(collision.transform.position.x - transform.position.x);
+                // 대포알의 이동 방향으로 넉백
+                float pushDirection = shootLeft ? -1f : 1f;
                 Vector2 knockback = new Vector2(pushDirection * pushVelocity.x, pushVelocity.y);
 
                 // 넉백 함수 호출

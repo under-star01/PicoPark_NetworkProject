@@ -114,6 +114,10 @@ public class PlayerMove : MonoBehaviour
                 transform.position = returnPos.position;
             }
         }
+        if (collision.gameObject.TryGetComponent<FlatForm>(out var platform) && collision.contacts[0].normal.y > 0.7f)
+        {
+            platform.AddRider(this);
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -166,6 +170,10 @@ public class PlayerMove : MonoBehaviour
                 wallScript.RemovePusher(this);
                 wallScript = null;
             }
+        }
+        if (collision.TryGetComponent<FlatForm>(out var platform))
+        {
+            platform.RemoveRider(this);
         }
     }
 
