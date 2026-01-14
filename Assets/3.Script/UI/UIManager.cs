@@ -158,7 +158,7 @@ public class UIMANAGER : MonoBehaviour
 
             case UIState.Login:
                 // 로그인 화면: Enter/Space 둘 다 로그인 실행
-                if (loginButton != null)
+                if (loginButton != null && loginButton.IsActive())
                 {
                     loginButton.onClick.Invoke();
                     OnLoginSuccess();
