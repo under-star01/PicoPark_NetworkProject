@@ -260,7 +260,7 @@ public class PlayerMove : MonoBehaviour
     {
         rb.linearVelocity = Vector2.zero;
         rb.AddForce(force, ForceMode2D.Impulse);
-        yield return new WaitForSeconds(0.2f);
+        yield return new WaitForSeconds(0.35f);
         knockbackCoroutine = null;
     }
 }

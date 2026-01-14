@@ -7,11 +7,9 @@ public class Canon : MonoBehaviour
 {
     [SerializeField] private GameObject canonBallPrefab;
     [SerializeField] private Transform shootPoint; // 대포알이 발사되는 위치
-    [SerializeField] private float shootInterval = 2f; // 발사 간격
     [SerializeField] private bool shootLeft = true; // 발사 방향
 
     private GameObject currentCanonBall;
-    private bool canShoot = true;
 
     private void Start()
     {
@@ -26,11 +24,15 @@ public class Canon : MonoBehaviour
     {
         while (true)
         {
-            yield return new WaitForSeconds(shootInterval);
-
-            // 대포알이 비활성화 상태일 때만 발사
-            if (canShoot && !currentCanonBall.activeInHierarchy)
+            while (true)
             {
+                // 대포알이 비활성화될 때까지 대기
+                yield return new WaitUntil(() => !currentCanonBall.activeInHierarchy);
+
+                // 대포알이 비활성화되면 1초 대기
+                yield return new WaitForSeconds(1f);
+
+                // 발사
                 ShootCanonBall();
             }
         }
