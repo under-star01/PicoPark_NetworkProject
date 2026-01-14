@@ -23,6 +23,8 @@ public class AuthService : MonoBehaviour
 
     public UserInfo info { get; private set; }
 
+    public event Action<bool> OnLoginResult;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void Start()
     {
@@ -55,11 +57,15 @@ public class AuthService : MonoBehaviour
                     //LogText_viewing("로그인 성공!");
                     AuthPanel.SetActive(false);
                     anykeyText.SetActive(true);
+
+                    OnLoginResult?.Invoke(true);
                 }
                 else
                 {
                     if (!reader.IsClosed) reader.Close();
                     LogText_viewing("로그인 실패!");
+
+                    OnLoginResult?.Invoke(false);
                 }
 
             }
@@ -67,6 +73,8 @@ public class AuthService : MonoBehaviour
         else {
             if (!reader.IsClosed) reader.Close();
             LogText_viewing("정확한 ID이나 PASSWORD를\n 다시 입력하세요");
+
+            OnLoginResult?.Invoke(false);
         }
     }
 

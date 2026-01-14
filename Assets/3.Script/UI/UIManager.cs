@@ -27,6 +27,9 @@ public class UIMANAGER : MonoBehaviour
     [SerializeField] private TitleMenu titleMenu;
     [SerializeField] private Button[] submitButtons; // 타이틀UI에서 실행 버튼
 
+    [Header("Auth")]
+    [SerializeField] private AuthService authService;
+
     private int currentIndex = 0; // 인덱스 번호(UI순서) 초기화
 
     private void Awake()
@@ -42,6 +45,8 @@ public class UIMANAGER : MonoBehaviour
 
     private void OnEnable()
     {
+        authService.OnLoginResult += HandleLoginResult;
+
         playerInput.MenuUI.Left.performed += MoveLeft;
         playerInput.MenuUI.Right.performed += MoveRight;
 
@@ -55,6 +60,8 @@ public class UIMANAGER : MonoBehaviour
 
     private void OnDisable()
     {
+        authService.OnLoginResult -= HandleLoginResult;
+
         playerInput.MenuUI.Left.performed -= MoveLeft;
         playerInput.MenuUI.Right.performed -= MoveRight;
 
@@ -117,6 +124,19 @@ public class UIMANAGER : MonoBehaviour
             titleMenuUI.SetActive(true);
         }
     }
+    private void HandleLoginResult(bool success)
+    {
+        if (success)
+        {
+            OnLoginSuccess();
+        }
+        else
+        {
+            authService.LogText_viewing("정확한 ID이나 PASSWORD를\n 다시 입력하세요");
+            // 실패 시 UI는 그대로 두거나, 효과음/진동 등
+        }
+    }
+
 
     // ========== 입력 처리 ==========
 
@@ -161,7 +181,6 @@ public class UIMANAGER : MonoBehaviour
                 if (loginButton != null && loginButton.IsActive())
                 {
                     loginButton.onClick.Invoke();
-                    OnLoginSuccess();
                 }
                 break;
 
