@@ -36,7 +36,7 @@ public class MovingWall : MonoBehaviour
     public void RemovePusher(PlayerMove p)
     {
         pushers.Remove(p);
-        
+
         if (pushers.Count < targetMoveCnt)
         {
             rb.bodyType = RigidbodyType2D.Kinematic;

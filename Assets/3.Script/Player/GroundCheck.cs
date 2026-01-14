@@ -20,6 +20,18 @@ public class GroundCheck : MonoBehaviour
 
         RecalculateUnderPlayer();
     }
+    private void OnTriggerStay2D(Collider2D other)
+    {
+        if (other.isTrigger) return;
+
+        // 이미 겹쳐 있으면 땅으로 인정
+        if (!groundSet.Contains(other))
+        {
+            groundSet.Add(other);
+            IsGround = true;
+            RecalculateUnderPlayer();
+        }
+    }
 
     private void OnTriggerExit2D(Collider2D other)
     {

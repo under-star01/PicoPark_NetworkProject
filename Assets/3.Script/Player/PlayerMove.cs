@@ -26,6 +26,9 @@ public class PlayerMove : MonoBehaviour
     [Header("¸®ÅÏ À§Ä¡")]
     [SerializeField] private Transform returnPos;
 
+    [Header("³Ë¹é")]
+    private Coroutine knockbackCoroutine;
+
     private Rigidbody2D rb;
     private Animator animator;
     private SpriteRenderer spriteRenderer;
@@ -51,7 +54,10 @@ public class PlayerMove : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Move();
+        if (knockbackCoroutine == null)
+        {
+            Move();
+        }
         CheckPush();
     }
 
@@ -108,6 +114,10 @@ public class PlayerMove : MonoBehaviour
                 transform.position = returnPos.position;
             }
         }
+        if (collision.gameObject.TryGetComponent<FlatForm>(out var platform) && collision.contacts[0].normal.y > 0.7f)
+        {
+            platform.AddRider(this);
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -160,6 +170,10 @@ public class PlayerMove : MonoBehaviour
                 wallScript.RemovePusher(this);
                 wallScript = null;
             }
+        }
+        if (collision.TryGetComponent<FlatForm>(out var platform))
+        {
+            platform.RemoveRider(this);
         }
     }
 
@@ -238,5 +252,23 @@ public class PlayerMove : MonoBehaviour
                 Physics2D.IgnoreCollision(parent, child, true);
             }
         }
+    }
+
+    // ³Ë¹é ÇÔ¼ö
+    public void Knockback(Vector2 force)
+    {
+        if (knockbackCoroutine != null)
+        {
+            StopCoroutine(knockbackCoroutine);
+        }
+        knockbackCoroutine = StartCoroutine(KnockbackRoutine(force));
+    }
+
+    private IEnumerator KnockbackRoutine(Vector2 force)
+    {
+        rb.linearVelocity = Vector2.zero;
+        rb.AddForce(force, ForceMode2D.Impulse);
+        yield return new WaitForSeconds(0.35f);
+        knockbackCoroutine = null;
     }
 }
