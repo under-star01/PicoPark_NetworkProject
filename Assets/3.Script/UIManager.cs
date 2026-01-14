@@ -139,7 +139,7 @@ public class UIMANAGER : MonoBehaviour
     }
 
 
-    private void MoveRight_input(InputAction.CallbackContext context)
+    private void MoveRight(InputAction.CallbackContext context)
     {
         if (state != UIState.TitleMenu) return;
 
