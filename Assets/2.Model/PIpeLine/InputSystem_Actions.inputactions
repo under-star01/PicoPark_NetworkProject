@@ -1,5 +1,4 @@
 {
-    "version": 1,
     "name": "InputSystem_Actions",
     "maps": [
         {
@@ -569,15 +568,6 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
-                },
-                {
-                    "name": "NextField",
-                    "type": "Button",
-                    "id": "d1b7929c-f736-4ece-aa43-54bcb1a82215",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -996,17 +986,6 @@
                     "processors": "",
                     "groups": "XR",
                     "action": "TrackedDeviceOrientation",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "c26d50e2-3bab-4918-a5a0-27da4bc4df0f",
-                    "path": "<Keyboard>/tab",
-                    "interactions": "Press",
-                    "processors": "",
-                    "groups": ";Keyboard&Mouse",
-                    "action": "NextField",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
