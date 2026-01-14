@@ -26,6 +26,9 @@ public class PlayerMove : MonoBehaviour
     [Header("¸®ÅÏ À§Ä¡")]
     [SerializeField] private Transform returnPos;
 
+    [Header("³Ë¹é")]
+    private Coroutine knockbackCoroutine;
+
     private Rigidbody2D rb;
     private Animator animator;
     private SpriteRenderer spriteRenderer;
@@ -51,7 +54,10 @@ public class PlayerMove : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Move();
+        if (knockbackCoroutine == null)
+        {
+            Move();
+        }
         CheckPush();
     }
 
@@ -238,5 +244,23 @@ public class PlayerMove : MonoBehaviour
                 Physics2D.IgnoreCollision(parent, child, true);
             }
         }
+    }
+
+    // ³Ë¹é ÇÔ¼ö
+    public void Knockback(Vector2 force)
+    {
+        if (knockbackCoroutine != null)
+        {
+            StopCoroutine(knockbackCoroutine);
+        }
+        knockbackCoroutine = StartCoroutine(KnockbackRoutine(force));
+    }
+
+    private IEnumerator KnockbackRoutine(Vector2 force)
+    {
+        rb.linearVelocity = Vector2.zero;
+        rb.AddForce(force, ForceMode2D.Impulse);
+        yield return new WaitForSeconds(0.2f);
+        knockbackCoroutine = null;
     }
 }

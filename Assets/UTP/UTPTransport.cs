@@ -4,6 +4,7 @@ using Mirror;
 using UnityEngine;
 using Unity.Collections;
 using Unity.Networking.Transport;
+
 using Unity.Networking.Transport.Relay;
 
 namespace Mirror.Transports.Utp
@@ -67,7 +68,7 @@ namespace Mirror.Transports.Utp
         public override void Shutdown() { if (m_Driver.IsCreated) m_Driver.Dispose(); m_ServerConns.Clear(); }
         public override int GetMaxPacketSize(int channelId = 0) => 1200;
 
-        // [CS0506 ÇØ°á] Mirror Á¤¼®´ë·Î EarlyUpdate¸¦ »ç¿ëÇÏ¿© »ó¼Ó ¿¡·¯¸¦ ¿øÃµ Â÷´ÜÇÕ´Ï´Ù.
+        // [CS0506 ï¿½Ø°ï¿½] Mirror ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ EarlyUpdateï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ãµ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½.
         public override void ClientEarlyUpdate() => Tick();
         public override void ServerEarlyUpdate() => Tick();
 
@@ -76,33 +77,33 @@ namespace Mirror.Transports.Utp
             if (!m_Driver.IsCreated) return;
             m_Driver.ScheduleUpdate().Complete();
 
-            // 1. [Server Àü¿ë] »õ·Î¿î ¿¬°áÀ» Accept()·Î °¡Á®¿É´Ï´Ù. (image_119b86 ·ÎÁ÷ Àû¿ë)
+            // 1. [Server ï¿½ï¿½ï¿½ï¿½] ï¿½ï¿½ï¿½Î¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Accept()ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½É´Ï´ï¿½. (image_119b86 ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)
             if (NetworkServer.active)
             {
                 Unity.Networking.Transport.NetworkConnection incoming;
-                while ((incoming = m_Driver.Accept()) != default) // Accept´Â ÀÎÀÚ¸¦ ¹ÞÁö ¾Ê½À´Ï´Ù!
+                while ((incoming = m_Driver.Accept()) != default) // Acceptï¿½ï¿½ ï¿½ï¿½ï¿½Ú¸ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ê½ï¿½ï¿½Ï´ï¿½!
                 {
                     int id = incoming.GetHashCode();
                     m_ServerConns[id] = incoming;
                     OnServerConnectedWithAddress?.Invoke(id, "RelayAddress");
-                    Debug.Log($"[Server] »õ Å¬¶óÀÌ¾ðÆ® ¼ö¶ôµÊ. ID: {id}");
+                    Debug.Log($"[Server] ï¿½ï¿½ Å¬ï¿½ï¿½ï¿½Ì¾ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½. ID: {id}");
                 }
             }
 
-            // 2. [°øÅë] ÀÌº¥Æ® Ã³¸® (PopEvent)
+            // 2. [ï¿½ï¿½ï¿½ï¿½] ï¿½Ìºï¿½Æ® Ã³ï¿½ï¿½ (PopEvent)
             NetworkEvent.Type evt;
-            // [CS1620 ÇØ°á] out Å°¿öµå¿Í Ç®³×ÀÓ Å¸ÀÔÀ» ¸í½ÃÇÏ¿© ¿¡·¯¸¦ ¸·½À´Ï´Ù.
+            // [CS1620 ï¿½Ø°ï¿½] out Å°ï¿½ï¿½ï¿½ï¿½ï¿½ Ç®ï¿½ï¿½ï¿½ï¿½ Å¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.
             while ((evt = m_Driver.PopEvent(out Unity.Networking.Transport.NetworkConnection conn, out DataStreamReader stream)) != NetworkEvent.Type.Empty)
             {
                 switch (evt)
                 {
                     case NetworkEvent.Type.Connect:
-                        // Å¬¶óÀÌ¾ðÆ® ÀÔÀå¿¡¼­¸¸ Ã³¸® (¼­¹ö´Â À§ Accept¿¡¼­ ÀÌ¹Ì Ã³¸®µÊ)
+                        // Å¬ï¿½ï¿½ï¿½Ì¾ï¿½Æ® ï¿½ï¿½ï¿½å¿¡ï¿½ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½ (ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ Acceptï¿½ï¿½ï¿½ï¿½ ï¿½Ì¹ï¿½ Ã³ï¿½ï¿½ï¿½ï¿½)
                         if (!NetworkServer.active) OnClientConnected?.Invoke();
                         break;
 
                     case NetworkEvent.Type.Data:
-                        // ¿©±â¼­ ÆÐÅ¶ÀÌ Àü´ÞµÇ¾î¾ß ÇÃ·¹ÀÌ¾î ÇÁ¸®ÆÕÀÌ ¼ÒÈ¯µË´Ï´Ù.
+                        // ï¿½ï¿½ï¿½â¼­ ï¿½ï¿½Å¶ï¿½ï¿½ ï¿½ï¿½ï¿½ÞµÇ¾ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¯ï¿½Ë´Ï´ï¿½.
                         byte[] data = new byte[stream.Length];
                         stream.ReadBytes(data);
                         if (NetworkServer.active) OnServerDataReceived?.Invoke(conn.GetHashCode(), new ArraySegment<byte>(data), 0);
