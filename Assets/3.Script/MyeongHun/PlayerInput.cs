@@ -6,6 +6,9 @@ using UnityEngine.InputSystem;
 
 public class PlayerInput : MonoBehaviour
 {
+    [Header("플레이어 조작 방식")]
+    [SerializeField] private bool isWASD;
+
     private IA_Player playerInput;
     private PlayerMove playerMove;
 
@@ -17,20 +20,42 @@ public class PlayerInput : MonoBehaviour
 
     private void OnEnable()
     {
-        playerInput.Player.Move.performed += Move;
-        playerInput.Player.Move.canceled += Move;
-        playerInput.Player.Jump.performed += JumpStart;
-        playerInput.Player.Jump.canceled += JumpEnd;
-        playerInput.Enable();
+        if (isWASD)
+        {
+            playerInput.Player.Move.performed += Move;
+            playerInput.Player.Move.canceled += Move;
+            playerInput.Player.Jump.performed += JumpStart;
+            playerInput.Player.Jump.canceled += JumpEnd;
+            playerInput.Enable();
+        }
+        else
+        {
+            playerInput.SubPlayer.Move.performed += Move;
+            playerInput.SubPlayer.Move.canceled += Move;
+            playerInput.SubPlayer.Jump.performed += JumpStart;
+            playerInput.SubPlayer.Jump.canceled += JumpEnd;
+            playerInput.Enable();
+        }
     }
 
     private void OnDisable()
     {
-        playerInput.Player.Move.performed -= Move;
-        playerInput.Player.Move.canceled -= Move;
-        playerInput.Player.Jump.performed -= JumpStart;
-        playerInput.Player.Jump.canceled -= JumpEnd;
-        playerInput.Disable();
+        if (isWASD)
+        {
+            playerInput.Player.Move.performed -= Move;
+            playerInput.Player.Move.canceled -= Move;
+            playerInput.Player.Jump.performed -= JumpStart;
+            playerInput.Player.Jump.canceled -= JumpEnd;
+            playerInput.Disable();
+        }
+        else
+        {
+            playerInput.SubPlayer.Move.performed -= Move;
+            playerInput.SubPlayer.Move.canceled -= Move;
+            playerInput.SubPlayer.Jump.performed -= JumpStart;
+            playerInput.SubPlayer.Jump.canceled -= JumpEnd;
+            playerInput.Disable();
+        }
     }
 
     private void Move(InputAction.CallbackContext context)

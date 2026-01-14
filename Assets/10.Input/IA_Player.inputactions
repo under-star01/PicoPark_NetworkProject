@@ -73,22 +73,119 @@
             ]
         },
         {
-            "name": "Menu UI",
-            "id": "24700d68-d1ae-4924-999f-be80936267dc",
+            "name": "SubPlayer",
+            "id": "300830cc-b84d-4468-8beb-3e0ddbe7ff28",
             "actions": [
                 {
-                    "name": "Any",
+                    "name": "Move",
+                    "type": "Value",
+                    "id": "9f1637d8-2f34-4e6b-b2f1-668b18dff141",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "Jump",
                     "type": "Button",
-                    "id": "ae0fd530-a717-49b4-8822-d8b92b4d5d22",
+                    "id": "e6106a71-0e98-4017-be90-120778bb7643",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "2D Vector",
+                    "id": "6f0c59da-2477-4e78-a714-7bc29b4e3028",
+                    "path": "2DVector",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "left",
+                    "id": "f7f6e3c1-60ea-4485-b381-938c89325c5c",
+                    "path": "<Keyboard>/leftArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";PC",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "right",
+                    "id": "6673936d-e29b-4e97-9f25-5048db68846c",
+                    "path": "<Keyboard>/rightArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";PC",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "53e7869c-3cdd-4d95-90b9-47d81a3c2f68",
+                    "path": "<Keyboard>/upArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";PC",
+                    "action": "Jump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "Menu UI",
+            "id": "ca6c03e1-9a33-4725-8c8c-9eeb1cd90e39",
+            "actions": [
+                {
+                    "name": "Enter",
+                    "type": "Button",
+                    "id": "435465fd-fb13-4368-ac2f-ee8af86812de",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Select",
+                    "name": "Space",
                     "type": "Button",
-                    "id": "3a030105-d138-470f-8fd7-aeb01e4bf97d",
+                    "id": "cbb0a273-0d5d-4a51-b84f-687bccfa0a6c",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Right",
+                    "type": "Button",
+                    "id": "671bee6b-aa3f-4d00-b056-55affe5809fc",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Left",
+                    "type": "Button",
+                    "id": "ed12fcf1-2250-4fc1-ba6b-28bc935f1cde",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "ESC",
+                    "type": "Button",
+                    "id": "f6625776-ddb7-4200-b5e5-6fe3f079356c",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -98,67 +195,78 @@
             "bindings": [
                 {
                     "name": "",
-                    "id": "2fc41559-a0e3-4ae9-b595-98981495a469",
-                    "path": "<Keyboard>/anyKey",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";PC",
-                    "action": "Any",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "bd4d19c1-f51f-4a75-8950-e3b3dda18ff7",
-                    "path": "<Keyboard>/a",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";PC",
-                    "action": "Select",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "debce03c-2a35-4281-a503-99ef48bd70d9",
-                    "path": "<Keyboard>/d",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";PC",
-                    "action": "Select",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "3282989c-e5ad-44c5-b908-3bf2772b7f78",
-                    "path": "<Keyboard>/space",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";PC",
-                    "action": "Select",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "b942805a-6d41-4a7a-b598-21fd5bec5d30",
+                    "id": "dd5f62db-a306-4c92-b8ec-21ba54c3839d",
                     "path": "<Keyboard>/enter",
                     "interactions": "",
                     "processors": "",
                     "groups": ";PC",
-                    "action": "Select",
+                    "action": "Enter",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "be055360-78ad-4ef5-ac65-e32638cd3278",
+                    "id": "7d055ab1-1b72-44a0-89e6-458c19fe74fa",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Space",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7f8262b5-b002-433b-a81a-bf1d8345e3a7",
+                    "path": "<Keyboard>/d",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Right",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7608bb5e-16c3-4bc9-9ba7-3df19eeff904",
+                    "path": "<Keyboard>/rightArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Right",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "96a4ed3c-eb87-40dd-8c00-a949f0bc7352",
                     "path": "<Keyboard>/escape",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Select",
+                    "action": "ESC",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "27d0f444-35d9-4eb8-a13c-07fa6d7be1aa",
+                    "path": "<Keyboard>/a",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Left",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6f752709-152d-4950-a526-74c2c5bb7d97",
+                    "path": "<Keyboard>/leftArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Left",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

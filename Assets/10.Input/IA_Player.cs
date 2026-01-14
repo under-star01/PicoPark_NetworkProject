@@ -159,22 +159,119 @@ public partial class @IA_Player: IInputActionCollection2, IDisposable
             ]
         },
         {
-            ""name"": ""Menu UI"",
-            ""id"": ""24700d68-d1ae-4924-999f-be80936267dc"",
+            ""name"": ""SubPlayer"",
+            ""id"": ""300830cc-b84d-4468-8beb-3e0ddbe7ff28"",
             ""actions"": [
                 {
-                    ""name"": ""Any"",
+                    ""name"": ""Move"",
+                    ""type"": ""Value"",
+                    ""id"": ""9f1637d8-2f34-4e6b-b2f1-668b18dff141"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Jump"",
                     ""type"": ""Button"",
-                    ""id"": ""ae0fd530-a717-49b4-8822-d8b92b4d5d22"",
+                    ""id"": ""e6106a71-0e98-4017-be90-120778bb7643"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": ""2D Vector"",
+                    ""id"": ""6f0c59da-2477-4e78-a714-7bc29b4e3028"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""f7f6e3c1-60ea-4485-b381-938c89325c5c"",
+                    ""path"": ""<Keyboard>/leftArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";PC"",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""6673936d-e29b-4e97-9f25-5048db68846c"",
+                    ""path"": ""<Keyboard>/rightArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";PC"",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""53e7869c-3cdd-4d95-90b9-47d81a3c2f68"",
+                    ""path"": ""<Keyboard>/upArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";PC"",
+                    ""action"": ""Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
+        },
+        {
+            ""name"": ""Menu UI"",
+            ""id"": ""ca6c03e1-9a33-4725-8c8c-9eeb1cd90e39"",
+            ""actions"": [
+                {
+                    ""name"": ""Enter"",
+                    ""type"": ""Button"",
+                    ""id"": ""435465fd-fb13-4368-ac2f-ee8af86812de"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Select"",
+                    ""name"": ""Space"",
                     ""type"": ""Button"",
-                    ""id"": ""3a030105-d138-470f-8fd7-aeb01e4bf97d"",
+                    ""id"": ""cbb0a273-0d5d-4a51-b84f-687bccfa0a6c"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Right"",
+                    ""type"": ""Button"",
+                    ""id"": ""671bee6b-aa3f-4d00-b056-55affe5809fc"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Left"",
+                    ""type"": ""Button"",
+                    ""id"": ""ed12fcf1-2250-4fc1-ba6b-28bc935f1cde"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ESC"",
+                    ""type"": ""Button"",
+                    ""id"": ""f6625776-ddb7-4200-b5e5-6fe3f079356c"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
@@ -184,67 +281,78 @@ public partial class @IA_Player: IInputActionCollection2, IDisposable
             ""bindings"": [
                 {
                     ""name"": """",
-                    ""id"": ""2fc41559-a0e3-4ae9-b595-98981495a469"",
-                    ""path"": ""<Keyboard>/anyKey"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";PC"",
-                    ""action"": ""Any"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""bd4d19c1-f51f-4a75-8950-e3b3dda18ff7"",
-                    ""path"": ""<Keyboard>/a"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";PC"",
-                    ""action"": ""Select"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""debce03c-2a35-4281-a503-99ef48bd70d9"",
-                    ""path"": ""<Keyboard>/d"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";PC"",
-                    ""action"": ""Select"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""3282989c-e5ad-44c5-b908-3bf2772b7f78"",
-                    ""path"": ""<Keyboard>/space"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";PC"",
-                    ""action"": ""Select"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""b942805a-6d41-4a7a-b598-21fd5bec5d30"",
+                    ""id"": ""dd5f62db-a306-4c92-b8ec-21ba54c3839d"",
                     ""path"": ""<Keyboard>/enter"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";PC"",
-                    ""action"": ""Select"",
+                    ""action"": ""Enter"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
                 {
                     ""name"": """",
-                    ""id"": ""be055360-78ad-4ef5-ac65-e32638cd3278"",
+                    ""id"": ""7d055ab1-1b72-44a0-89e6-458c19fe74fa"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Space"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7f8262b5-b002-433b-a81a-bf1d8345e3a7"",
+                    ""path"": ""<Keyboard>/d"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Right"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7608bb5e-16c3-4bc9-9ba7-3df19eeff904"",
+                    ""path"": ""<Keyboard>/rightArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Right"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""96a4ed3c-eb87-40dd-8c00-a949f0bc7352"",
                     ""path"": ""<Keyboard>/escape"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Select"",
+                    ""action"": ""ESC"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""27d0f444-35d9-4eb8-a13c-07fa6d7be1aa"",
+                    ""path"": ""<Keyboard>/a"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Left"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6f752709-152d-4950-a526-74c2c5bb7d97"",
+                    ""path"": ""<Keyboard>/leftArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Left"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -263,15 +371,23 @@ public partial class @IA_Player: IInputActionCollection2, IDisposable
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
         m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
         m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
+        // SubPlayer
+        m_SubPlayer = asset.FindActionMap("SubPlayer", throwIfNotFound: true);
+        m_SubPlayer_Move = m_SubPlayer.FindAction("Move", throwIfNotFound: true);
+        m_SubPlayer_Jump = m_SubPlayer.FindAction("Jump", throwIfNotFound: true);
         // Menu UI
         m_MenuUI = asset.FindActionMap("Menu UI", throwIfNotFound: true);
-        m_MenuUI_Any = m_MenuUI.FindAction("Any", throwIfNotFound: true);
-        m_MenuUI_Select = m_MenuUI.FindAction("Select", throwIfNotFound: true);
+        m_MenuUI_Enter = m_MenuUI.FindAction("Enter", throwIfNotFound: true);
+        m_MenuUI_Space = m_MenuUI.FindAction("Space", throwIfNotFound: true);
+        m_MenuUI_Right = m_MenuUI.FindAction("Right", throwIfNotFound: true);
+        m_MenuUI_Left = m_MenuUI.FindAction("Left", throwIfNotFound: true);
+        m_MenuUI_ESC = m_MenuUI.FindAction("ESC", throwIfNotFound: true);
     }
 
     ~@IA_Player()
     {
         UnityEngine.Debug.Assert(!m_Player.enabled, "This will cause a leak and performance issues, IA_Player.Player.Disable() has not been called.");
+        UnityEngine.Debug.Assert(!m_SubPlayer.enabled, "This will cause a leak and performance issues, IA_Player.SubPlayer.Disable() has not been called.");
         UnityEngine.Debug.Assert(!m_MenuUI.enabled, "This will cause a leak and performance issues, IA_Player.MenuUI.Disable() has not been called.");
     }
 
@@ -452,11 +568,121 @@ public partial class @IA_Player: IInputActionCollection2, IDisposable
     /// </summary>
     public PlayerActions @Player => new PlayerActions(this);
 
+    // SubPlayer
+    private readonly InputActionMap m_SubPlayer;
+    private List<ISubPlayerActions> m_SubPlayerActionsCallbackInterfaces = new List<ISubPlayerActions>();
+    private readonly InputAction m_SubPlayer_Move;
+    private readonly InputAction m_SubPlayer_Jump;
+    /// <summary>
+    /// Provides access to input actions defined in input action map "SubPlayer".
+    /// </summary>
+    public struct SubPlayerActions
+    {
+        private @IA_Player m_Wrapper;
+
+        /// <summary>
+        /// Construct a new instance of the input action map wrapper class.
+        /// </summary>
+        public SubPlayerActions(@IA_Player wrapper) { m_Wrapper = wrapper; }
+        /// <summary>
+        /// Provides access to the underlying input action "SubPlayer/Move".
+        /// </summary>
+        public InputAction @Move => m_Wrapper.m_SubPlayer_Move;
+        /// <summary>
+        /// Provides access to the underlying input action "SubPlayer/Jump".
+        /// </summary>
+        public InputAction @Jump => m_Wrapper.m_SubPlayer_Jump;
+        /// <summary>
+        /// Provides access to the underlying input action map instance.
+        /// </summary>
+        public InputActionMap Get() { return m_Wrapper.m_SubPlayer; }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Enable()" />
+        public void Enable() { Get().Enable(); }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Disable()" />
+        public void Disable() { Get().Disable(); }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.enabled" />
+        public bool enabled => Get().enabled;
+        /// <summary>
+        /// Implicitly converts an <see ref="SubPlayerActions" /> to an <see ref="InputActionMap" /> instance.
+        /// </summary>
+        public static implicit operator InputActionMap(SubPlayerActions set) { return set.Get(); }
+        /// <summary>
+        /// Adds <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+        /// </summary>
+        /// <param name="instance">Callback instance.</param>
+        /// <remarks>
+        /// If <paramref name="instance" /> is <c>null</c> or <paramref name="instance"/> have already been added this method does nothing.
+        /// </remarks>
+        /// <seealso cref="SubPlayerActions" />
+        public void AddCallbacks(ISubPlayerActions instance)
+        {
+            if (instance == null || m_Wrapper.m_SubPlayerActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_SubPlayerActionsCallbackInterfaces.Add(instance);
+            @Move.started += instance.OnMove;
+            @Move.performed += instance.OnMove;
+            @Move.canceled += instance.OnMove;
+            @Jump.started += instance.OnJump;
+            @Jump.performed += instance.OnJump;
+            @Jump.canceled += instance.OnJump;
+        }
+
+        /// <summary>
+        /// Removes <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+        /// </summary>
+        /// <remarks>
+        /// Calling this method when <paramref name="instance" /> have not previously been registered has no side-effects.
+        /// </remarks>
+        /// <seealso cref="SubPlayerActions" />
+        private void UnregisterCallbacks(ISubPlayerActions instance)
+        {
+            @Move.started -= instance.OnMove;
+            @Move.performed -= instance.OnMove;
+            @Move.canceled -= instance.OnMove;
+            @Jump.started -= instance.OnJump;
+            @Jump.performed -= instance.OnJump;
+            @Jump.canceled -= instance.OnJump;
+        }
+
+        /// <summary>
+        /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="SubPlayerActions.UnregisterCallbacks(ISubPlayerActions)" />.
+        /// </summary>
+        /// <seealso cref="SubPlayerActions.UnregisterCallbacks(ISubPlayerActions)" />
+        public void RemoveCallbacks(ISubPlayerActions instance)
+        {
+            if (m_Wrapper.m_SubPlayerActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        /// <summary>
+        /// Replaces all existing callback instances and previously registered input action callbacks associated with them with callbacks provided via <param cref="instance" />.
+        /// </summary>
+        /// <remarks>
+        /// If <paramref name="instance" /> is <c>null</c>, calling this method will only unregister all existing callbacks but not register any new callbacks.
+        /// </remarks>
+        /// <seealso cref="SubPlayerActions.AddCallbacks(ISubPlayerActions)" />
+        /// <seealso cref="SubPlayerActions.RemoveCallbacks(ISubPlayerActions)" />
+        /// <seealso cref="SubPlayerActions.UnregisterCallbacks(ISubPlayerActions)" />
+        public void SetCallbacks(ISubPlayerActions instance)
+        {
+            foreach (var item in m_Wrapper.m_SubPlayerActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_SubPlayerActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    /// <summary>
+    /// Provides a new <see cref="SubPlayerActions" /> instance referencing this action map.
+    /// </summary>
+    public SubPlayerActions @SubPlayer => new SubPlayerActions(this);
+
     // Menu UI
     private readonly InputActionMap m_MenuUI;
     private List<IMenuUIActions> m_MenuUIActionsCallbackInterfaces = new List<IMenuUIActions>();
-    private readonly InputAction m_MenuUI_Any;
-    private readonly InputAction m_MenuUI_Select;
+    private readonly InputAction m_MenuUI_Enter;
+    private readonly InputAction m_MenuUI_Space;
+    private readonly InputAction m_MenuUI_Right;
+    private readonly InputAction m_MenuUI_Left;
+    private readonly InputAction m_MenuUI_ESC;
     /// <summary>
     /// Provides access to input actions defined in input action map "Menu UI".
     /// </summary>
@@ -469,13 +695,25 @@ public partial class @IA_Player: IInputActionCollection2, IDisposable
         /// </summary>
         public MenuUIActions(@IA_Player wrapper) { m_Wrapper = wrapper; }
         /// <summary>
-        /// Provides access to the underlying input action "MenuUI/Any".
+        /// Provides access to the underlying input action "MenuUI/Enter".
         /// </summary>
-        public InputAction @Any => m_Wrapper.m_MenuUI_Any;
+        public InputAction @Enter => m_Wrapper.m_MenuUI_Enter;
         /// <summary>
-        /// Provides access to the underlying input action "MenuUI/Select".
+        /// Provides access to the underlying input action "MenuUI/Space".
         /// </summary>
-        public InputAction @Select => m_Wrapper.m_MenuUI_Select;
+        public InputAction @Space => m_Wrapper.m_MenuUI_Space;
+        /// <summary>
+        /// Provides access to the underlying input action "MenuUI/Right".
+        /// </summary>
+        public InputAction @Right => m_Wrapper.m_MenuUI_Right;
+        /// <summary>
+        /// Provides access to the underlying input action "MenuUI/Left".
+        /// </summary>
+        public InputAction @Left => m_Wrapper.m_MenuUI_Left;
+        /// <summary>
+        /// Provides access to the underlying input action "MenuUI/ESC".
+        /// </summary>
+        public InputAction @ESC => m_Wrapper.m_MenuUI_ESC;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -502,12 +740,21 @@ public partial class @IA_Player: IInputActionCollection2, IDisposable
         {
             if (instance == null || m_Wrapper.m_MenuUIActionsCallbackInterfaces.Contains(instance)) return;
             m_Wrapper.m_MenuUIActionsCallbackInterfaces.Add(instance);
-            @Any.started += instance.OnAny;
-            @Any.performed += instance.OnAny;
-            @Any.canceled += instance.OnAny;
-            @Select.started += instance.OnSelect;
-            @Select.performed += instance.OnSelect;
-            @Select.canceled += instance.OnSelect;
+            @Enter.started += instance.OnEnter;
+            @Enter.performed += instance.OnEnter;
+            @Enter.canceled += instance.OnEnter;
+            @Space.started += instance.OnSpace;
+            @Space.performed += instance.OnSpace;
+            @Space.canceled += instance.OnSpace;
+            @Right.started += instance.OnRight;
+            @Right.performed += instance.OnRight;
+            @Right.canceled += instance.OnRight;
+            @Left.started += instance.OnLeft;
+            @Left.performed += instance.OnLeft;
+            @Left.canceled += instance.OnLeft;
+            @ESC.started += instance.OnESC;
+            @ESC.performed += instance.OnESC;
+            @ESC.canceled += instance.OnESC;
         }
 
         /// <summary>
@@ -519,12 +766,21 @@ public partial class @IA_Player: IInputActionCollection2, IDisposable
         /// <seealso cref="MenuUIActions" />
         private void UnregisterCallbacks(IMenuUIActions instance)
         {
-            @Any.started -= instance.OnAny;
-            @Any.performed -= instance.OnAny;
-            @Any.canceled -= instance.OnAny;
-            @Select.started -= instance.OnSelect;
-            @Select.performed -= instance.OnSelect;
-            @Select.canceled -= instance.OnSelect;
+            @Enter.started -= instance.OnEnter;
+            @Enter.performed -= instance.OnEnter;
+            @Enter.canceled -= instance.OnEnter;
+            @Space.started -= instance.OnSpace;
+            @Space.performed -= instance.OnSpace;
+            @Space.canceled -= instance.OnSpace;
+            @Right.started -= instance.OnRight;
+            @Right.performed -= instance.OnRight;
+            @Right.canceled -= instance.OnRight;
+            @Left.started -= instance.OnLeft;
+            @Left.performed -= instance.OnLeft;
+            @Left.canceled -= instance.OnLeft;
+            @ESC.started -= instance.OnESC;
+            @ESC.performed -= instance.OnESC;
+            @ESC.canceled -= instance.OnESC;
         }
 
         /// <summary>
@@ -594,6 +850,28 @@ public partial class @IA_Player: IInputActionCollection2, IDisposable
         void OnJump(InputAction.CallbackContext context);
     }
     /// <summary>
+    /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "SubPlayer" which allows adding and removing callbacks.
+    /// </summary>
+    /// <seealso cref="SubPlayerActions.AddCallbacks(ISubPlayerActions)" />
+    /// <seealso cref="SubPlayerActions.RemoveCallbacks(ISubPlayerActions)" />
+    public interface ISubPlayerActions
+    {
+        /// <summary>
+        /// Method invoked when associated input action "Move" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnMove(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Jump" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnJump(InputAction.CallbackContext context);
+    }
+    /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Menu UI" which allows adding and removing callbacks.
     /// </summary>
     /// <seealso cref="MenuUIActions.AddCallbacks(IMenuUIActions)" />
@@ -601,18 +879,39 @@ public partial class @IA_Player: IInputActionCollection2, IDisposable
     public interface IMenuUIActions
     {
         /// <summary>
-        /// Method invoked when associated input action "Any" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "Enter" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnAny(InputAction.CallbackContext context);
+        void OnEnter(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "Select" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "Space" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnSelect(InputAction.CallbackContext context);
+        void OnSpace(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Right" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnRight(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Left" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnLeft(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "ESC" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnESC(InputAction.CallbackContext context);
     }
 }
