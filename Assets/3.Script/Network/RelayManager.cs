@@ -12,6 +12,7 @@ using Mirror.Transports.Utp;
 public class RelayManager : MonoBehaviour
 {
     [SerializeField] private TMP_InputField joinInputField;
+    [SerializeField] private TMP_Text hostID;
     private UTPTransport transport;
 
     async void Start()
@@ -28,6 +29,7 @@ public class RelayManager : MonoBehaviour
             Allocation allocation = await RelayService.Instance.CreateAllocationAsync(maxPlayers);
             string code = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
             Debug.Log($"방 생성 성공! 코드: {code}");
+            hostID.text = string.Format("ID : {0}",code);
 
             // [교정된 순서] 반드시 이 순서를 지켜야 합니다.
             // 1. Host, 2. Port, 3. AllocationId, 4. ConnectionData, 5. HostConnectionData, 6. Key, 7. IsSecure
