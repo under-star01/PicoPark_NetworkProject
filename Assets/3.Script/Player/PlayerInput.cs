@@ -12,6 +12,7 @@ public class PlayerInput : NetworkBehaviour
 
     private IA_Player playerInput;
     private PlayerMove playerMove;
+    private Door nearDoor; // 근처 문
 
     private void Awake()
     {
@@ -64,6 +65,27 @@ public class PlayerInput : NetworkBehaviour
         }
     }
 
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        // 문 근처에 도착
+        if (collision.gameObject.TryGetComponent(out Door door))
+        {
+            nearDoor = door;
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        // 문에서 멀어짐
+        if (collision.gameObject.TryGetComponent(out Door door))
+        {
+            if (nearDoor == door)
+            {
+                nearDoor = null;
+            }
+        }
+    }
+
     private void Move(InputAction.CallbackContext context)
     {
         Vector2 input = context.ReadValue<Vector2>();
@@ -73,7 +95,16 @@ public class PlayerInput : NetworkBehaviour
 
     private void JumpStart(InputAction.CallbackContext context)
     {
-        playerMove.JumpStart();
+        // 근처에 열린 문이 있으면 문 입장/퇴장
+        if (nearDoor != null)
+        {
+            nearDoor.TryEnterDoor(playerMove);
+        }
+        else
+        {
+            // 문이 없으면 점프
+            playerMove.JumpStart();
+        }
     }
 
     private void JumpEnd(InputAction.CallbackContext context)

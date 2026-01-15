@@ -35,6 +35,9 @@ public class PlayerMove : NetworkBehaviour
     [Header("넉백")]
     private Coroutine knockbackCoroutine;
 
+    [Header("문 안 상태")]
+    private bool isInsideDoor = false;
+
     private Rigidbody2D rb;
     private Animator animator;
     private SpriteRenderer spriteRenderer;
@@ -62,7 +65,7 @@ public class PlayerMove : NetworkBehaviour
     private void FixedUpdate()
     {
         if (!isLocalPlayer) return;
-        if (knockbackCoroutine == null)
+        if (knockbackCoroutine == null && !isInsideDoor)
         {
             Move();
         }
@@ -85,6 +88,10 @@ public class PlayerMove : NetworkBehaviour
     public void SetMove(Vector2 input)
     {
         if (!isLocalPlayer) return;
+
+        // 문 안에 있으면 입력 무시
+        if (isInsideDoor) return;
+
         moveInput = input;
 
         bool isRun = (Mathf.Abs(moveInput.x) > 0.01f);
@@ -100,6 +107,9 @@ public class PlayerMove : NetworkBehaviour
 
     public void JumpStart()
     {
+        // 문 안에 있으면 점프 무시
+        if (isInsideDoor) return;
+
         if (!isGround) return;
 
         rb.linearVelocityY = jumpForce;
@@ -283,5 +293,10 @@ public class PlayerMove : NetworkBehaviour
         rb.AddForce(force, ForceMode2D.Impulse);
         yield return new WaitForSeconds(0.35f);
         knockbackCoroutine = null;
+    }
+
+    public void SetInsideDoor(bool inside)
+    {
+        isInsideDoor = inside;
     }
 }
