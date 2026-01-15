@@ -3,21 +3,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using Mirror;
 
 public class PlayerInput : MonoBehaviour
 {
-
     [Header("플레이어 조작 방식")]
     [SerializeField] private bool isWASD;
 
-    private NetworkIdentity netId;
     private IA_Player playerInput;
     private PlayerMove playerMove;
 
     private void Awake()
     {
-        netId = GetComponent<NetworkIdentity>();
         playerInput = new IA_Player();
         TryGetComponent(out playerMove);
     }
