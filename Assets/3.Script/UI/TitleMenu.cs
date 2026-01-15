@@ -27,9 +27,21 @@ public class TitleMenu : MonoBehaviour
     public VolumeControl bgmVolume;
     public VolumeControl sfxVolume;
 
+    // 기존 볼륨을 백업해둘 변수
+    private int backupMaster, backupBGM, backupSFX;
+
     // 옵션/종료 패널
     [SerializeField] private GameObject optionPanel;
+    [SerializeField] private Button OKButton;
+    [SerializeField] private Button CancelButton;
+
     [SerializeField] private GameObject exitPanel;
+    [SerializeField] private Button ExitOKButton;
+    [SerializeField] private Button ExitCancelButton;
+
+    [Header("Selection Colors")]
+    [SerializeField] private Color selectedColor = Color.black;
+    [SerializeField] private Color normalColor = Color.white;
 
     [Header("다음 씬")]
     // 전환용 씬 이름
@@ -85,9 +97,18 @@ public class TitleMenu : MonoBehaviour
         SceneManager.LoadScene(nextSceneName);
     }
 
-    void OpenOption() // 옵션 버튼 눌렀으면 옵션 패널 켜
+    public void OpenOption() // 옵션 버튼 눌렀으면 옵션 패널 켜
     {
-        if (optionPanel != null) optionPanel.SetActive(true);
+        if (optionPanel != null)
+        {
+            backupMaster = masterVolume.value;
+            backupBGM = bgmVolume.value;
+            backupSFX = sfxVolume.value;
+
+            Debug.Log($"백업 완료: M:{backupMaster}, B:{backupBGM}, S:{backupSFX}"); // 로그로 확인
+
+            optionPanel.SetActive(true);
+        }
     }
 
     public void OpenExit() // 종료 버튼 눌렀으면 종료 패널 켜
@@ -118,14 +139,14 @@ public class TitleMenu : MonoBehaviour
     {
         vc.value = Mathf.Clamp(vc.value - 1, 0, 10);
         UpdateVolumeDisplay(vc); // 화면에서도 바꿔주고
-        SaveVolume(vc); // 값도 저장해서 다시 켜도 유지되게 해줘
+        //SaveVolume(vc); // 값도 저장해서 다시 켜도 유지되게 해줘
     }
 
     public void VolumeRight(VolumeControl vc) // 오른쪽 버튼(볼륨 증가)
     {
         vc.value = Mathf.Clamp(vc.value + 1, 0, 10);
         UpdateVolumeDisplay(vc); // 화면에 뜨는거 바꾸고!
-        SaveVolume(vc); // 유지시켜!
+        //SaveVolume(vc); // 유지시켜!
     }
 
     public void MasterVolumeLeft()
@@ -184,6 +205,83 @@ public class TitleMenu : MonoBehaviour
         Application.Quit(); // 게임 꺼!
     }
 
+    public void UpdatePanelSelection(int panelIndex)
+    {
+        // 모든 항목을 일단 기본색으로 초기화
+        ResetAllColors();
+        if (optionPanel.activeSelf)
+        {
+            // 선택된 인덱스에 따라 색상 강조
+            switch (panelIndex)
+            {
+                case 0: // Master
+                    SetVolumeControlColor(masterVolume, selectedColor);
+                    masterVolume.display.GetComponent<ButtonHover>().OnFocus();
+                    break;
+                case 1: // BGM
+                    SetVolumeControlColor(bgmVolume, selectedColor);
+                    bgmVolume.display.GetComponent<ButtonHover>().OnFocus();
+                    break;
+                case 2: // SFX
+                    SetVolumeControlColor(sfxVolume, selectedColor);
+                    sfxVolume.display.GetComponent<ButtonHover>().OnFocus();
+                    break;
+                case 3: // OK 버튼 (있다면)
+                    OKButton.GetComponent<ButtonHover>().OnFocus();
+                    break;
+                case 4: // Cancel 버튼 (있다면)
+                    CancelButton.GetComponent<ButtonHover>().OnFocus();
+                    break;
+            }
+        }
+        else if (exitPanel.activeSelf)
+        {
+            switch (panelIndex)
+            {
+                case 0: ExitOKButton.GetComponent<ButtonHover>().OnFocus(); break;
+                case 1: ExitCancelButton.GetComponent<ButtonHover>().OnFocus(); break;
+            }
+        }
 
+    }
+
+    private void SetVolumeControlColor(VolumeControl vc, Color color)
+    {
+        if (vc.leftBtn != null) vc.leftBtn.GetComponent<Image>().color = color;
+        if (vc.rightBtn != null) vc.rightBtn.GetComponent<Image>().color = color;
+        
+    }
+
+    private void ResetAllColors()
+    {
+        SetVolumeControlColor(masterVolume, normalColor);
+        SetVolumeControlColor(bgmVolume, normalColor);
+        SetVolumeControlColor(sfxVolume, normalColor);
+    }
+
+    // [OK 버튼용] 실제로 파일에 저장
+    public void ConfirmOption()
+    {
+        PlayerPrefs.SetInt("MasterVolume", masterVolume.value);
+        PlayerPrefs.SetInt("BGMVolume", bgmVolume.value);
+        PlayerPrefs.SetInt("SFXVolume", sfxVolume.value);
+        PlayerPrefs.Save();
+        CloseOptionPanel();
+    }
+
+    // [Cancel 버튼용] 변경된 값을 무시하고 백업 데이터로 복구
+    public void CancelOption()
+    {
+        masterVolume.value = backupMaster;
+        bgmVolume.value = backupBGM;
+        sfxVolume.value = backupSFX;
+
+        // UI 다시 업데이트
+        UpdateVolumeDisplay(masterVolume);
+        UpdateVolumeDisplay(bgmVolume);
+        UpdateVolumeDisplay(sfxVolume);
+
+        CloseOptionPanel();
+    }
 
 }

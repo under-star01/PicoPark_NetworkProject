@@ -57,6 +57,9 @@ public class UIMANAGER : MonoBehaviour
         playerInput.MenuUI.Left.performed += MoveLeft;
         playerInput.MenuUI.Right.performed += MoveRight;
 
+        playerInput.MenuUI.Up.performed += MoveUp;
+        playerInput.MenuUI.Down.performed += MoveDown;
+
         playerInput.MenuUI.Enter.performed += Select;
         playerInput.MenuUI.Space.performed += Select;
 
@@ -71,6 +74,9 @@ public class UIMANAGER : MonoBehaviour
 
         playerInput.MenuUI.Left.performed -= MoveLeft;
         playerInput.MenuUI.Right.performed -= MoveRight;
+
+        playerInput.MenuUI.Up.performed -= MoveUp;
+        playerInput.MenuUI.Down.performed -= MoveDown;
 
         playerInput.MenuUI.Enter.performed -= Select;
         playerInput.MenuUI.Space.performed -= Select;
@@ -133,18 +139,20 @@ public class UIMANAGER : MonoBehaviour
 
     }
 
-    private void ShowPanelUI()
+    private void ShowPanelUI(int panelIdx)
     {
         state = UIState.Panel;
-
-
+        panelIndex = 0; // 항상 처음 항목부터 시작
+        DisablePanel();
+        Panels[panelIdx].SetActive(true);
+        titleMenu.UpdatePanelSelection(panelIndex); // 시각적 초기화
     }
 
     private void DisablePanel()
     {
         if (Panels != null)
         {
-            foreach(GameObject Panel in Panels)
+            foreach (GameObject Panel in Panels)
             {
                 Panel.SetActive(false);
             }
@@ -178,7 +186,34 @@ public class UIMANAGER : MonoBehaviour
                 currentIndex = titleMenu.currentIndex;
                 break;
             case UIState.Panel:
-
+                if (Panels[0].activeSelf) // 옵션 패널이 켜져 있으면
+                {
+                    if (panelIndex.Equals(0)) // 마스터
+                    {
+                        titleMenu.MasterVolumeLeft();
+                    }
+                    else if (panelIndex.Equals(1)) // BGM
+                    {
+                        titleMenu.BGMVolumeLeft();
+                    }
+                    else if (panelIndex.Equals(2)) // SE
+                    {
+                        titleMenu.SFXVolumeLeft();
+                    }
+                    else // cancel
+                    {
+                        panelIndex = 3;
+                        titleMenu.UpdatePanelSelection(panelIndex);
+                    }
+                }
+                else
+                {
+                    if (panelIndex.Equals(1)) // No
+                    {
+                        panelIndex = 0;
+                        titleMenu.UpdatePanelSelection(panelIndex);
+                    }
+                }
                 break;
         }
 
@@ -197,9 +232,64 @@ public class UIMANAGER : MonoBehaviour
                 currentIndex = titleMenu.currentIndex;
                 break;
             case UIState.Panel:
-
+                if (Panels[0].activeSelf) // 옵션 패널이 켜져 있으면
+                {
+                    if (panelIndex.Equals(0)) // 마스터
+                    {
+                        titleMenu.MasterVolumeRight();
+                    }
+                    else if (panelIndex.Equals(1)) // BGM
+                    {
+                        titleMenu.BGMVolumeRight();
+                    }
+                    else if (panelIndex.Equals(2)) // SE
+                    {
+                        titleMenu.SFXVolumeRight();
+                    }
+                    else// OK
+                    {
+                        panelIndex = 4;
+                        titleMenu.UpdatePanelSelection(panelIndex);
+                    }
+                }
+                else
+                {
+                    if (panelIndex.Equals(0)) // YES
+                    {
+                        panelIndex = 1;
+                        titleMenu.UpdatePanelSelection(panelIndex);
+                    }
+                }
                 break;
         }
+    }
+
+    private void MoveUp(InputAction.CallbackContext context)
+    {
+        if (state != UIState.Panel) return;
+        panelIndex--;
+
+        int maxIndex = Panels[0].activeSelf ? 4 : 1;
+
+        if (panelIndex < 0)
+        {
+            panelIndex = maxIndex;
+        }
+        titleMenu.UpdatePanelSelection(panelIndex);
+    }
+
+    private void MoveDown(InputAction.CallbackContext context)
+    {
+        if (state != UIState.Panel) return;
+        panelIndex++;
+
+        int maxIndex = Panels[0].activeSelf ? 4 : 1;
+
+        if (panelIndex > maxIndex)
+        {
+            panelIndex = 0;
+        }
+        titleMenu.UpdatePanelSelection(panelIndex);
     }
 
     private void Select(InputAction.CallbackContext context)
@@ -229,7 +319,33 @@ public class UIMANAGER : MonoBehaviour
                 SubmitCurrent();
                 break;
             case UIState.Panel:
+                if (Panels[0].activeSelf)
+                {
 
+                    if (panelIndex == 3) // OK 버튼
+                    {
+                        titleMenu.ConfirmOption(); // 여기서 저장 로직 호출
+                        state = UIState.TitleMenu;
+                    }
+                    else if (panelIndex == 4) // Cancel 버튼
+                    {
+                        titleMenu.CancelOption(); // 여기서 복구 로직 호출
+                        state = UIState.TitleMenu;
+                    }
+                }
+                else if (Panels[1].activeSelf)
+                {
+                    // 종료 패널은 보통 버튼이 2개이므로 panelIndex 0: YES, 1: NO 라고 가정합니다.
+                    if (panelIndex == 0) // YES (종료 실행)
+                    {
+                        titleMenu.ConfirmExitYes();
+                    }
+                    else if (panelIndex == 1) // NO (취소 후 돌아가기)
+                    {
+                        titleMenu.CloseExitNo();
+                        state = UIState.TitleMenu; // 상태 복구
+                    }
+                }
                 break;
         }
     }
@@ -244,9 +360,20 @@ public class UIMANAGER : MonoBehaviour
         }
         if (submitButtons[currentIndex] != null)
         {
-            submitButtons[currentIndex].onClick.Invoke();
-            ShowPanelUI();
-
+            if (currentIndex == 1)
+            {
+                titleMenu.OpenOption(); // 여기서 backupMaster = value 로직이 실행됨
+                ShowPanelUI(0); // 인덱스 전달하도록 수정 추천
+            }
+            else if (currentIndex == 2) // 종료
+            {
+                titleMenu.OpenExit();
+                ShowPanelUI(1);
+            }
+            else
+            {
+                submitButtons[currentIndex].onClick.Invoke();
+            }
         }
     }
 

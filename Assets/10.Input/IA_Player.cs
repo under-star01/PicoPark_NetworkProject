@@ -260,6 +260,24 @@ public partial class @IA_Player: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""Up"",
+                    ""type"": ""Button"",
+                    ""id"": ""9a892e38-0e27-4efb-a103-fdfe6182f340"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Down"",
+                    ""type"": ""Button"",
+                    ""id"": ""134089d9-c86d-443e-8040-c07a8c4d9e15"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""Left"",
                     ""type"": ""Button"",
                     ""id"": ""ed12fcf1-2250-4fc1-ba6b-28bc935f1cde"",
@@ -325,6 +343,50 @@ public partial class @IA_Player: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""6fc51e29-fb72-405e-9f78-cc014bc68b7d"",
+                    ""path"": ""<Keyboard>/w"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Up"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ba6d96a6-9354-40dc-bad0-d478bebb2461"",
+                    ""path"": ""<Keyboard>/upArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Up"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0a237f68-dad9-439f-b508-a80f2ac3fc02"",
+                    ""path"": ""<Keyboard>/s"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Down"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b8d152eb-a9b4-449b-a6f2-ce43383c54b5"",
+                    ""path"": ""<Keyboard>/downArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Down"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""96a4ed3c-eb87-40dd-8c00-a949f0bc7352"",
                     ""path"": ""<Keyboard>/escape"",
                     ""interactions"": """",
@@ -380,6 +442,8 @@ public partial class @IA_Player: IInputActionCollection2, IDisposable
         m_MenuUI_Enter = m_MenuUI.FindAction("Enter", throwIfNotFound: true);
         m_MenuUI_Space = m_MenuUI.FindAction("Space", throwIfNotFound: true);
         m_MenuUI_Right = m_MenuUI.FindAction("Right", throwIfNotFound: true);
+        m_MenuUI_Up = m_MenuUI.FindAction("Up", throwIfNotFound: true);
+        m_MenuUI_Down = m_MenuUI.FindAction("Down", throwIfNotFound: true);
         m_MenuUI_Left = m_MenuUI.FindAction("Left", throwIfNotFound: true);
         m_MenuUI_ESC = m_MenuUI.FindAction("ESC", throwIfNotFound: true);
     }
@@ -681,6 +745,8 @@ public partial class @IA_Player: IInputActionCollection2, IDisposable
     private readonly InputAction m_MenuUI_Enter;
     private readonly InputAction m_MenuUI_Space;
     private readonly InputAction m_MenuUI_Right;
+    private readonly InputAction m_MenuUI_Up;
+    private readonly InputAction m_MenuUI_Down;
     private readonly InputAction m_MenuUI_Left;
     private readonly InputAction m_MenuUI_ESC;
     /// <summary>
@@ -706,6 +772,14 @@ public partial class @IA_Player: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "MenuUI/Right".
         /// </summary>
         public InputAction @Right => m_Wrapper.m_MenuUI_Right;
+        /// <summary>
+        /// Provides access to the underlying input action "MenuUI/Up".
+        /// </summary>
+        public InputAction @Up => m_Wrapper.m_MenuUI_Up;
+        /// <summary>
+        /// Provides access to the underlying input action "MenuUI/Down".
+        /// </summary>
+        public InputAction @Down => m_Wrapper.m_MenuUI_Down;
         /// <summary>
         /// Provides access to the underlying input action "MenuUI/Left".
         /// </summary>
@@ -749,6 +823,12 @@ public partial class @IA_Player: IInputActionCollection2, IDisposable
             @Right.started += instance.OnRight;
             @Right.performed += instance.OnRight;
             @Right.canceled += instance.OnRight;
+            @Up.started += instance.OnUp;
+            @Up.performed += instance.OnUp;
+            @Up.canceled += instance.OnUp;
+            @Down.started += instance.OnDown;
+            @Down.performed += instance.OnDown;
+            @Down.canceled += instance.OnDown;
             @Left.started += instance.OnLeft;
             @Left.performed += instance.OnLeft;
             @Left.canceled += instance.OnLeft;
@@ -775,6 +855,12 @@ public partial class @IA_Player: IInputActionCollection2, IDisposable
             @Right.started -= instance.OnRight;
             @Right.performed -= instance.OnRight;
             @Right.canceled -= instance.OnRight;
+            @Up.started -= instance.OnUp;
+            @Up.performed -= instance.OnUp;
+            @Up.canceled -= instance.OnUp;
+            @Down.started -= instance.OnDown;
+            @Down.performed -= instance.OnDown;
+            @Down.canceled -= instance.OnDown;
             @Left.started -= instance.OnLeft;
             @Left.performed -= instance.OnLeft;
             @Left.canceled -= instance.OnLeft;
@@ -899,6 +985,20 @@ public partial class @IA_Player: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnRight(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Up" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnUp(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Down" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnDown(InputAction.CallbackContext context);
         /// <summary>
         /// Method invoked when associated input action "Left" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
