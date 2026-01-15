@@ -2,12 +2,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Mirror;
 
-public class FlatForm : MonoBehaviour
+public class FlatForm : NetworkBehaviour
 {
     [Header("조건")]
     [SerializeField] private int targetMoveCnt = 2;
-    [SerializeField] private int currentStacked = 0;
+    [SerializeField] private int moveLeftCnt;
 
     [Header("이동")]
     [SerializeField] private float moveSpeed = 2f;
@@ -30,6 +31,8 @@ public class FlatForm : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (!isServer) return;
+
         if (!isLocked)
         {
             isActive = GetTotalCeilCnt() >= targetMoveCnt;
@@ -40,15 +43,17 @@ public class FlatForm : MonoBehaviour
 
     private int GetTotalCeilCnt()
     {
-        currentStacked = 0; 
+        int total = 0; 
 
         foreach (PlayerMove player in riders)
         {
             if (player == null) continue;
-            currentStacked += player.stackCnt;
+            total += player.stackCnt;
         }
 
-        return currentStacked;
+        moveLeftCnt = targetMoveCnt - total;
+
+        return total;
     }
 
     private void MovePlatform()
@@ -81,11 +86,15 @@ public class FlatForm : MonoBehaviour
 
     public void AddRider(PlayerMove p)
     {
+        if (!isServer) return;
+
         riders.Add(p);
     }
 
     public void RemoveRider(PlayerMove p)
     {
+        if (!isServer) return;
+
         riders.Remove(p);
     }
 }

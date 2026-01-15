@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 359252821449748799}
   - component: {fileID: 6345019482505241538}
   - component: {fileID: 4026308688082644733}
-  - component: {fileID: -8533921474722747188}
+  - component: {fileID: 7634458753017272158}
   m_Layer: 6
   m_Name: 'Player '
   m_TagString: Player
@@ -275,7 +275,7 @@ MonoBehaviour:
   serverOnly: 0
   visibility: 0
   hasSpawned: 0
---- !u!114 &-8533921474722747188
+--- !u!114 &7634458753017272158
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
