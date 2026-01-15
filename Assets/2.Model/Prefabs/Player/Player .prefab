@@ -508,8 +508,8 @@ GameObject:
   - component: {fileID: 5763391757440021593}
   - component: {fileID: 2809810322752548777}
   m_Layer: 0
-  m_Name: Trigger
-  m_TagString: Trigger
+  m_Name: Interact
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

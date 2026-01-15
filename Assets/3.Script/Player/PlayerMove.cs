@@ -12,6 +12,7 @@ public class PlayerMove : MonoBehaviour
     [SerializeField] private float jumpForce = 50f;
 
     [Header("착지 관련 변수")]
+    public GroundCheck groundCheck;
     [SerializeField] private bool isGround = false;
     [SerializeField] private LayerMask blockLayer;
 
@@ -20,8 +21,12 @@ public class PlayerMove : MonoBehaviour
     public MovingWall wallScript;
     public PlayerMove frontPlayer;
     public PlayerMove backPlayer;
-    private PlayerMove tempPlayer;
+    private PlayerMove detectPlayer;
     private bool prevIsPushing;
+
+    [Header("플랫폼 관련 변수")]
+    public CeilCheck ceilCheck;
+    public int stackCnt => ceilCheck.ceilingCnt;
 
     [Header("리턴 위치")]
     [SerializeField] private Transform returnPos;
@@ -29,10 +34,10 @@ public class PlayerMove : MonoBehaviour
     [Header("넉백")]
     private Coroutine knockbackCoroutine;
 
+
     private Rigidbody2D rb;
     private Animator animator;
     private SpriteRenderer spriteRenderer;
-    private GroundCheck groundCheck;
     private Vector2 moveInput;
 
     private void Awake()
@@ -42,6 +47,7 @@ public class PlayerMove : MonoBehaviour
         TryGetComponent(out spriteRenderer);
 
         groundCheck = GetComponentInChildren<GroundCheck>();
+        ceilCheck = GetComponentInChildren<CeilCheck>();
 
         IgnoreSelfCollision();
     }
@@ -124,7 +130,7 @@ public class PlayerMove : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            tempPlayer = collision.gameObject.GetComponentInParent<PlayerMove>();
+            detectPlayer = collision.gameObject.GetComponentInParent<PlayerMove>();
         }
     }
 
@@ -134,21 +140,21 @@ public class PlayerMove : MonoBehaviour
         if (!isPushing) return;
 
         // 플레이어와 충돌할 경우, 미는 인원 추가
-        if (collision.gameObject.CompareTag("Player") && tempPlayer != null)
+        if (collision.gameObject.CompareTag("Player") && detectPlayer != null)
         {
-            // 내가 밀고 있는 방향에 상대가 있는지
-            float dir = Mathf.Sign(moveInput.x);
-            float delta = tempPlayer.transform.position.x - transform.position.x;
+            // 밀격 인원 확인 -> 내가 밀고 있는 방향에 상대가 있는지
+            float dir = Mathf.Sign(moveInput.x); // 부호만 확인
+            float detectDir = Mathf.Sign(detectPlayer.transform.position.x - transform.position.x);
 
-            if (Mathf.Sign(delta) == dir)
+            if (detectDir == dir)
             {
-                frontPlayer = tempPlayer;
-                tempPlayer.backPlayer = this;
+                frontPlayer = detectPlayer;
+                detectPlayer.backPlayer = this;
 
                 // 앞사람이 이미 벽과 연결돼 있다면 공유
-                if (tempPlayer.wallScript != null)
+                if (detectPlayer.wallScript != null)
                 {
-                    wallScript = tempPlayer.wallScript;
+                    wallScript = detectPlayer.wallScript;
                     wallScript.AddPusher(this);
                 }
             }
@@ -187,7 +193,7 @@ public class PlayerMove : MonoBehaviour
         if (Mathf.Abs(moveInput.x) < 0.01f)
         {
             // input이 없을 경우, 밀기 상태 해제
-            EndPushIfNeeded();
+            EndPush();
             return;
         }
 
@@ -207,13 +213,13 @@ public class PlayerMove : MonoBehaviour
         if (prevIsPushing && !isPushing)
         {
             // isPushiong 변경시, 밀기 상태 해제
-            EndPushIfNeeded();
+            EndPush();
         }
 
         animator.SetBool("IsPush", isPushing);
     }
 
-    private void EndPushIfNeeded()
+    private void EndPush()
     {
         // 벽과 연결되어 있으면 해제
         if (wallScript != null)

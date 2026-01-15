@@ -31,10 +31,23 @@ public class FlatForm : MonoBehaviour
     {
         if (!isLocked)
         {
-            isActive = riders.Count >= targetMoveCnt;
+            isActive = GetTotalCeilCnt() >= targetMoveCnt;
         }
 
         MovePlatform();
+    }
+
+    private int GetTotalCeilCnt()
+    {
+        int total = 0; 
+
+        foreach (PlayerMove player in riders)
+        {
+            if (player == null) continue;
+            total += player.stackCnt;
+        }
+
+        return total;
     }
 
     private void MovePlatform()

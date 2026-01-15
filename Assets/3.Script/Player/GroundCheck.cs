@@ -52,7 +52,7 @@ public class GroundCheck : MonoBehaviour
         {
             if (col == null) continue;
 
-            if (col.CompareTag("Trigger"))
+            if (col.CompareTag("Player"))
             {
                 if (col.gameObject != transform.root.gameObject)
                 {
