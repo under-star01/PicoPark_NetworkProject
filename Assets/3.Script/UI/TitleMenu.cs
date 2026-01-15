@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem;
 
 
@@ -10,9 +12,37 @@ public class TitleMenu : MonoBehaviour
     public int currentIndex = 0;
     [SerializeField] GameObject[] menu;
 
+    [System.Serializable]
+    public class VolumeControl
+    {
+        public string name;          // 볼륨항목 라벨링
+        public int value;               // 0~10
+        public Button leftBtn;
+        public Button rightBtn;
+        public Image display;             // 0~10 값에 따른 스프라이트
+        public Sprite[] valueSprites;     // NUM_0 ~ NUM_10
+    }
+
+    public VolumeControl masterVolume;
+    public VolumeControl bgmVolume;
+    public VolumeControl sfxVolume;
+
+    // 옵션/종료 패널
+    [SerializeField] private GameObject optionPanel;
+    [SerializeField] private GameObject exitPanel;
+
+    // 전환용 씬 이름
+    [SerializeField] private string nextSceneName = "NextScene";
+
     void Start()
     {
         menu[currentIndex].SetActive(true);
+
+        // 초기 값 로드
+        LoadVolumes();
+        UpdateVolumeDisplay(masterVolume);
+        UpdateVolumeDisplay(bgmVolume);
+        UpdateVolumeDisplay(sfxVolume);
     }
 
     public void MoveRight()
@@ -36,4 +66,123 @@ public class TitleMenu : MonoBehaviour
         }
         menu[currentIndex].SetActive(true);
     }
+
+    // 각 항목 선택했을 때 작동할 메서드 연결
+    public void Select()
+    {
+        switch (currentIndex)
+        {
+            case 0: Online(); break;
+            case 1: OpenOption(); break;
+            case 2: OpenExit(); break;
+        }
+    }
+
+    //위에서 연결될 메서드들
+    void Online() // 온라인 버튼 눌렀으면 씬넘겨
+    {
+        SceneManager.LoadScene(nextSceneName);
+    }
+
+    void OpenOption() // 옵션 버튼 눌렀으면 옵션 패널 켜
+    {
+        if (optionPanel != null) optionPanel.SetActive(true);
+    }
+
+    void OpenExit() // 종료 버튼 눌렀으면 종료 패널 켜
+    {
+        if (exitPanel != null) exitPanel.SetActive(true);
+    }
+
+    // 볼륨 컨트롤 로직
+    void LoadVolumes() // 볼륨의 기본 값은 5로 주고, 0부터 10까지 조절 가능함.
+    {
+        masterVolume.value = Mathf.Clamp(PlayerPrefs.GetInt("MasterVolume", 5), 0, 10);
+        bgmVolume.value = Mathf.Clamp(PlayerPrefs.GetInt("BGMVolume", 5), 0, 10);
+        sfxVolume.value = Mathf.Clamp(PlayerPrefs.GetInt("SFXVolume", 5), 0, 10);
+    }
+
+    // 
+    void UpdateVolumeDisplay(VolumeControl vc)
+    {
+        int idx = Mathf.Clamp(vc.value, 0, 10); // 볼륨의 범위
+        if (vc.valueSprites.Length > idx)
+        {
+            vc.display.sprite = vc.valueSprites[idx]; // 볼륨에 맞춰 스프라이트 출력해!
+        }
+    }
+
+    // 0~10 증가/감소
+    public void VolumeLeft(VolumeControl vc) // 왼쪽 버튼(볼륨 감소)
+    {
+        vc.value = Mathf.Clamp(vc.value - 1, 0, 10);
+        UpdateVolumeDisplay(vc); // 화면에서도 바꿔주고
+        SaveVolume(vc); // 값도 저장해서 다시 켜도 유지되게 해줘
+    }
+
+    public void VolumeRight(VolumeControl vc) // 오른쪽 버튼(볼륨 증가)
+    {
+        vc.value = Mathf.Clamp(vc.value + 1, 0, 10);
+        UpdateVolumeDisplay(vc); // 화면에 뜨는거 바꾸고!
+        SaveVolume(vc); // 유지시켜!
+    }
+
+    public void MasterVolumeLeft()
+    {
+        VolumeLeft(masterVolume);
+    }
+    public void MasterVolumeRight()
+    {
+        VolumeRight(masterVolume);
+    }
+    public void BGMVolumeLeft()
+    {
+        VolumeLeft(bgmVolume);
+    }
+    public void BGMVolumeRight()
+    {
+        VolumeRight(bgmVolume);
+    }
+    public void SFXVolumeLeft()
+    {
+        VolumeLeft(sfxVolume);
+    }
+    public void SFXVolumeRight()
+    {
+        VolumeRight(sfxVolume);
+    }
+
+    void SaveVolume(VolumeControl vc)
+    {
+        if (vc == masterVolume) //마스터 볼륨 저장
+        {
+            PlayerPrefs.SetInt("MasterVolume", vc.value);
+        }
+        else if (vc == bgmVolume) // BGM 볼륨 저장
+        {
+            PlayerPrefs.SetInt("BGMVolume", vc.value);
+        }
+        else if (vc == sfxVolume) // sfx 볼륨 저장
+        {
+            PlayerPrefs.SetInt("SFXVolume", vc.value);
+        }
+        PlayerPrefs.Save();
+    }
+
+    // 닫기/확인 버튼
+    public void CloseOptionPanel()
+    {
+            optionPanel.SetActive(false); // 옵션창 꺼!
+    }
+    public void CloseExitNo()
+    {
+            exitPanel.SetActive(false); // 종료창 꺼!
+    }
+    public void ConfirmExitYes()
+    {
+        Application.Quit(); // 게임 꺼!
+    }
+
+
+
 }
