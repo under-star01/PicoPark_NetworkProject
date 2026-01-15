@@ -125,6 +125,7 @@ public class PlayerMove : NetworkBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+
         if (collision.gameObject.CompareTag("DeadLine"))
         {
             if (returnPos != null)
@@ -132,10 +133,12 @@ public class PlayerMove : NetworkBehaviour
                 transform.position = returnPos.position;
             }
         }
+
+        if (!isLocalPlayer) return;
+
         if (collision.gameObject.CompareTag("FlatForm") && collision.contacts[0].normal.y > 0.7f)
         {
-            FlatForm platform = collision.gameObject.GetComponent<FlatForm>();
-            platform.AddRider(this);
+            CmdAddRider(collision.gameObject);
         }
     }
 
@@ -190,11 +193,33 @@ public class PlayerMove : NetworkBehaviour
                 wallScript = null;
             }
         }
-        if (collision.gameObject.CompareTag("FlatForm"))
+
+        if (!isLocalPlayer) return;
+
+        if (collision.CompareTag("FlatForm"))
         {
-            FlatForm platform = collision.gameObject.GetComponent<FlatForm>();
-            platform.RemoveRider(this);
+            CmdRemoveRider(collision.gameObject);
         }
+    }
+
+    // FlatForm에 인원수 추가 Command
+    [Command]
+    private void CmdAddRider(GameObject platformObj)
+    {
+        FlatForm platform = platformObj.GetComponent<FlatForm>();
+        if (platform == null) return;
+
+        platform.AddRider(this);
+    }
+
+    // FlatForm에 인원수 감소 Command
+    [Command]
+    private void CmdRemoveRider(GameObject platformObj)
+    {
+        FlatForm platform = platformObj.GetComponent<FlatForm>();
+        if (platform == null) return;
+
+        platform.RemoveRider(this);
     }
 
     //밀기 체크

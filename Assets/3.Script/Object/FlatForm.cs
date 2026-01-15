@@ -7,6 +7,7 @@ public class FlatForm : MonoBehaviour
 {
     [Header("조건")]
     [SerializeField] private int targetMoveCnt = 2;
+    [SerializeField] private int currentStacked = 0;
 
     [Header("이동")]
     [SerializeField] private float moveSpeed = 2f;
@@ -39,15 +40,15 @@ public class FlatForm : MonoBehaviour
 
     private int GetTotalCeilCnt()
     {
-        int total = 0; 
+        currentStacked = 0; 
 
         foreach (PlayerMove player in riders)
         {
             if (player == null) continue;
-            total += player.stackCnt;
+            currentStacked += player.stackCnt;
         }
 
-        return total;
+        return currentStacked;
     }
 
     private void MovePlatform()
