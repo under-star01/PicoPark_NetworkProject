@@ -10,9 +10,11 @@ public class UIMANAGER : MonoBehaviour
     {
         PressEnter,     // 첫 화면(Enter만 허용)
         Login,          // 로그인 화면(Enter/Space 둘 다 허용, 로그인 실행)
-        TitleMenu       // 타이틀 메뉴(Enter/Space 둘 다 허용, 선택 실행)
+        TitleMenu,       // 타이틀 메뉴(Enter/Space 둘 다 허용, 선택 실행)
+        Panel,           // 패널 선택(Enter/Space 둘 다 허용, 선택 실행)
     }
 
+    [SerializeField]
     private UIState state = UIState.PressEnter; // 시작 상태 초기화
 
     [Header("UI References")]
@@ -27,11 +29,16 @@ public class UIMANAGER : MonoBehaviour
     [SerializeField] private TitleMenu titleMenu;
     [SerializeField] private Button[] submitButtons; // 타이틀UI에서 실행 버튼
 
+
+    [Header("Panel")]
+    [SerializeField] private GameObject[] Panels;
+
+
     [Header("Auth")]
     [SerializeField] private AuthService authService;
 
     private int currentIndex = 0; // 인덱스 번호(UI순서) 초기화
-
+    private int panelIndex = 0;   // 옵션 - 사운드 패널 수직 인덱스 번호 (0: Master, 1: BGM, 2: SE, 3: OK/Cancel 등)
     private void Awake()
     {
         playerInput = new IA_Player(); // 뉴인풋받기
@@ -123,7 +130,27 @@ public class UIMANAGER : MonoBehaviour
         {
             titleMenuUI.SetActive(true);
         }
+
     }
+
+    private void ShowPanelUI()
+    {
+        state = UIState.Panel;
+
+
+    }
+
+    private void DisablePanel()
+    {
+        if (Panels != null)
+        {
+            foreach(GameObject Panel in Panels)
+            {
+                Panel.SetActive(false);
+            }
+        }
+    }
+
     private void HandleLoginResult(bool success)
     {
         if (success)
@@ -142,24 +169,36 @@ public class UIMANAGER : MonoBehaviour
 
     private void MoveLeft(InputAction.CallbackContext context)
     {
-        if (state != UIState.TitleMenu) return;
+        if (!(state == UIState.TitleMenu || state == UIState.Panel)) return;
 
-        if (titleMenu != null)
+        switch (state)
         {
-            titleMenu.MoveLeft();
-            currentIndex = titleMenu.currentIndex;
+            case UIState.TitleMenu:
+                titleMenu.MoveLeft();
+                currentIndex = titleMenu.currentIndex;
+                break;
+            case UIState.Panel:
+
+                break;
         }
+
+
     }
 
 
     private void MoveRight(InputAction.CallbackContext context)
     {
-        if (state != UIState.TitleMenu) return;
+        if (!(state == UIState.TitleMenu || state == UIState.Panel)) return;
 
-        if (titleMenu != null)
+        switch (state)
         {
-            titleMenu.MoveRight();
-            currentIndex = titleMenu.currentIndex;
+            case UIState.TitleMenu:
+                titleMenu.MoveRight();
+                currentIndex = titleMenu.currentIndex;
+                break;
+            case UIState.Panel:
+
+                break;
         }
     }
 
@@ -189,6 +228,9 @@ public class UIMANAGER : MonoBehaviour
 
                 SubmitCurrent();
                 break;
+            case UIState.Panel:
+
+                break;
         }
     }
 
@@ -203,11 +245,36 @@ public class UIMANAGER : MonoBehaviour
         if (submitButtons[currentIndex] != null)
         {
             submitButtons[currentIndex].onClick.Invoke();
+            ShowPanelUI();
+
         }
     }
 
     private void ESC(InputAction.CallbackContext context)
     {
         //TitleMenu에서 뒤로가기 등 기능 추가
+        switch (state)
+        {
+            case UIState.PressEnter:
+                // ★ PressEnter 화면에선 **Enter만** 허용
+                if (context.action == playerInput.MenuUI.ESC)
+                {
+                    titleMenu.OpenExit();
+                }
+                break;
+
+            case UIState.Login:
+                SetPressEnterState();   // 되돌아가기
+                break;
+
+            case UIState.TitleMenu:
+                ShowLoginUI();   // 되돌아가기
+                break;
+            case UIState.Panel:
+                DisablePanel();
+                state = UIState.TitleMenu; // 되돌아가기
+                break;
+        }
+
     }
 }

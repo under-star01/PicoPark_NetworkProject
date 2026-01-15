@@ -31,6 +31,7 @@ public class TitleMenu : MonoBehaviour
     [SerializeField] private GameObject optionPanel;
     [SerializeField] private GameObject exitPanel;
 
+    [Header("다음 씬")]
     // 전환용 씬 이름
     [SerializeField] private string nextSceneName = "NextScene";
 
@@ -89,7 +90,7 @@ public class TitleMenu : MonoBehaviour
         if (optionPanel != null) optionPanel.SetActive(true);
     }
 
-    void OpenExit() // 종료 버튼 눌렀으면 종료 패널 켜
+    public void OpenExit() // 종료 버튼 눌렀으면 종료 패널 켜
     {
         if (exitPanel != null) exitPanel.SetActive(true);
     }
