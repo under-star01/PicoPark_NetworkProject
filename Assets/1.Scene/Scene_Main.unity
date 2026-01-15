@@ -1180,7 +1180,7 @@ GameObject:
   - component: {fileID: 680110218}
   m_Layer: 9
   m_Name: Flatform
-  m_TagString: Untagged
+  m_TagString: FlatForm
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2661,6 +2661,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 28da7c65e31c7e845a97b6ea60cc256c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GroundCheck
+  UnderPlayerRb: {fileID: 0}
 --- !u!50 &268018150188187302
 Rigidbody2D:
   serializedVersion: 5
@@ -3022,6 +3023,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 28da7c65e31c7e845a97b6ea60cc256c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GroundCheck
+  UnderPlayerRb: {fileID: 0}
 --- !u!95 &1392549265596841268
 Animator:
   serializedVersion: 7
@@ -3279,6 +3281,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 28da7c65e31c7e845a97b6ea60cc256c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GroundCheck
+  UnderPlayerRb: {fileID: 0}
 --- !u!1 &2199498624634473961
 GameObject:
   m_ObjectHideFlags: 0
@@ -3763,6 +3766,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 28da7c65e31c7e845a97b6ea60cc256c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GroundCheck
+  UnderPlayerRb: {fileID: 0}
 --- !u!95 &3904246771129549568
 Animator:
   serializedVersion: 7
@@ -3797,6 +3801,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 28da7c65e31c7e845a97b6ea60cc256c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GroundCheck
+  UnderPlayerRb: {fileID: 0}
 --- !u!1 &3992574043593142935
 GameObject:
   m_ObjectHideFlags: 0
@@ -4305,6 +4310,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 28da7c65e31c7e845a97b6ea60cc256c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GroundCheck
+  UnderPlayerRb: {fileID: 0}
 --- !u!212 &5408563052963485168
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -4600,6 +4606,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 28da7c65e31c7e845a97b6ea60cc256c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GroundCheck
+  UnderPlayerRb: {fileID: 0}
 --- !u!212 &6274743679445002056
 SpriteRenderer:
   m_ObjectHideFlags: 0

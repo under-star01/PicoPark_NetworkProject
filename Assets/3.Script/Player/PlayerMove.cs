@@ -34,7 +34,6 @@ public class PlayerMove : MonoBehaviour
     [Header("³Ë¹é")]
     private Coroutine knockbackCoroutine;
 
-
     private Rigidbody2D rb;
     private Animator animator;
     private SpriteRenderer spriteRenderer;
@@ -120,8 +119,9 @@ public class PlayerMove : MonoBehaviour
                 transform.position = returnPos.position;
             }
         }
-        if (collision.gameObject.TryGetComponent<FlatForm>(out var platform) && collision.contacts[0].normal.y > 0.7f)
+        if (collision.gameObject.CompareTag("FlatForm") && collision.contacts[0].normal.y > 0.7f)
         {
+            FlatForm platform = collision.gameObject.GetComponent<FlatForm>();
             platform.AddRider(this);
         }
     }
@@ -177,8 +177,9 @@ public class PlayerMove : MonoBehaviour
                 wallScript = null;
             }
         }
-        if (collision.TryGetComponent<FlatForm>(out var platform))
+        if (collision.gameObject.CompareTag("FlatForm"))
         {
+            FlatForm platform = collision.gameObject.GetComponent<FlatForm>();
             platform.RemoveRider(this);
         }
     }

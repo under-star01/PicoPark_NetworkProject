@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,7 +7,7 @@ using UnityEngine;
 public class GroundCheck : MonoBehaviour
 {
     public bool IsGround { get; private set; }
-    public Rigidbody2D UnderPlayerRb { get; private set; }
+    public Rigidbody2D UnderPlayerRb;
 
     private HashSet<Collider2D> groundSet = new HashSet<Collider2D>();
 
@@ -24,7 +24,7 @@ public class GroundCheck : MonoBehaviour
     {
         if (other.isTrigger) return;
 
-        // �̹� ���� ������ ������ ����
+        // 이미 겹쳐 있으면 땅으로 인정
         if (!groundSet.Contains(other))
         {
             groundSet.Add(other);
@@ -51,14 +51,16 @@ public class GroundCheck : MonoBehaviour
         foreach (var col in groundSet)
         {
             if (col == null) continue;
+            if (!col.CompareTag("Player")) continue;
+            if (col.transform.root.gameObject == transform.root.gameObject) continue;
 
-            if (col.CompareTag("Player"))
+            float checkBottom = GetComponent<Collider2D>().bounds.min.y; // 콜라이더 가장 아래 좌표값
+            float colTop = col.bounds.max.y; // 부딪힌 ground 오브젝트의 가장 위에 좌표값
+
+            if (colTop <= checkBottom + 0.05f) // 아래에 있을 때만 바닥으로 인정
             {
-                if (col.gameObject != transform.root.gameObject)
-                {
-                    UnderPlayerRb = col.attachedRigidbody;
-                    return; // Player �켱
-                }
+                UnderPlayerRb = col.attachedRigidbody;
+                return;
             }
         }
     }

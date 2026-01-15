@@ -9,6 +9,7 @@ TagManager:
   - MovingWall
   - CanonBall
   - Key
+  - FlatForm
   layers:
   - Default
   - TransparentFX
