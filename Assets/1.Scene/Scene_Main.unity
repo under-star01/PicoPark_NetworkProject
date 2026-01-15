@@ -3363,6 +3363,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c167bba4ba71efe41be0f78f30722f4a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMove
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
   moveSpeed: 4
   jumpForce: 12
   groundCheck: {fileID: 0}
@@ -4090,6 +4093,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c05dfc0df95b714db6c4cb8b281bc3e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerInput
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
   isWASD: 0
 --- !u!50 &4444482329535466052
 Rigidbody2D:
@@ -5316,6 +5322,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c05dfc0df95b714db6c4cb8b281bc3e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerInput
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
   isWASD: 1
 --- !u!1 &8451444359782170839
 GameObject:
@@ -5410,6 +5419,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c167bba4ba71efe41be0f78f30722f4a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMove
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
   moveSpeed: 4
   jumpForce: 12
   groundCheck: {fileID: 0}

@@ -96,7 +96,7 @@ public class PlayerInput : NetworkBehaviour
     private void JumpStart(InputAction.CallbackContext context)
     {
         // 근처에 열린 문이 있으면 문 입장/퇴장
-        if (nearDoor != null)
+        if (nearDoor != null && nearDoor.isOpened)
         {
             nearDoor.TryEnterDoor(playerMove);
         }

@@ -11,8 +11,8 @@ public class Door : MonoBehaviour
     [Header("클리어 설정")]
     [SerializeField] private int totalPlayerCount = 2; // 총 플레이어 수
 
+    public bool isOpened = false;
     private SpriteRenderer spriteRenderer;
-    private bool isOpened = false;
     private HashSet<PlayerMove> enteredPlayers = new HashSet<PlayerMove>(); // 들어간 플레이어들
     private List<PlayerMove> playersInRange = new List<PlayerMove>(); // 문 범위 안 플레이어들
 

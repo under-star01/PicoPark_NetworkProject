@@ -107,9 +107,6 @@ public class PlayerMove : NetworkBehaviour
 
     public void JumpStart()
     {
-        // 문 안에 있으면 점프 무시
-        if (isInsideDoor) return;
-
         if (!isGround) return;
 
         rb.linearVelocityY = jumpForce;
