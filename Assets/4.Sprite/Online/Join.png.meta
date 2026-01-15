@@ -1,10 +1,19 @@
 fileFormatVersion: 2
-guid: a715f2bf63f50ae42b5ac6958621695b
+guid: 0feff6351c9316241ab6be5de5448ee7
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 1009064033684743221
-    second: blank 1_0
+      213: 7497863740091833841
+    second: Join_0
+  - first:
+      213: 3792373183198258432
+    second: Join_1
+  - first:
+      213: 7616432734159704972
+    second: Join_2
+  - first:
+      213: -2242799396603045041
+    second: Join_3
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -46,7 +55,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -139,13 +148,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: blank 1_0
+      name: Join_0
       rect:
         serializedVersion: 2
-        x: 26
-        y: 90
-        width: 762
-        height: 243
+        x: 13
+        y: 10
+        width: 48
+        height: 95
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -154,8 +163,74 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 534e663746ae00e00800000000000000
-      internalID: 1009064033684743221
+      spriteID: 1fd9472a853cd0860800000000000000
+      internalID: 7497863740091833841
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Join_1
+      rect:
+        serializedVersion: 2
+        x: 73
+        y: 10
+        width: 62
+        height: 95
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 005ef38315731a430800000000000000
+      internalID: 3792373183198258432
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Join_2
+      rect:
+        serializedVersion: 2
+        x: 146
+        y: 10
+        width: 22
+        height: 95
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c831f37d73103b960800000000000000
+      internalID: 7616432734159704972
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Join_3
+      rect:
+        serializedVersion: 2
+        x: 179
+        y: 10
+        width: 55
+        height: 95
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f4bd307e4d9ffd0e0800000000000000
+      internalID: -2242799396603045041
       vertices: []
       indices: 
       edges: []
@@ -164,7 +239,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 5e97eb03825dee720800000000000000
     internalID: 0
     vertices: []
     indices: 
@@ -174,7 +249,10 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      blank 1_0: 1009064033684743221
+      Join_0: 7497863740091833841
+      Join_1: 3792373183198258432
+      Join_2: 7616432734159704972
+      Join_3: -2242799396603045041
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

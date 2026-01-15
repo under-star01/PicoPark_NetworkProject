@@ -10,12 +10,13 @@ public class ButtonHover : MonoBehaviour,IPointerEnterHandler, IPointerExitHandl
 
     public void OnPointerEnter(PointerEventData e)
     {
-        //Cursor.SetActive(true);
+        Cursor.SetActive(true);
         Cursor.transform.position = transform.position;
     }
 
     public void OnPointerExit(PointerEventData e)
     {
+        Cursor.SetActive(false);
         
     }
 }
