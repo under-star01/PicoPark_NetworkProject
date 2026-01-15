@@ -150,6 +150,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMove
   moveSpeed: 4
   jumpForce: 12
+  groundCheck: {fileID: 0}
   isGround: 0
   blockLayer:
     serializedVersion: 2
@@ -158,6 +159,7 @@ MonoBehaviour:
   wallScript: {fileID: 0}
   frontPlayer: {fileID: 0}
   backPlayer: {fileID: 0}
+  ceilCheck: {fileID: 0}
   returnPos: {fileID: 0}
 --- !u!50 &6797068560288179526
 Rigidbody2D:
@@ -247,7 +249,7 @@ MonoBehaviour:
   syncDirection: 1
   syncMode: 0
   syncInterval: 0
-  clientAuthority: 0
+  clientAuthority: 1
   animator: {fileID: 843471294947913791}
 --- !u!114 &4026308688082644733
 MonoBehaviour:
@@ -284,7 +286,7 @@ MonoBehaviour:
   target: {fileID: 1077388066812899517}
   syncPosition: 1
   syncRotation: 1
-  syncScale: 0
+  syncScale: 1
   onlySyncOnChange: 1
   compressRotation: 1
   interpolatePosition: 1
@@ -391,6 +393,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 28da7c65e31c7e845a97b6ea60cc256c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GroundCheck
+  UnderPlayerRb: {fileID: 0}
 --- !u!1 &6482103435518413078
 GameObject:
   m_ObjectHideFlags: 0

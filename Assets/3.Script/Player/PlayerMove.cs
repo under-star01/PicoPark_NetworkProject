@@ -2,8 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Mirror;
 
-public class PlayerMove : MonoBehaviour
+public class PlayerMove : NetworkBehaviour
 {
     [Header("이동 관련 변수")]
     [SerializeField] private float moveSpeed = 5f;
@@ -53,12 +54,14 @@ public class PlayerMove : MonoBehaviour
 
     private void Update()
     {
+        if (!isLocalPlayer) return;
         isGround = groundCheck.IsGround;
         animator.SetBool("IsGround", isGround);
     }
 
     private void FixedUpdate()
     {
+        if (!isLocalPlayer) return;
         if (knockbackCoroutine == null)
         {
             Move();
@@ -81,6 +84,7 @@ public class PlayerMove : MonoBehaviour
 
     public void SetMove(Vector2 input)
     {
+        if (!isLocalPlayer) return;
         moveInput = input;
 
         bool isRun = (Mathf.Abs(moveInput.x) > 0.01f);
@@ -88,7 +92,9 @@ public class PlayerMove : MonoBehaviour
 
         if (isRun)
         {
-            spriteRenderer.flipX = moveInput.x < 0;
+            //spriteRenderer.flipX = moveInput.x < 0;
+            float direction = moveInput.x > 0 ? 1f : -1f;
+            transform.localScale = new Vector3(direction, 1f, 1f);
         }
     }
 
