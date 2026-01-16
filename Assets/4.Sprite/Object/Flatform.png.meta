@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: aa4e28c0fcf075542bc6feb6206a096d
+guid: dcd83fae939c1694296b3955f303c828
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 5171866844571943703
-    second: NUM_1_0
+      213: 1886814100365961360
+    second: Flatform_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -139,23 +139,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: NUM_1_0
+      name: Flatform_0
       rect:
         serializedVersion: 2
-        x: 622
-        y: 255
-        width: 579
-        height: 1467
-      alignment: 9
-      pivot: {x: 0.7714517, y: 0.50000006}
+        x: 16
+        y: 1
+        width: 147
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 713c4505e7926c740800000000000000
-      internalID: 5171866844571943703
+      spriteID: 098e2817d6f4f2a10800000000000000
+      internalID: 1886814100365961360
       vertices: []
       indices: 
       edges: []
@@ -164,7 +164,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 5e97eb03825dee720800000000000000
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -174,7 +174,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      NUM_1_0: 5171866844571943703
+      Flatform_0: 1886814100365961360
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
