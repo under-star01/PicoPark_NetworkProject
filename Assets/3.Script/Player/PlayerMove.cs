@@ -167,13 +167,6 @@ public class PlayerMove : NetworkBehaviour
             {
                 frontPlayer = detectPlayer;
                 detectPlayer.backPlayer = this;
-
-                // 앞사람이 이미 벽과 연결돼 있다면 공유
-                if (detectPlayer.wallScript != null)
-                {
-                    wallScript = detectPlayer.wallScript;
-                    wallScript.AddPusher(this);
-                }
             }
         }
 
