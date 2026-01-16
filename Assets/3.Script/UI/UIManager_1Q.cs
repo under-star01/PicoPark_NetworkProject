@@ -32,9 +32,4 @@ public class UIManager_1Q : MonoBehaviour
         hostMenuUI.SetActive(false);
     }
 
-    public void PressJoinBtn()
-    {
-        Debug.Log("참여 버튼 누름");
-        clientMenuUI.SetActive(false);
-    }
 }

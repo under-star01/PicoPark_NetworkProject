@@ -27,6 +27,6 @@ public class ButtonHover : MonoBehaviour,IPointerEnterHandler, IPointerExitHandl
 
     public void OutFocus()
     {
-        Cursor.SetActive(false);
+        if (Cursor != null) Cursor.SetActive(false);
     }
 }

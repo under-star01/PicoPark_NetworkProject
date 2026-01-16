@@ -33,7 +33,9 @@ public class HostMenuController : MonoBehaviour
     private const int MIN_PLAYERS = 2;
     private const int MAX_PLAYERS = 6;
 
-    [SerializeField] private GameObject[] HostMenuButtons; 
+    [SerializeField] private GameObject[] HostMenuButtons;
+ 
+
 
     // MAX PLAYER수 증감 및 적용
     public void OnMaxPlayerLeft()
@@ -108,12 +110,6 @@ public class HostMenuController : MonoBehaviour
         colorImage.sprite = playerColors[colorIndex];
     }
 
-    // 방 생성하면 다음 씬(로비)으로 넘어가기
-    public void OnCreate()
-    {
-        // 다음 씬으로 이동
-        SceneManager.LoadScene("NextSceneName");
-    }
 
     // CANCEL 눌렀으면 그냥 꺼주기
     public void OnCancel()
@@ -122,7 +118,7 @@ public class HostMenuController : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    public void UpdatePanelSelection(int panelIndex)
+    public void UpdateHostPanelSelection(int panelIndex)
     {
         for(int i = 0; i < HostMenuButtons.Length; i++)
         {
@@ -130,5 +126,4 @@ public class HostMenuController : MonoBehaviour
         }
         HostMenuButtons[panelIndex].GetComponent<ButtonHover>().OnFocus();
     }
-
 }

@@ -17,6 +17,8 @@ public class OnlineMenu_UIManager : MonoBehaviour
     [SerializeField]
     private UIState state = UIState.Entry; // 시작 상태 초기화
 
+    [Header("Entry")]
+    [SerializeField] private GameObject Entry;
 
     [Header("Panel")] // Host, Join
     [SerializeField] private GameObject[] OnlineMenuButtons;
@@ -24,6 +26,13 @@ public class OnlineMenu_UIManager : MonoBehaviour
     [Header("LobbyEntryPanel")] // HostMenu, JoinMenu
     [SerializeField] private GameObject[] LobbyEntryPanels;
     [SerializeField] private HostMenuController hostMenuController;
+    [SerializeField] private JoinMenuController joinMenuController;
+
+    [SerializeField] private Button CreateRoomButton;
+    [SerializeField] private Button CancelButton;
+
+    [SerializeField] private Button JoinRoomButton;
+    [SerializeField] private Button JoinCancelButton;
 
     [Header("SelectPanel")] //Start Game, Return, Finish Game
     [SerializeField] private GameObject[] TitlePanels;
@@ -105,7 +114,14 @@ public class OnlineMenu_UIManager : MonoBehaviour
         panelIndex = 0; // 항상 처음 항목부터 시작
         //DisablePanel();
         LobbyEntryPanels[panelIdx].SetActive(true);
-        hostMenuController.UpdatePanelSelection(panelIndex);
+        if (panelIdx.Equals(0))
+        {
+            hostMenuController.UpdateHostPanelSelection(panelIndex);
+        }
+        else
+        {
+            joinMenuController.UpdateJoinPanelSelection(panelIndex);
+        }
         state = UIState.LobbyEntry;
     }
 
@@ -158,10 +174,18 @@ public class OnlineMenu_UIManager : MonoBehaviour
                 }
                 else
                 {
-                    if (panelIndex.Equals(1) || panelIndex.Equals(2)) //
+                    if (panelIndex.Equals(1)) // Hat
                     {
-                        panelIndex = 0;
-                        // 입력 포커스
+                        joinMenuController.OnHatLeft();
+                    }
+                    else if (panelIndex.Equals(2)) // Color
+                    {
+                        joinMenuController.OnColorLeft();
+                    }
+                    else if (panelIndex.Equals(4))
+                    {
+                        panelIndex = 3;
+                        joinMenuController.UpdateJoinPanelSelection(panelIndex);
                     }
                 }
                 break;
@@ -210,10 +234,17 @@ public class OnlineMenu_UIManager : MonoBehaviour
                 }
                 else
                 {
-                    if (panelIndex.Equals(1) || panelIndex.Equals(2)) //
+                    if (panelIndex.Equals(1)) // Hat
                     {
-                        panelIndex = 0;
-                        // 입력 포커스
+                        joinMenuController.OnHatRight();
+                    }
+                    else if (panelIndex.Equals(2)) // Color
+                    {
+                        joinMenuController.OnColorRight();
+                    }else if (panelIndex.Equals(3))
+                    {
+                        panelIndex = 4;
+                        joinMenuController.UpdateJoinPanelSelection(panelIndex);
                     }
                 }
                 break;
@@ -238,8 +269,16 @@ public class OnlineMenu_UIManager : MonoBehaviour
                     {
                         panelIndex = 5;
                     }
-                    hostMenuController.UpdatePanelSelection(panelIndex);
+                    hostMenuController.UpdateHostPanelSelection(panelIndex);
 
+                }
+                else
+                {
+                    if (panelIndex < 0)
+                    {
+                        panelIndex = 4;
+                    }
+                    joinMenuController.UpdateJoinPanelSelection(panelIndex);
                 }
                 break;
             case UIState.StageSelect:
@@ -251,7 +290,9 @@ public class OnlineMenu_UIManager : MonoBehaviour
     private void MoveDown(InputAction.CallbackContext context)
     {
         if (state != UIState.LobbyEntry && state != UIState.StageSelect) return;
+
         panelIndex++;
+
         switch (state)
         {
             case UIState.LobbyEntry:
@@ -261,8 +302,15 @@ public class OnlineMenu_UIManager : MonoBehaviour
                     {
                         panelIndex = 0;
                     }
-                    hostMenuController.UpdatePanelSelection(panelIndex);
+                    hostMenuController.UpdateHostPanelSelection(panelIndex);
 
+                }else
+                {
+                    if (panelIndex > 4)
+                    {
+                        panelIndex = 0;
+                    }
+                    joinMenuController.UpdateJoinPanelSelection(panelIndex);
                 }
                 break;
             case UIState.StageSelect:
@@ -281,7 +329,34 @@ public class OnlineMenu_UIManager : MonoBehaviour
                 break;
 
             case UIState.LobbyEntry:
-                // 로그인 화면: Enter/Space 둘 다 로그인 실행
+                if (LobbyEntryPanels[0].activeSelf)
+                {
+                    if (panelIndex.Equals(4))
+                    {
+                        CreateRoomButton.onClick.Invoke();
+                    }
+                    else if (panelIndex.Equals(5))
+                    {
+                        CancelButton.onClick.Invoke();
+                        SetEntryState();
+                    }
+                }
+                else
+                {
+                    if (panelIndex.Equals(0))
+                    {
+                        joinMenuController.FocusInputField();
+                    }
+                    else if (panelIndex.Equals(3))
+                    {
+                        JoinRoomButton.onClick.Invoke();
+                    }
+                    else if (panelIndex.Equals(4))
+                    {
+                        JoinCancelButton.onClick.Invoke();
+                    }
+                }
+
 
                 break;
 
@@ -305,4 +380,12 @@ public class OnlineMenu_UIManager : MonoBehaviour
         }
 
     }
+    public void changeState()
+    {
+        SetEntryState();
+        if (!Entry.activeSelf)
+        {
+            Entry.SetActive(true);
+        }
+    }  
 }
