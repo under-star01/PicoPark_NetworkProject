@@ -4,7 +4,6 @@ using Mirror;
 using UnityEngine;
 using Unity.Collections;
 using Unity.Networking.Transport;
-
 using Unity.Networking.Transport.Relay;
 
 namespace Mirror.Transports.Utp
