@@ -171,6 +171,11 @@ public class OnlineMenu_UIManager : MonoBehaviour
                     {
                         hostMenuController.OnColorLeft();
                     }
+                    else if (panelIndex.Equals(5))
+                    {
+                        panelIndex = 4;
+                        hostMenuController.UpdateHostPanelSelection(panelIndex);
+                    }
                 }
                 else
                 {
@@ -230,6 +235,9 @@ public class OnlineMenu_UIManager : MonoBehaviour
                     else if (panelIndex.Equals(3)) // Color
                     {
                         hostMenuController.OnColorRight();
+                    }else if (panelIndex.Equals(4)){
+                        panelIndex = 5;
+                        hostMenuController.UpdateHostPanelSelection(panelIndex);
                     }
                 }
                 else
