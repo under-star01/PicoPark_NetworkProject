@@ -7450,6 +7450,7 @@ MonoBehaviour:
   joinInputField: {fileID: 5361282844429996899}
   Log: {fileID: 3878679858046463536}
   hostID: {fileID: 910664873828605178}
+  Join_Menu: {fileID: 918914661225493478}
 --- !u!1 &4759314659404777940
 GameObject:
   m_ObjectHideFlags: 0
@@ -11341,10 +11342,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Button
       objectReference: {fileID: 0}
-    - target: {fileID: 3199558480822217594, guid: edbd204b6cd402b4abf0e15a2ef7b71b, type: 3}
-      propertyPath: m_SortingOrder
-      value: -1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -12019,67 +12016,6 @@ RectTransform:
   m_AnchoredPosition: {x: -405, y: -42}
   m_SizeDelta: {x: 300, y: 40}
   m_Pivot: {x: 0, y: 0.5}
---- !u!1001 &7442104964666217395
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 3271525373535064234, guid: c2c5ad9170add40418270c074c6e0487, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 1.04
-      objectReference: {fileID: 0}
-    - target: {fileID: 3271525373535064234, guid: c2c5ad9170add40418270c074c6e0487, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -4.39
-      objectReference: {fileID: 0}
-    - target: {fileID: 3271525373535064234, guid: c2c5ad9170add40418270c074c6e0487, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3271525373535064234, guid: c2c5ad9170add40418270c074c6e0487, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3271525373535064234, guid: c2c5ad9170add40418270c074c6e0487, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3271525373535064234, guid: c2c5ad9170add40418270c074c6e0487, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3271525373535064234, guid: c2c5ad9170add40418270c074c6e0487, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3271525373535064234, guid: c2c5ad9170add40418270c074c6e0487, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3271525373535064234, guid: c2c5ad9170add40418270c074c6e0487, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3271525373535064234, guid: c2c5ad9170add40418270c074c6e0487, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5625621068529186865, guid: c2c5ad9170add40418270c074c6e0487, type: 3}
-      propertyPath: sceneId
-      value: 2084564270
-      objectReference: {fileID: 0}
-    - target: {fileID: 8388508766787811552, guid: c2c5ad9170add40418270c074c6e0487, type: 3}
-      propertyPath: m_Name
-      value: DeathButton
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: c2c5ad9170add40418270c074c6e0487, type: 3}
 --- !u!222 &7459353386861602650
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -15002,6 +14938,5 @@ SceneRoots:
   - {fileID: 2067517728}
   - {fileID: 1526000658}
   - {fileID: 7038531026954535214}
-  - {fileID: 7442104964666217395}
   - {fileID: 3443684181402310832}
   - {fileID: 4037164518559242786}

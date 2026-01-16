@@ -14,6 +14,7 @@ public class RelayManager : MonoBehaviour
     [SerializeField] private TMP_InputField joinInputField;
     [SerializeField] private GameObject Log;
     [SerializeField] private TMP_Text hostID;
+    [SerializeField] private GameObject Join_Menu;
     private UTPTransport transport;
 
     async void Start()
@@ -47,6 +48,7 @@ public class RelayManager : MonoBehaviour
 
             transport.SetRelayServerData(relayServerData);
             NetworkManager.singleton.StartHost();
+
         }
         catch (RelayServiceException e) { Debug.LogError(e.Message); }
     }
@@ -79,6 +81,7 @@ public class RelayManager : MonoBehaviour
 
             transport.SetRelayServerData(relayServerData);
             NetworkManager.singleton.StartClient();
+            Join_Menu.SetActive(false);
         }
         catch (RelayServiceException e) {
             Log.SetActive(true);
