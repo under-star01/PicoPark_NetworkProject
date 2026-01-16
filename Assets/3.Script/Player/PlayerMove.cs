@@ -435,14 +435,11 @@ public class PlayerMove : NetworkBehaviour
 
         Vector3 topPos = transform.position;
 
-        //0.1초 멈춤
-        yield return new WaitForSeconds(0.1f);
-
         time = 0f;
         while (time < 4f)
         {
             time += Time.deltaTime;
-            transform.position = topPos - Vector3.up * (time / 4f) * 30f; // 4초 동안 30만큼 내려감
+            transform.position = topPos - Vector3.up * (time / 5f) * 30f; // 5초 동안 30만큼 내려감
             yield return null;
         }
 

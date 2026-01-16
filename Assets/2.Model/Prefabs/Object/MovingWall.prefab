@@ -121,7 +121,7 @@ Transform:
   m_GameObject: {fileID: 6216941352845595406}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.5, y: -3.86, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -275,7 +275,6 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0
   targetMoveCnt: 2
-  pushCnt: 0
   Srenderer: {fileID: 7504368693860769036}
   numbers:
   - {fileID: 8722194088004246932, guid: 8e6dff208fa252d4b8649bbd2e0ff48f, type: 3}
