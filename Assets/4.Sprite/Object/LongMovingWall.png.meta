@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: aa4e28c0fcf075542bc6feb6206a096d
+guid: 2ef4a7becee2f9542a372b5f865beae8
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 5171866844571943703
-    second: NUM_1_0
+      213: 3609112317181318936
+    second: LongMovingWall_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -139,23 +139,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: NUM_1_0
+      name: LongMovingWall_0
       rect:
         serializedVersion: 2
-        x: 622
-        y: 255
-        width: 579
-        height: 1467
-      alignment: 9
-      pivot: {x: 0.7714517, y: 0.50000006}
+        x: 9
+        y: 4
+        width: 82
+        height: 592
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 713c4505e7926c740800000000000000
-      internalID: 5171866844571943703
+      spriteID: 8175414d784261230800000000000000
+      internalID: 3609112317181318936
       vertices: []
       indices: 
       edges: []
@@ -164,7 +164,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 5e97eb03825dee720800000000000000
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -174,7 +174,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      NUM_1_0: 5171866844571943703
+      LongMovingWall_0: 3609112317181318936
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
