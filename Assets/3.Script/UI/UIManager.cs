@@ -319,7 +319,7 @@ public class UIMANAGER : MonoBehaviour
                 SubmitCurrent();
                 break;
             case UIState.Panel:
-                if (Panels[0].activeSelf)
+                if (Panels[0].activeSelf) //Option
                 {
 
                     if (panelIndex == 3) // OK 버튼
@@ -333,7 +333,7 @@ public class UIMANAGER : MonoBehaviour
                         state = UIState.TitleMenu;
                     }
                 }
-                else if (Panels[1].activeSelf)
+                else if (Panels[1].activeSelf)// Exit
                 {
                     // 종료 패널은 보통 버튼이 2개이므로 panelIndex 0: YES, 1: NO 라고 가정합니다.
                     if (panelIndex == 0) // YES (종료 실행)
