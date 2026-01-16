@@ -2,65 +2,91 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Mirror;
 
-public class MovingWall : MonoBehaviour
+public class MovingWall : NetworkBehaviour
 {
     [Header("이동 설정")]
     [SerializeField] private int targetMoveCnt = 2;
-    [SerializeField] private int pushCnt = 0;
 
     [Header("스프라이트 설정")]
     [SerializeField] private SpriteRenderer Srenderer;
     [SerializeField] private Sprite[] numbers; // 필요한 인원수 (0: 1명, 1: 2명, 2: 3명...)
 
     public HashSet<PlayerMove> pushers = new HashSet<PlayerMove>();
+    
+    [SyncVar(hook = nameof(OnRemainingCntChanged))]
+    private int remainingCnt;
+    private float pushDir; 
+    private bool canMove = false;
 
     private Rigidbody2D rb;
-    private int prevRemainingCnt = -1; // 이전 프레임 남은 인원수
 
     private void Awake()
     {
         TryGetComponent(out rb);
+    }
 
-        // 초기 숫자 스프라이트 설정
-        UpdateNumberSprite();
+    public override void OnStartServer()
+    {
+        base.OnStartServer();
+
+        rb.bodyType = RigidbodyType2D.Kinematic;
+        remainingCnt = targetMoveCnt;
     }
 
     private void FixedUpdate()
     {
-        rb.linearVelocityX = 0f;
+        if (!isServer) return;
 
-        // 현재 밀고 있는 인원수
-        pushCnt = pushers.Count;
+        int newRemaining = Mathf.Max(0, targetMoveCnt - pushers.Count);
+        if (remainingCnt != newRemaining)
+            remainingCnt = newRemaining;
 
-        // 남은 인원수 계산 (필요 인원 - 현재 밀고 있는 인원)
-        int remainingCnt = Mathf.Max(0, targetMoveCnt - pushCnt);
-
-        // 남은 인원수가 변경되면 숫자 스프라이트 업데이트
-        if (remainingCnt != prevRemainingCnt)
+        if (!canMove)
         {
-            UpdateNumberSprite(remainingCnt);
-            prevRemainingCnt = remainingCnt;
+            rb.linearVelocity = Vector2.zero;
+            return;
         }
+
+        rb.linearVelocity = new Vector2(pushDir * 2f, rb.linearVelocity.y);
     }
+
+    // 서버 전용 로직
     public void AddPusher(PlayerMove p)
     {
+        if (!isServer || p == null) return;
+        
         pushers.Add(p);
+
+        // 방향 저장
+        pushDir = Mathf.Sign(p.transform.localScale.x);
 
         if (pushers.Count >= targetMoveCnt)
         {
             rb.bodyType = RigidbodyType2D.Dynamic;
+            canMove = true;
         }
     }
 
     public void RemovePusher(PlayerMove p)
     {
+        if (!isServer || p == null) return;
+
         pushers.Remove(p);
 
         if (pushers.Count < targetMoveCnt)
         {
+            canMove = false;
             rb.bodyType = RigidbodyType2D.Kinematic;
+            rb.linearVelocity = Vector2.zero;
         }
+    }
+
+    // SyncVar Hook 설정
+    private void OnRemainingCntChanged(int oldValue, int newValue)
+    {
+        UpdateNumberSprite(newValue);
     }
 
     // 숫자 스프라이트 업데이트
@@ -73,11 +99,5 @@ public class MovingWall : MonoBehaviour
         {
             Srenderer.sprite = numbers[remaining];
         }
-    }
-
-    // 초기 숫자 표시 (Awake용)
-    private void UpdateNumberSprite()
-    {
-        UpdateNumberSprite(targetMoveCnt);
     }
 }

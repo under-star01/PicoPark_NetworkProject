@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 3562375863293982088}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 6.21, y: -3.78, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -152,3 +152,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Door
   closedSprite: {fileID: 5143072091549839320, guid: f8adffecd3394b242908a9c5bbd7c54c, type: 3}
   openedSprite: {fileID: 4856990145134343996, guid: 0fc78e6b11e77e348bc2484f3cee966d, type: 3}
+  totalPlayerCount: 2
+  isOpened: 0
