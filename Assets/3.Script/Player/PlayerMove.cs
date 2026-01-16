@@ -20,14 +20,19 @@ public class PlayerMove : NetworkBehaviour
     [Header("벽 밀기 관련 변수")]
     public bool isPushing;
     public MovingWall wallScript;
-    public PlayerMove frontPlayer;
-    public PlayerMove backPlayer;
     private PlayerMove detectPlayer;
     private bool prevIsPushing; 
     private NetworkIdentity currentWallNetId;
 
     [Header("플랫폼 관련 변수")]
     public CeilCheck ceilCheck;
+
+    [Header("어부바 관련 변수")]
+    [SyncVar]
+    private NetworkIdentity frontNetId;
+    [SyncVar]
+    private NetworkIdentity backNetId;
+
     public int stackCnt => ceilCheck.ceilingCnt;
 
     [Header("리턴 위치")]
@@ -163,10 +168,10 @@ public class PlayerMove : NetworkBehaviour
             float dir = Mathf.Sign(moveInput.x); // 부호만 확인
             float detectDir = Mathf.Sign(detectPlayer.transform.position.x - transform.position.x);
 
-            if (detectDir == dir)
+            if (detectDir == dir && frontNetId == null)
             {
-                frontPlayer = detectPlayer;
-                detectPlayer.backPlayer = this;
+                NetworkIdentity targetNetId = detectPlayer.GetComponent<NetworkIdentity>();
+                CmdStartCarry(targetNetId);
             }
         }
 
@@ -250,6 +255,33 @@ public class PlayerMove : NetworkBehaviour
             wallScript = null;
     }
 
+    // 밀기 시작 Command
+    [Command]
+    private void CmdStartCarry(NetworkIdentity targetNetId)
+    {
+        if (targetNetId == null) return;
+
+        PlayerMove target = targetNetId.GetComponent<PlayerMove>();
+        if (target == null) return;
+
+        // 서버에서 관계 확정
+        target.backNetId = netIdentity;
+        frontNetId = targetNetId;
+    }
+
+    // 밀기 해제 Command
+    [Command]
+    private void CmdStopCarry()
+    {
+        if (frontNetId == null) return;
+
+        PlayerMove front = frontNetId.GetComponent<PlayerMove>();
+        if (front != null)
+            front.backNetId = null;
+
+        frontNetId = null;
+    }
+
     //밀기 체크
     private void CheckPush()
     {
@@ -290,23 +322,13 @@ public class PlayerMove : NetworkBehaviour
     {
         if (!isLocalPlayer) return;
 
+        CmdStopCarry();
+
+        // 기존 밀기 해제 로직 유지
         if (currentWallNetId != null)
         {
             CmdStopPush(currentWallNetId);
             currentWallNetId = null;
-        }
-
-        // 어부바 연결 해제
-        if (frontPlayer != null)
-        {
-            frontPlayer.backPlayer = null;
-            frontPlayer = null;
-        }
-
-        if (backPlayer != null)
-        {
-            backPlayer.frontPlayer = null;
-            backPlayer = null;
         }
     }
 

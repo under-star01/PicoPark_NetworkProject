@@ -8,7 +8,8 @@ public class FlatForm : NetworkBehaviour
 {
     [Header("조건")]
     [SerializeField] private int targetMoveCnt = 2;
-    [SerializeField] private int moveCurrentCnt;
+    [SyncVar(hook = nameof(OnRemainingCntChanged))]
+    private int moveCurrentCnt;
 
     [Header("이동")]
     [SerializeField] private float moveSpeed = 2f;
@@ -25,15 +26,24 @@ public class FlatForm : NetworkBehaviour
     private Coroutine lockRoutine;
     private bool isLocked;
     private bool isActive; // 목표 인원 도달 여부
-    private int prevRemainingCnt = -1; // 이전 프레임 남은 인원수
 
     private void Awake()
     {
         TryGetComponent(out rb);
-        rb.bodyType = RigidbodyType2D.Kinematic;
+    }
 
-        // 초기 숫자 표시
-        UpdateNumberSprite(targetMoveCnt);
+    public override void OnStartClient()
+    {
+        base.OnStartClient();
+        UpdateNumberSprite(moveCurrentCnt);
+    }
+
+    public override void OnStartServer()
+    {
+        base.OnStartServer();
+
+        rb.bodyType = RigidbodyType2D.Kinematic;
+        moveCurrentCnt = targetMoveCnt; // 초기 숫자
     }
 
     private void FixedUpdate()
@@ -46,13 +56,6 @@ public class FlatForm : NetworkBehaviour
         }
 
         MovePlatform();
-
-        // 남은 인원수가 변경되면 스프라이트 업데이트
-        if (moveCurrentCnt != prevRemainingCnt)
-        {
-            UpdateNumberSprite(moveCurrentCnt);
-            prevRemainingCnt = moveCurrentCnt;
-        }
     }
 
     private int GetTotalCeilCnt()
@@ -63,7 +66,12 @@ public class FlatForm : NetworkBehaviour
             if (player == null) continue;
             total += player.stackCnt;
         }
-        moveCurrentCnt = Mathf.Max(0, targetMoveCnt - total);
+
+        int newRemaining = Mathf.Max(0, targetMoveCnt - total);
+
+        if (moveCurrentCnt != newRemaining)
+            moveCurrentCnt = newRemaining;
+
         return total;
     }
 
@@ -114,5 +122,10 @@ public class FlatForm : NetworkBehaviour
         {
             sRenderer.sprite = numbers[remaining];
         }
+    }
+
+    private void OnRemainingCntChanged(int oldValue, int newValue)
+    {
+        UpdateNumberSprite(newValue);
     }
 }
