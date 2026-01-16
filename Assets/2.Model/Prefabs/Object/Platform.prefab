@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 1165543919797903417}
   - component: {fileID: 7156776915113259853}
   m_Layer: 9
-  m_Name: Flatform
+  m_Name: Platform
   m_TagString: FlatForm
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
