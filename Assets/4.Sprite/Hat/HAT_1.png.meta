@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: dcfe48380ccc6714c9ead22156d88132
+guid: baf49d4ec452b7346b06aa5c0c52c99b
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -4003881795176857152
-    second: CREATE 1_0
+      213: 9193511315674399393
+    second: poop (1)_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -139,23 +139,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: CREATE 1_0
+      name: poop (1)_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 122
-        height: 34
+        x: 82
+        y: 88
+        width: 200
+        height: 150
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 0c184d388ba5f68c0800000000000000
-      internalID: -4003881795176857152
+      spriteID: 1a28e4115d9e59f70800000000000000
+      internalID: 9193511315674399393
       vertices: []
       indices: 
       edges: []
@@ -164,7 +164,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 988fb4e545b9b9244b7fc5d7cee8b662
     internalID: 0
     vertices: []
     indices: 
@@ -174,7 +174,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      CREATE 1_0: -4003881795176857152
+      poop (1)_0: 9193511315674399393
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

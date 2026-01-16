@@ -12,11 +12,13 @@ using Mirror.Transports.Utp;
 public class RelayManager : MonoBehaviour
 {
     [SerializeField] private TMP_InputField joinInputField;
+    [SerializeField] private GameObject Log;
     [SerializeField] private TMP_Text hostID;
     private UTPTransport transport;
 
     async void Start()
     {
+        Log.SetActive(false);
         await UnityServices.InitializeAsync();
         if (!AuthenticationService.Instance.IsSignedIn) await AuthenticationService.Instance.SignInAnonymouslyAsync();
         transport = NetworkManager.singleton.GetComponent<UTPTransport>();
@@ -53,6 +55,13 @@ public class RelayManager : MonoBehaviour
 
     public async void JoinRelayServer(string inputCode)
     {
+        if (string.IsNullOrWhiteSpace(inputCode))
+        {
+            Log.SetActive(true);
+            Log.GetComponent<TMP_Text>().text = "접속 코드가 비어있습니다!\n코드를 입력해주세요.";
+            return;
+        }
+
         try
         {
             JoinAllocation joinAllocation = await RelayService.Instance.JoinAllocationAsync(inputCode);
@@ -71,6 +80,9 @@ public class RelayManager : MonoBehaviour
             transport.SetRelayServerData(relayServerData);
             NetworkManager.singleton.StartClient();
         }
-        catch (RelayServiceException e) { Debug.LogError(e.Message); }
+        catch (RelayServiceException e) {
+            Log.SetActive(true);
+            Log.GetComponent<TMP_Text>().text = "입력하신 ROOM CODE는\n존재하지 않습니다.";
+        }
     }
 }
