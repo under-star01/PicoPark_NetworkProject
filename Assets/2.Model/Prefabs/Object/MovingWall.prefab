@@ -103,6 +103,8 @@ GameObject:
   - component: {fileID: 1378853801632120712}
   - component: {fileID: 8768350096088237536}
   - component: {fileID: 2404691672256434953}
+  - component: {fileID: 8801761180627971892}
+  - component: {fileID: 7612933014051978205}
   m_Layer: 9
   m_Name: MovingWall
   m_TagString: MovingWall
@@ -121,7 +123,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -2.5, y: -3.86, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 8811929397021962306}
   m_Father: {fileID: 0}
@@ -269,6 +271,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c18d73abf2c3d04dae66d3ab7d6ebeb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MovingWall
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
   targetMoveCnt: 2
   pushCnt: 0
   Srenderer: {fileID: 7504368693860769036}
@@ -280,3 +285,54 @@ MonoBehaviour:
   - {fileID: 5166843755062256282, guid: 9fcefefb3076e9547b2904459fa4cf2d, type: 3}
   - {fileID: 5517330862624807361, guid: e2d23ff99a6240d44b77da9913b3c8b6, type: 3}
   - {fileID: 9189055049841073796, guid: a4cb84da604576b41a75492d42842e68, type: 3}
+--- !u!114 &8801761180627971892
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6216941352845595406}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Mirror::Mirror.NetworkIdentity
+  sceneId: 0
+  _assetId: 3808495348
+  serverOnly: 0
+  visibility: 0
+  hasSpawned: 0
+--- !u!114 &7612933014051978205
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6216941352845595406}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a553cb17010b2403e8523b558bffbc14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Mirror.Components::Mirror.NetworkTransformUnreliable
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
+  target: {fileID: 5650470621367308607}
+  syncPosition: 1
+  syncRotation: 0
+  syncScale: 0
+  onlySyncOnChange: 1
+  compressRotation: 1
+  interpolatePosition: 1
+  interpolateRotation: 1
+  interpolateScale: 1
+  coordinateSpace: 0
+  timelineOffset: 1
+  showGizmos: 0
+  showOverlay: 0
+  overlayColor: {r: 0, g: 0, b: 0, a: 0.5}
+  bufferResetMultiplier: 3
+  useFixedUpdate: 1
+  positionSensitivity: 0.01
+  rotationSensitivity: 0.01
+  scaleSensitivity: 0.01

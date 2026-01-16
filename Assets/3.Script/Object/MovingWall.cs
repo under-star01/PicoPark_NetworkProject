@@ -2,8 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Mirror;
 
-public class MovingWall : MonoBehaviour
+public class MovingWall : NetworkBehaviour
 {
     [Header("이동 설정")]
     [SerializeField] private int targetMoveCnt = 2;
@@ -28,6 +29,8 @@ public class MovingWall : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (!isServer) return;
+
         rb.linearVelocityX = 0f;
 
         // 현재 밀고 있는 인원수
@@ -45,6 +48,8 @@ public class MovingWall : MonoBehaviour
     }
     public void AddPusher(PlayerMove p)
     {
+        if (!isServer || p == null) return;
+        
         pushers.Add(p);
 
         if (pushers.Count >= targetMoveCnt)
@@ -55,6 +60,8 @@ public class MovingWall : MonoBehaviour
 
     public void RemovePusher(PlayerMove p)
     {
+        if (!isServer || p == null) return;
+
         pushers.Remove(p);
 
         if (pushers.Count < targetMoveCnt)

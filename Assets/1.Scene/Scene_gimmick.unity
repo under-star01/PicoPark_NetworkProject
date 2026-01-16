@@ -11198,6 +11198,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Flatform
       objectReference: {fileID: 0}
+    - target: {fileID: 1165543919797903417, guid: a3d2a89cb3ac476498bf9ee765d8ea6b, type: 3}
+      propertyPath: useFixedUpdate
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3741277346873763671, guid: a3d2a89cb3ac476498bf9ee765d8ea6b, type: 3}
       propertyPath: sceneId
       value: 686492191
@@ -13856,17 +13860,13 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 2404691672256434953, guid: 41f94573459ba9b43a7c680e267a2405, type: 3}
-      propertyPath: targetMoveCnt
-      value: 2
-      objectReference: {fileID: 0}
     - target: {fileID: 5650470621367308607, guid: 41f94573459ba9b43a7c680e267a2405, type: 3}
       propertyPath: m_LocalPosition.x
       value: -2.5
       objectReference: {fileID: 0}
     - target: {fileID: 5650470621367308607, guid: 41f94573459ba9b43a7c680e267a2405, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -3.86
+      value: -3.832
       objectReference: {fileID: 0}
     - target: {fileID: 5650470621367308607, guid: 41f94573459ba9b43a7c680e267a2405, type: 3}
       propertyPath: m_LocalPosition.z
@@ -13900,13 +13900,13 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5650470621367308607, guid: 41f94573459ba9b43a7c680e267a2405, type: 3}
-      propertyPath: m_ConstrainProportionsScale
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 6216941352845595406, guid: 41f94573459ba9b43a7c680e267a2405, type: 3}
       propertyPath: m_Name
       value: MovingWall
+      objectReference: {fileID: 0}
+    - target: {fileID: 8801761180627971892, guid: 41f94573459ba9b43a7c680e267a2405, type: 3}
+      propertyPath: sceneId
+      value: 310006280
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -15913,6 +15913,10 @@ PrefabInstance:
     - target: {fileID: 2333410949909626165, guid: f0b444a1685a182409b294d7fd6a0b74, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6293470158332882731, guid: f0b444a1685a182409b294d7fd6a0b74, type: 3}
+      propertyPath: sceneId
+      value: 951527348
       objectReference: {fileID: 0}
     - target: {fileID: 8835598428880081341, guid: f0b444a1685a182409b294d7fd6a0b74, type: 3}
       propertyPath: m_Name
