@@ -20,19 +20,16 @@ public class PlayerMove : NetworkBehaviour
     [Header("벽 밀기 관련 변수")]
     public bool isPushing;
     public MovingWall wallScript;
+    public PlayerMove frontPlayer;
+    public PlayerMove backPlayer;
     private PlayerMove detectPlayer;
-    private bool prevIsPushing; 
-    private NetworkIdentity currentWallNetId;
+    private bool prevIsPushing;
+
+    // RPC 추가
+    private NetworkIdentity currentWallNetId; // 현재 밀고 있는 벽의 NetworkIdentity
 
     [Header("플랫폼 관련 변수")]
     public CeilCheck ceilCheck;
-
-    [Header("어부바 관련 변수")]
-    [SyncVar]
-    private NetworkIdentity frontNetId;
-    [SyncVar]
-    private NetworkIdentity backNetId;
-
     public int stackCnt => ceilCheck.ceilingCnt;
 
     [Header("리턴 위치")]
@@ -64,6 +61,7 @@ public class PlayerMove : NetworkBehaviour
     private void Update()
     {
         if (!isLocalPlayer) return;
+
         isGround = groundCheck.IsGround;
         animator.SetBool("IsGround", isGround);
     }
@@ -71,6 +69,7 @@ public class PlayerMove : NetworkBehaviour
     private void FixedUpdate()
     {
         if (!isLocalPlayer) return;
+        
         if (knockbackCoroutine == null && !isInsideDoor)
         {
             Move();
@@ -88,7 +87,7 @@ public class PlayerMove : NetworkBehaviour
             underMoveX = groundCheck.UnderPlayerRb.linearVelocity.x;
         }
 
-        rb.linearVelocity = new Vector2(moveX + (isPushing ? 0 : 1) * underMoveX, rb.linearVelocity.y); //더하기
+        rb.linearVelocity = new Vector2(moveX + (isPushing ? 0 : 1) * underMoveX, rb.linearVelocity.y);
     }
 
     public void SetMove(Vector2 input)
@@ -131,7 +130,6 @@ public class PlayerMove : NetworkBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (!isLocalPlayer) return;
 
         if (collision.gameObject.CompareTag("DeadLine"))
         {
@@ -140,6 +138,9 @@ public class PlayerMove : NetworkBehaviour
                 transform.position = returnPos.position;
             }
         }
+
+        if (!isLocalPlayer) return;
+
         if (collision.gameObject.CompareTag("FlatForm") && collision.contacts[0].normal.y > 0.7f)
         {
             CmdAddRider(collision.gameObject);
@@ -156,11 +157,8 @@ public class PlayerMove : NetworkBehaviour
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if (!isLocalPlayer) return;
-
-        // 밀격 상태가 아닐 경우 리턴
-        if (!isPushing) return;
-
+        if (!isLocalPlayer || !isPushing) return;
+        
         // 플레이어와 충돌할 경우, 미는 인원 추가
         if (collision.gameObject.CompareTag("Player") && detectPlayer != null)
         {
@@ -168,22 +166,20 @@ public class PlayerMove : NetworkBehaviour
             float dir = Mathf.Sign(moveInput.x); // 부호만 확인
             float detectDir = Mathf.Sign(detectPlayer.transform.position.x - transform.position.x);
 
-            if (detectDir == dir && frontNetId == null)
+            if (detectDir == dir)
             {
-                NetworkIdentity targetNetId = detectPlayer.GetComponent<NetworkIdentity>();
-                CmdStartCarry(targetNetId);
+                frontPlayer = detectPlayer;
+                detectPlayer.backPlayer = this;
             }
         }
 
-        if (collision.gameObject.CompareTag("MovingWall"))
+        if (collision.gameObject.CompareTag("MovingWall") && currentWallNetId == null)
         {
-            if (currentWallNetId != null) return;
-
-            NetworkIdentity wallNetId = collision.GetComponent<NetworkIdentity>();
-            if (wallNetId != null)
+            NetworkIdentity netId = collision.GetComponent<NetworkIdentity>();
+            if (netId != null)
             {
-                currentWallNetId = wallNetId;
-                CmdStartPush(wallNetId);
+                currentWallNetId = netId;
+                CmdAddPusher(netId);
             }
         }
     }
@@ -192,19 +188,44 @@ public class PlayerMove : NetworkBehaviour
     {
         if (!isLocalPlayer) return;
 
-        if (collision.CompareTag("MovingWall"))
+        if (collision.CompareTag("MovingWall") && currentWallNetId != null)
         {
-            if (currentWallNetId != null)
-            {
-                CmdStopPush(currentWallNetId);
-                currentWallNetId = null;
-            }
+            CmdRemovePusher(currentWallNetId);
+            currentWallNetId = null;
         }
 
         if (collision.CompareTag("FlatForm"))
         {
             CmdRemoveRider(collision.gameObject);
         }
+    }
+
+    // MovingWall를 미는 Pusher추가
+    [Command]
+    private void CmdAddPusher(NetworkIdentity wallNetId)
+    {
+        if (wallNetId == null) return;
+
+        MovingWall wall = wallNetId.GetComponent<MovingWall>();
+        if (wall == null) return;
+
+        wall.AddPusher(this);
+        wallScript = wall;
+    }
+
+    // MovingWall를 미는 Pusher 해제
+    [Command]
+    private void CmdRemovePusher(NetworkIdentity wallNetId)
+    {
+        if (wallNetId == null) return;
+
+        MovingWall wall = wallNetId.GetComponent<MovingWall>();
+        if (wall == null) return;
+
+        wall.RemovePusher(this);
+
+        if (wallScript == wall)
+            wallScript = null;
     }
 
     // FlatForm에 인원수 추가 Command
@@ -225,61 +246,6 @@ public class PlayerMove : NetworkBehaviour
         if (platform == null) return;
 
         platform.RemoveRider(this);
-    }
-
-    // MovingWall 이동 시작 Command
-    [Command]
-    private void CmdStartPush(NetworkIdentity wallNetId)
-    {
-        if (wallNetId == null) return;
-
-        MovingWall wall = wallNetId.GetComponent<MovingWall>();
-        if (wall == null) return;
-
-        wall.AddPusher(this);
-        wallScript = wall;
-    }
-
-    // MovingWall 이동 종료 Command
-    [Command]
-    private void CmdStopPush(NetworkIdentity wallNetId)
-    {
-        if (wallNetId == null) return;
-
-        MovingWall wall = wallNetId.GetComponent<MovingWall>();
-        if (wall == null) return;
-
-        wall.RemovePusher(this);
-
-        if (wallScript == wall)
-            wallScript = null;
-    }
-
-    // 밀기 시작 Command
-    [Command]
-    private void CmdStartCarry(NetworkIdentity targetNetId)
-    {
-        if (targetNetId == null) return;
-
-        PlayerMove target = targetNetId.GetComponent<PlayerMove>();
-        if (target == null) return;
-
-        // 서버에서 관계 확정
-        target.backNetId = netIdentity;
-        frontNetId = targetNetId;
-    }
-
-    // 밀기 해제 Command
-    [Command]
-    private void CmdStopCarry()
-    {
-        if (frontNetId == null) return;
-
-        PlayerMove front = frontNetId.GetComponent<PlayerMove>();
-        if (front != null)
-            front.backNetId = null;
-
-        frontNetId = null;
     }
 
     //밀기 체크
@@ -322,17 +288,26 @@ public class PlayerMove : NetworkBehaviour
     {
         if (!isLocalPlayer) return;
 
-        CmdStopCarry();
-
-        // 기존 밀기 해제 로직 유지
         if (currentWallNetId != null)
         {
-            CmdStopPush(currentWallNetId);
+            CmdRemovePusher(currentWallNetId);
             currentWallNetId = null;
+        }
+
+        if (frontPlayer != null)
+        {
+            frontPlayer.backPlayer = null;
+            frontPlayer = null;
+        }
+
+        if (backPlayer != null)
+        {
+            backPlayer.frontPlayer = null;
+            backPlayer = null;
         }
     }
 
-    //자시자신 콜라이더 무시
+    //자기 자신 콜라이더 무시
     private void IgnoreSelfCollision()
     {
         Collider2D[] Cols = GetComponents<Collider2D>(); // 내 콜라이더

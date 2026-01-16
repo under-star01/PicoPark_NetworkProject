@@ -166,8 +166,6 @@ MonoBehaviour:
     m_Bits: 576
   isPushing: 0
   wallScript: {fileID: 0}
-  frontPlayer: {fileID: 0}
-  backPlayer: {fileID: 0}
   ceilCheck: {fileID: 0}
   returnPos: {fileID: 0}
 --- !u!50 &6797068560288179526
@@ -377,7 +375,7 @@ Transform:
   m_GameObject: {fileID: 2323101840052430765}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -7.63, y: 3.17486, z: 0}
+  m_LocalPosition: {x: 0, y: 0.9, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
