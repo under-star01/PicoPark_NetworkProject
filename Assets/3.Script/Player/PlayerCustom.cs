@@ -59,6 +59,13 @@ public class PlayerCustom : MonoBehaviour
         }
     }
 
+    // 모자 끄기
+    public void HideHat()
+    {
+        hatSR.enabled = false;
+    }
+
+
     // Inspector에서 미리보기
     private void OnValidate()
     {

@@ -44,6 +44,9 @@ public class PlayerMove : NetworkBehaviour
     [Header("문 안 상태")]
     private bool isInsideDoor = false;
 
+    [Header("죽음")]
+    private bool isDead = false;
+
     private Rigidbody2D rb;
     private Animator animator;
     private SpriteRenderer spriteRenderer;
@@ -59,11 +62,14 @@ public class PlayerMove : NetworkBehaviour
         ceilCheck = GetComponentInChildren<CeilCheck>();
 
         IgnoreSelfCollision();
+
+        isDead = false;
     }
 
     private void Update()
     {
         if (!isLocalPlayer) return;
+        if (isDead) return;
         isGround = groundCheck.IsGround;
         animator.SetBool("IsGround", isGround);
     }
@@ -71,6 +77,9 @@ public class PlayerMove : NetworkBehaviour
     private void FixedUpdate()
     {
         if (!isLocalPlayer) return;
+
+        if (isDead) return;
+
         if (knockbackCoroutine == null && !isInsideDoor)
         {
             Move();
@@ -95,8 +104,8 @@ public class PlayerMove : NetworkBehaviour
     {
         if (!isLocalPlayer) return;
 
-        // 문 안에 있으면 입력 무시
-        if (isInsideDoor) return;
+        // 죽었거나 문 안에 있으면 나가
+        if (isDead || isInsideDoor) return;
 
         moveInput = input;
 
@@ -113,7 +122,7 @@ public class PlayerMove : NetworkBehaviour
 
     public void JumpStart()
     {
-        if (!isGround) return;
+        if (isDead || isInsideDoor) return;
 
         rb.linearVelocityY = jumpForce;
     }
@@ -371,5 +380,73 @@ public class PlayerMove : NetworkBehaviour
     public void SetInsideDoor(bool inside)
     {
         isInsideDoor = inside;
+    }
+
+    public void Die()
+    {
+        if (isDead) return; // 죽었으면 나가
+
+        isDead = true;
+
+        // Rigidbody를 Kinematic으로 변경
+        rb.bodyType = RigidbodyType2D.Kinematic;
+        rb.linearVelocity = Vector2.zero;
+        SetMove(Vector2.zero);
+
+        // 다른 애니메이션 파라미터 초기화
+        animator.SetBool("IsGround", true);
+        animator.SetBool("IsRun", false);
+        animator.SetBool("IsPush", false);
+        animator.SetTrigger("Dead"); // Dead 트리거
+
+        // 콜라이더 끄기
+        Collider2D[] allColliders = GetComponentsInChildren<Collider2D>();
+        foreach (var col in allColliders)
+        {
+            col.enabled = false;
+        }
+
+        // 모자 끄기
+        PlayerCustom custom = GetComponent<PlayerCustom>();
+        if (custom != null)
+        {
+            custom.HideHat();
+        }
+
+        // 죽는 애니메이션
+        StartCoroutine(DeathAnimation());
+    }
+
+    // 애니메이터로 안돼서 코드로 구현한 애니메이션..
+    private IEnumerator DeathAnimation()
+    {
+        Vector3 startPos = transform.position;
+
+        // 1초 멈춤
+        yield return new WaitForSeconds(1f);
+
+        float time = 0f;
+        while (time < 0.3f)
+        {
+            time += Time.deltaTime;
+            transform.position = startPos + Vector3.up * (time / 0.3f) * 1.2f; //0.3초 동안 1.2만큼 올라감
+            yield return null;
+        }
+
+        Vector3 topPos = transform.position;
+
+        //0.1초 멈춤
+        yield return new WaitForSeconds(0.1f);
+
+        time = 0f;
+        while (time < 4f)
+        {
+            time += Time.deltaTime;
+            transform.position = topPos - Vector3.up * (time / 4f) * 30f; // 4초 동안 30만큼 내려감
+            yield return null;
+        }
+
+        // (여기에 게임오버 넣으면 됩니다)
+        Debug.Log("게임오버!");
     }
 }
