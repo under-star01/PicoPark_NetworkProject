@@ -10,7 +10,7 @@ using UnityEngine.InputSystem;
 public class TitleMenuOnline : MonoBehaviour
 {
     [Header("메뉴")]
-    [SerializeField] GameObject[] menu;
+    [SerializeField] GameObject[] menu; // StartGame, Return, FinishGame
     public int currentIndex = 0;
 
     // 옵션/종료 패널
@@ -95,5 +95,4 @@ public class TitleMenuOnline : MonoBehaviour
     }
 
     
-
 }

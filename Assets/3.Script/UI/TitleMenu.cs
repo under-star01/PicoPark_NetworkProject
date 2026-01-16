@@ -105,8 +105,6 @@ public class TitleMenu : MonoBehaviour
             backupBGM = bgmVolume.value;
             backupSFX = sfxVolume.value;
 
-            Debug.Log($"백업 완료: M:{backupMaster}, B:{backupBGM}, S:{backupSFX}"); // 로그로 확인
-
             optionPanel.SetActive(true);
         }
     }

@@ -21,7 +21,7 @@ public class OnlineMenu_UIManager : MonoBehaviour
     [Header("Panel")] // Host, Join
     [SerializeField] private GameObject[] OnlineMenuButtons;
 
-    [Header("Panel")] // HostMenu, JoinMenu
+    [Header("LobbyEntryPanel")] // HostMenu, JoinMenu
     [SerializeField] private GameObject[] LobbyEntryPanels;
     [SerializeField] private HostMenuController hostMenuController;
 
@@ -99,12 +99,14 @@ public class OnlineMenu_UIManager : MonoBehaviour
         OnlineMenuButtons[panelIndex].GetComponent<ButtonHover>().OnFocus();
     }
 
-    private void ShowPanelUI(int panelIdx)
+    private void ShowLobbyEntryPanelUI(int panelIdx)
     {
 
         panelIndex = 0; // 항상 처음 항목부터 시작
-        DisablePanel();
-       // LobbyEntryPanels[panelIdx].SetActive(true);
+        //DisablePanel();
+        LobbyEntryPanels[panelIdx].SetActive(true);
+        hostMenuController.UpdatePanelSelection(panelIndex);
+        state = UIState.LobbyEntry;
     }
 
     private void DisablePanel()
@@ -149,7 +151,7 @@ public class OnlineMenu_UIManager : MonoBehaviour
                     {
                         hostMenuController.OnHatLeft();
                     }
-                    else // Color
+                    else if (panelIndex.Equals(3)) // Color
                     {
                         hostMenuController.OnColorLeft();
                     }
@@ -201,7 +203,7 @@ public class OnlineMenu_UIManager : MonoBehaviour
                     {
                         hostMenuController.OnHatRight();
                     }
-                    else // Color
+                    else if (panelIndex.Equals(3)) // Color
                     {
                         hostMenuController.OnColorRight();
                     }
@@ -225,30 +227,41 @@ public class OnlineMenu_UIManager : MonoBehaviour
 
     private void MoveUp(InputAction.CallbackContext context)
     {
-        if (state != UIState.LobbyEntry || state != UIState.StageSelect) return;
+        if (state != UIState.LobbyEntry && state != UIState.StageSelect) return;
         panelIndex--;
-
-        int maxIndex = LobbyEntryPanels[0].activeSelf ? 4 : 1;
-
-        if (panelIndex < 0)
+        switch (state)
         {
-            panelIndex = maxIndex;
+            case UIState.LobbyEntry:
+                if (LobbyEntryPanels[0].activeSelf)
+                {
+                    if (panelIndex < 0)
+                    {
+                        panelIndex = 5;
+                    }
+                    hostMenuController.UpdatePanelSelection(panelIndex);
+
+                }
+                break;
+            case UIState.StageSelect:
+                break;
         }
+
     }
 
     private void MoveDown(InputAction.CallbackContext context)
     {
-        if (state != UIState.LobbyEntry || state != UIState.StageSelect) return;
+        if (state != UIState.LobbyEntry && state != UIState.StageSelect) return;
         panelIndex++;
         switch (state)
         {
             case UIState.LobbyEntry:
                 if (LobbyEntryPanels[0].activeSelf)
                 {
-                    if (panelIndex > 6)
+                    if (panelIndex >= 6)
                     {
                         panelIndex = 0;
                     }
+                    hostMenuController.UpdatePanelSelection(panelIndex);
 
                 }
                 break;
@@ -264,6 +277,7 @@ public class OnlineMenu_UIManager : MonoBehaviour
         {
             case UIState.Entry:
                 OnlineMenuButtons[panelIndex].GetComponent<Button>().onClick.Invoke();
+                ShowLobbyEntryPanelUI(panelIndex);
                 break;
 
             case UIState.LobbyEntry:

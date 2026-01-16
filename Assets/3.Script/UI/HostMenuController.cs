@@ -33,6 +33,8 @@ public class HostMenuController : MonoBehaviour
     private const int MIN_PLAYERS = 2;
     private const int MAX_PLAYERS = 6;
 
+    [SerializeField] private GameObject[] HostMenuButtons; 
+
     // MAX PLAYER수 증감 및 적용
     public void OnMaxPlayerLeft()
     {
@@ -119,4 +121,14 @@ public class HostMenuController : MonoBehaviour
         Debug.Log("종료버튼 눌렸다!");
         gameObject.SetActive(false);
     }
+
+    public void UpdatePanelSelection(int panelIndex)
+    {
+        for(int i = 0; i < HostMenuButtons.Length; i++)
+        {
+            HostMenuButtons[panelIndex].GetComponent<ButtonHover>().OutFocus();
+        }
+        HostMenuButtons[panelIndex].GetComponent<ButtonHover>().OnFocus();
+    }
+
 }
