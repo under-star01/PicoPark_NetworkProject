@@ -1,12 +1,15 @@
+using Mirror;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Jar : MonoBehaviour
+public class Jar : NetworkBehaviour
 {
     [Header("내구도 설정")]
     [SerializeField] private int hitCount = 3; // 최대 맞을 수 있는 횟수
+
+    [SyncVar(hook = nameof(OnHitCountChanged))]
     private int currentHitCount = 0;
 
     [Header("스프라이트 설정")]
@@ -18,46 +21,55 @@ public class Jar : MonoBehaviour
         TryGetComponent(out spriteRenderer);
     }
 
+    private void Start()
+    {
+        if (spriteRenderer != null && damageSprites.Length > 0)
+        {
+            spriteRenderer.sprite = damageSprites[0];
+        }
+    }
+
+    [ServerCallback]
     private void OnTriggerEnter2D(Collider2D collision)
     {
         // 대포알과 충돌
         if (collision.gameObject.CompareTag("CanonBall"))
         {
-            TakeDamage();
+            TakeDamageServer();
         }
     }
 
-    private void TakeDamage()
+    [Server]
+    private void TakeDamageServer()
     {
+        if (currentHitCount >= hitCount) return;
+
         currentHitCount++;
 
-        // 스프라이트 변경
-        UpdateSprite();
-
-        // 최대 횟수 도달 시 깨짐
         if (currentHitCount >= hitCount)
         {
-            Break();
+            BreakServer();
         }
     }
 
-    private void UpdateSprite()
+    [Server]
+    private void BreakServer()
     {
-        // 스프라이트 배열이 있고, 현재 히트 카운트에 맞는 스프라이트가 있으면 변경
-        if (damageSprites != null && damageSprites.Length > currentHitCount)
+        NetworkServer.Destroy(gameObject);
+    }
+
+    private void OnHitCountChanged(int oldValue, int newValue)
+    {
+        UpdateSprite(newValue);
+    }
+
+    private void UpdateSprite(int hit)
+    {
+        if (spriteRenderer == null) return;
+
+        if (damageSprites != null && hit > 0 && hit - 1 < damageSprites.Length)
         {
-            spriteRenderer.sprite = damageSprites[currentHitCount];
+            spriteRenderer.sprite = damageSprites[hit - 1];
         }
-    }
-
-    private void Break()
-    {
-            Destroy(gameObject);
-    }
-
-    public void ResetJar()
-    {
-        currentHitCount = 0;
-        UpdateSprite();
     }
 }

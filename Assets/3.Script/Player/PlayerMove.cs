@@ -42,7 +42,7 @@ public class PlayerMove : NetworkBehaviour
     [SerializeField] private Transform returnPos;
 
     [Header("넉백")]
-    private Coroutine knockbackCoroutine;
+    public Coroutine knockbackCoroutine;
 
     [Header("문 안 상태")]
     private bool isInsideDoor = false;

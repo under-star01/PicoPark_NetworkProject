@@ -2,8 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Mirror;
 
-public class CanonBall : MonoBehaviour
+public class CanonBall : NetworkBehaviour
 {
     [Header("설정")]
     [SerializeField] private float shootSpeed = 10f;
@@ -11,8 +12,11 @@ public class CanonBall : MonoBehaviour
 
     private Rigidbody2D rb;
     private Animator ani;
+
     private bool isActive = false; // 현재 발사 중인지 확인
-    private bool shootLeft = true; // Canon에서 설정됨
+    [SyncVar] private bool shootLeft = true; // Canon에서 설정됨
+
+    private Canon ownerCanon;
 
     private void Awake()
     {
@@ -20,79 +24,85 @@ public class CanonBall : MonoBehaviour
         TryGetComponent(out ani);
     }
 
-    private void OnEnable()
+    [Server]
+    public void Init(bool left, Canon canon)
     {
+        shootLeft = left;
+        ownerCanon = canon;
         isActive = true;
-        //rb.bodyType = RigidbodyType2D.Dynamic; // 발사 시 Dynamic으로 변경
+
+        rb.gravityScale = 0f;
+        rb.linearVelocity = Vector2.zero;
     }
 
+    [ServerCallback]
     private void FixedUpdate()
     {
-        if (isActive)
-        {
-            Shoot();
-        }
+        if (!isActive) return;
+
+        Vector2 dir = shootLeft ? Vector2.left : Vector2.right;
+        rb.linearVelocity = dir * shootSpeed;
     }
 
+    [ServerCallback]
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (!isActive) return;
 
-        // 플레이어와 충돌 시 밀어내기
-        if (collision.gameObject.CompareTag("Player"))
+        // 플레이어 충돌
+        if (collision.CompareTag("Player"))
         {
-            PlayerMove playerMove = collision.gameObject.GetComponent<PlayerMove>();
-            if (playerMove != null)
+            PlayerMove player = collision.GetComponent<PlayerMove>();
+            if (player != null)
             {
-                // 대포알의 이동 방향으로 넉백
-                float pushDirection = shootLeft ? -1f : 1f;
-                Vector2 knockback = new Vector2(pushDirection * pushVelocity.x, pushVelocity.y);
+                float pushDir = shootLeft ? -1f : 1f;
+                Vector2 knockback = new Vector2(pushDir * pushVelocity.x, pushVelocity.y);
 
-                // 넉백 함수 호출
-                playerMove.Knockback(knockback);
+                player.Knockback(knockback);
             }
-            Hit();
+
+            HitServer();
+            return;
         }
 
+        // 벽 충돌
         if (collision.gameObject.layer == LayerMask.NameToLayer("Wall"))
         {
-            Hit();
+            HitServer();
         }
     }
 
-    private void Hit()
+    [Server]
+    private void HitServer()
     {
+        if (!isActive) return;
+
         isActive = false;
-        rb.linearVelocity = Vector2.zero; // 속도 초기화
-        //rb.bodyType = RigidbodyType2D.Kinematic; // Kinematic으로 변경하여 물리 영향 제거
-        ani.SetTrigger("Hit");
+        rb.linearVelocity = Vector2.zero;
+
+        RpcPlayHitAnim();
     }
 
-    private void Shoot()
+
+    [ClientRpc]
+    private void RpcPlayHitAnim()
     {
-        Vector2 direction;
-
-        if (shootLeft)
-        {
-            direction = Vector2.left;
-        }
-        else
-        {
-            direction = Vector2.right;
-        }
-
-        rb.linearVelocity = direction * shootSpeed;
+        if (ani != null)
+            ani.SetTrigger("Hit");
     }
 
-    // 방향 설정
-    public void SetDirection(bool left)
+    [Server]
+    private void DestroySelf()
     {
-        shootLeft = left;
+        if (ownerCanon != null)
+            ownerCanon.OnCanonBallDestroyed();
+
+        NetworkServer.Destroy(gameObject);
     }
 
-    // 애니메이션 이벤트에서 호출할 함수
-    public void Reload()
+    public void AnimHitEnd()
     {
-        gameObject.SetActive(false);
+        if (!isServer) return;
+        DestroySelf();
     }
 }

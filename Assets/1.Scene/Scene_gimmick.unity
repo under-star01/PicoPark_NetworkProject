@@ -7976,6 +7976,23 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1.25, y: 1.06}
   m_EdgeRadius: 0
+--- !u!114 &4868408414253201648
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3287902562639197024}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Mirror::Mirror.NetworkIdentity
+  sceneId: 2169982584
+  _assetId: 2629891137
+  serverOnly: 0
+  visibility: 0
+  hasSpawned: 0
 --- !u!114 &4877814045656019353
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9931,17 +9948,13 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2971436284852893730, guid: a665cf1a9d7eedf4392c6e764444a818, type: 3}
-      propertyPath: m_SortingOrder
-      value: 3
+    - target: {fileID: 3445486254663697179, guid: a665cf1a9d7eedf4392c6e764444a818, type: 3}
+      propertyPath: sceneId
+      value: 542740342
       objectReference: {fileID: 0}
     - target: {fileID: 4809993016693248593, guid: a665cf1a9d7eedf4392c6e764444a818, type: 3}
       propertyPath: m_Name
       value: HangAhRi
-      objectReference: {fileID: 0}
-    - target: {fileID: 4809993016693248593, guid: a665cf1a9d7eedf4392c6e764444a818, type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -10987,6 +11000,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1024156907348895572, guid: 858a91f1d60691e4481a6842fea9c6ca, type: 3}
       insertIndex: 2
       addedObject: {fileID: 4868408414253201644}
+    - targetCorrespondingSourceObject: {fileID: 1024156907348895572, guid: 858a91f1d60691e4481a6842fea9c6ca, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4868408414253201648}
   m_SourcePrefab: {fileID: 100100000, guid: 858a91f1d60691e4481a6842fea9c6ca, type: 3}
 --- !u!114 &6734883904705839954
 MonoBehaviour:

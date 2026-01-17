@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 2971436284852893730}
   - component: {fileID: 6038515418609074735}
   - component: {fileID: 7806285602175321893}
+  - component: {fileID: 3445486254663697179}
   m_Layer: 9
   m_Name: HangAhRi
   m_TagString: Untagged
@@ -80,7 +81,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 3
   m_Sprite: {fileID: 661719948108360851, guid: 645f32e5e1cfe584483f9c9e6d88042e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -150,9 +151,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 243a5be412226b342b59f656bd4da866, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Jar
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
   hitCount: 4
   damageSprites:
   - {fileID: 661719948108360851, guid: 645f32e5e1cfe584483f9c9e6d88042e, type: 3}
   - {fileID: 2202431456937014980, guid: 72b2f7a6696b0f54ab0db732183370a6, type: 3}
   - {fileID: -5510482565471146242, guid: 31de4ad18ef8dee458f2d3c5e0c17f41, type: 3}
   - {fileID: -6925885435171621623, guid: c01d1220b2ba3324d997ab41ede7dfc0, type: 3}
+--- !u!114 &3445486254663697179
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4809993016693248593}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Mirror::Mirror.NetworkIdentity
+  sceneId: 0
+  _assetId: 626473497
+  serverOnly: 0
+  visibility: 0
+  hasSpawned: 0

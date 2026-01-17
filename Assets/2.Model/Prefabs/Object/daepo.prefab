@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 7251133226132017543}
   - component: {fileID: 8712024525581004266}
   - component: {fileID: 4389109332475292701}
+  - component: {fileID: 9191621265596313411}
   m_Layer: 0
   m_Name: daepo
   m_TagString: Untagged
@@ -104,9 +105,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97247d25723b23341b1d508503e6bc34, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Canon
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
   canonBallPrefab: {fileID: 8256551358351774673, guid: 3d158fa84ae61ff46988fd6ada270b9a, type: 3}
   shootPoint: {fileID: 7896916247526955159}
   shootLeft: 1
+--- !u!114 &9191621265596313411
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1024156907348895572}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Mirror::Mirror.NetworkIdentity
+  sceneId: 0
+  _assetId: 2629891137
+  serverOnly: 0
+  visibility: 0
+  hasSpawned: 0
 --- !u!1 &3498883586847028115
 GameObject:
   m_ObjectHideFlags: 0

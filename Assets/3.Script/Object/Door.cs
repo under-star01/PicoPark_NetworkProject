@@ -125,6 +125,12 @@ public class Door : NetworkBehaviour
         PlayerMove player = playerId.GetComponent<PlayerMove>();
         if (player == null) return;
 
+        int playerLayer = LayerMask.NameToLayer("Player");
+        int undetectLayer = LayerMask.NameToLayer("UnDetect");
+
+        int targetLayer = hide ? undetectLayer : playerLayer;
+        player.gameObject.layer = targetLayer;
+
         // 스프라이트 투명도
         SpriteRenderer sr = player.GetComponent<SpriteRenderer>();
         if (sr != null)
