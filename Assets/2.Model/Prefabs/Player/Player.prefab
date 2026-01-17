@@ -160,14 +160,10 @@ MonoBehaviour:
   moveSpeed: 4
   jumpForce: 12
   groundCheck: {fileID: 0}
-  isGround: 0
   blockLayer:
     serializedVersion: 2
     m_Bits: 576
   isPushing: 0
-  wallScript: {fileID: 0}
-  frontPlayer: {fileID: 0}
-  backPlayer: {fileID: 0}
   ceilCheck: {fileID: 0}
   returnPos: {fileID: 0}
 --- !u!50 &6797068560288179526
@@ -255,10 +251,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f6f3bf89aa97405989c802ba270f815, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Mirror.Components::Mirror.NetworkAnimator
-  syncDirection: 1
+  syncDirection: 0
   syncMode: 0
   syncInterval: 0
-  clientAuthority: 1
+  clientAuthority: 0
   animator: {fileID: 843471294947913791}
 --- !u!114 &4026308688082644733
 MonoBehaviour:
@@ -289,7 +285,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a553cb17010b2403e8523b558bffbc14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Mirror.Components::Mirror.NetworkTransformUnreliable
-  syncDirection: 1
+  syncDirection: 0
   syncMode: 0
   syncInterval: 0
   target: {fileID: 1077388066812899517}
@@ -306,7 +302,7 @@ MonoBehaviour:
   showGizmos: 0
   showOverlay: 0
   overlayColor: {r: 0, g: 0, b: 0, a: 0.5}
-  bufferResetMultiplier: 3
+  bufferResetMultiplier: 1
   useFixedUpdate: 0
   positionSensitivity: 0.01
   rotationSensitivity: 0.01

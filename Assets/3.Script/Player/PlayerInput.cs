@@ -18,18 +18,31 @@ public class PlayerInput : NetworkBehaviour
     {
         playerInput = new IA_Player();
         TryGetComponent(out playerMove);
+
+        playerInput.Disable();
     }
+
+    // * Network Lifecycle
 
     public override void OnStartLocalPlayer()
     {
+        EnableInput();
+    }
 
+    public override void OnStopLocalPlayer()
+    {
+        DisableInput();
+    }
+
+    // * Input Enable / Disable
+    private void EnableInput()
+    {
         if (isWASD)
         {
             playerInput.Player.Move.performed += Move;
             playerInput.Player.Move.canceled += Move;
             playerInput.Player.Jump.performed += JumpStart;
             playerInput.Player.Jump.canceled += JumpEnd;
-            playerInput.Enable();
         }
         else
         {
@@ -37,32 +50,74 @@ public class PlayerInput : NetworkBehaviour
             playerInput.SubPlayer.Move.canceled += Move;
             playerInput.SubPlayer.Jump.performed += JumpStart;
             playerInput.SubPlayer.Jump.canceled += JumpEnd;
-            playerInput.Enable();
         }
+
+        playerInput.Enable();
     }
 
-    private void OnDisable()
+    private void DisableInput()
     {
-        if (isLocalPlayer)
+        if (isWASD)
         {
-            playerInput.Disable();
-            if (isWASD)
-            {
-                playerInput.Player.Move.performed -= Move;
-                playerInput.Player.Move.canceled -= Move;
-                playerInput.Player.Jump.performed -= JumpStart;
-                playerInput.Player.Jump.canceled -= JumpEnd;
-                playerInput.Disable();
-            }
-            else
-            {
-                playerInput.SubPlayer.Move.performed -= Move;
-                playerInput.SubPlayer.Move.canceled -= Move;
-                playerInput.SubPlayer.Jump.performed -= JumpStart;
-                playerInput.SubPlayer.Jump.canceled -= JumpEnd;
-                playerInput.Disable();
-            }
+            playerInput.Player.Move.performed -= Move;
+            playerInput.Player.Move.canceled -= Move;
+            playerInput.Player.Jump.performed -= JumpStart;
+            playerInput.Player.Jump.canceled -= JumpEnd;
         }
+        else
+        {
+            playerInput.SubPlayer.Move.performed -= Move;
+            playerInput.SubPlayer.Move.canceled -= Move;
+            playerInput.SubPlayer.Jump.performed -= JumpStart;
+            playerInput.SubPlayer.Jump.canceled -= JumpEnd;
+        }
+
+        playerInput.Disable();
+    }
+
+    // * Input Callbacks (Client)
+
+    private void Move(InputAction.CallbackContext context)
+    {
+        if (!isLocalPlayer) return;
+
+        Vector2 input = context.ReadValue<Vector2>();
+        CmdSetMove(input);
+    }
+
+    private void JumpStart(InputAction.CallbackContext context)
+    {
+        if (!isLocalPlayer) return;
+        CmdJumpStart();
+    }
+
+    private void JumpEnd(InputAction.CallbackContext context)
+    {
+        if (!isLocalPlayer) return;
+        CmdJumpEnd();
+    }
+
+    // * Commands (Client → Server)
+
+    [Command]
+    private void CmdSetMove(Vector2 input)
+    {
+        if (playerMove == null) return;
+        playerMove.SetMove(input); // 서버에서 실행됨
+    }
+
+    [Command]
+    private void CmdJumpStart()
+    {
+        if (playerMove == null) return;
+        playerMove.JumpStart();
+    }
+
+    [Command]
+    private void CmdJumpEnd()
+    {
+        if (playerMove == null) return;
+        playerMove.JumpStop();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -84,31 +139,5 @@ public class PlayerInput : NetworkBehaviour
                 nearDoor = null;
             }
         }
-    }
-
-    private void Move(InputAction.CallbackContext context)
-    {
-        Vector2 input = context.ReadValue<Vector2>();
-
-        playerMove.SetMove(input);
-    }
-
-    private void JumpStart(InputAction.CallbackContext context)
-    {
-        // 근처에 열린 문이 있으면 문 입장/퇴장
-        if (nearDoor != null && nearDoor.isOpened)
-        {
-            nearDoor.TryEnterDoor(playerMove);
-        }
-        else
-        {
-            // 문이 없으면 점프
-            playerMove.JumpStart();
-        }
-    }
-
-    private void JumpEnd(InputAction.CallbackContext context)
-    {
-        playerMove.JumpStop();
     }
 }

@@ -14,19 +14,9 @@ public class PlayerMove : NetworkBehaviour
 
     [Header("착지 관련 변수")]
     public GroundCheck groundCheck;
-    [SerializeField] private bool isGround = false;
-    [SerializeField] private LayerMask blockLayer;
 
     [Header("벽 밀기 관련 변수")]
-    public bool isPushing;
-    public MovingWall wallScript;
-    public PlayerMove frontPlayer;
-    public PlayerMove backPlayer;
-    private PlayerMove detectPlayer;
-    private bool prevIsPushing;
-
-    // RPC 추가
-    private NetworkIdentity currentWallNetId; // 현재 밀고 있는 벽의 NetworkIdentity
+    public bool isInputPushing; // 밀려고 입력 중인 상태
 
     [Header("플랫폼 관련 변수")]
     public CeilCheck ceilCheck;
@@ -65,26 +55,46 @@ public class PlayerMove : NetworkBehaviour
 
     private void Update()
     {
-        if (!isLocalPlayer) return;
+        if (!isClient) return;
         if (isDead) return;
 
-        isGround = groundCheck.IsGround;
-        animator.SetBool("IsGround", isGround);
+        animator.SetBool("IsGround", groundCheck.IsGround);
     }
 
+    [ServerCallback]
     private void FixedUpdate()
     {
-        if (!isLocalPlayer) return;
-
-        if (isDead) return;
-
-        if (knockbackCoroutine == null && !isInsideDoor)
+        if (isServer)
         {
-            Move();
+            ServerMove();
         }
-        CheckPush();
+        else if (isClient && isOwned)
+        {
+            ClientPredictMove();
+        }
     }
 
+    [Server]
+    private void ServerMove()
+    {
+        if (isDead) return;
+
+        if (knockbackCoroutine != null || isInsideDoor) return;
+        
+        CheckPush();
+        Move();
+    }
+
+    private void ClientPredictMove()
+    {
+        if (!isOwned) return;
+
+        Vector2 predictedVelocity = new Vector2(moveInput.x * moveSpeed, rb.linearVelocity.y);
+
+        rb.linearVelocity = new Vector2(predictedVelocity.x, rb.linearVelocity.y);
+    }
+
+    [Server]
     private void Move()
     {
         float moveX = moveInput.x * moveSpeed;
@@ -95,227 +105,91 @@ public class PlayerMove : NetworkBehaviour
             underMoveX = groundCheck.UnderPlayerRb.linearVelocity.x;
         }
 
-        rb.linearVelocity = new Vector2(moveX + (isPushing ? 0 : 1) * underMoveX, rb.linearVelocity.y);
+        rb.linearVelocity = new Vector2(
+            moveX + (isInputPushing ? 0 : 1) * underMoveX,
+            rb.linearVelocity.y
+        );
     }
 
+    [Server]
     public void SetMove(Vector2 input)
     {
-        if (!isLocalPlayer) return;
-
-        // 문 안에 있으면 입력 무시
         if (isInsideDoor) return;
-
-        if (isDead || isInsideDoor) return;
+        if (isDead) return;
 
         moveInput = input;
-
-        bool isRun = (Mathf.Abs(moveInput.x) > 0.01f);
-        animator.SetBool("IsRun", isRun);
-
-        if (isRun)
-        {
-            //spriteRenderer.flipX = moveInput.x < 0;
-            float direction = moveInput.x > 0 ? 1f : -1f;
-            transform.localScale = new Vector3(direction, 1f, 1f);
-        }
     }
 
+    [Server]
     public void JumpStart()
     {
-        if (!isGround) return;
+        if (!groundCheck.IsGround) return;
         if (isDead || isInsideDoor) return;
 
         rb.linearVelocityY = jumpForce;
     }
 
+    [Server]
     public void JumpStop()
     {
-        Vector2 velocity = rb.linearVelocity;
-
-        if (velocity.y > 0f)
+        if (rb.linearVelocity.y > 0f)
         {
-            velocity.y *= 0.5f;
-            rb.linearVelocity = velocity;
+            rb.linearVelocityY *= 0.5f;
         }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        if (!isServer) return;
 
+        HandleCollisionEnterServer(collision);
+    }
+
+    [Server]
+    private void HandleCollisionEnterServer(Collision2D collision)
+    {
         if (collision.gameObject.CompareTag("DeadLine"))
         {
             if (returnPos != null)
-            {
                 transform.position = returnPos.position;
-            }
         }
-
-        if (!isLocalPlayer) return;
 
         if (collision.gameObject.CompareTag("FlatForm") && collision.contacts[0].normal.y > 0.7f)
         {
-            CmdAddRider(collision.gameObject);
-        }
-    }
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.gameObject.CompareTag("Player"))
-        {
-            detectPlayer = collision.gameObject.GetComponentInParent<PlayerMove>();
-        }
-    }
-
-    private void OnTriggerStay2D(Collider2D collision)
-    {
-        if (!isLocalPlayer || !isPushing) return;
-        
-        // 플레이어와 충돌할 경우, 미는 인원 추가
-        if (collision.gameObject.CompareTag("Player") && detectPlayer != null)
-        {
-            // 밀격 인원 확인 -> 내가 밀고 있는 방향에 상대가 있는지
-            float dir = Mathf.Sign(moveInput.x); // 부호만 확인
-            float detectDir = Mathf.Sign(detectPlayer.transform.position.x - transform.position.x);
-
-            if (detectDir == dir)
+            FlatForm platform = collision.gameObject.GetComponent<FlatForm>();
+            if (platform != null)
             {
-                frontPlayer = detectPlayer;
-                detectPlayer.backPlayer = this;
-            }
-        }
-
-        if (collision.gameObject.CompareTag("MovingWall") && currentWallNetId == null)
-        {
-            NetworkIdentity netId = collision.GetComponent<NetworkIdentity>();
-            if (netId != null)
-            {
-                currentWallNetId = netId;
-                CmdAddPusher(netId);
+                platform.AddRider(this);
             }
         }
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (!isLocalPlayer) return;
+        if (!isServer) return;
 
-        if (collision.CompareTag("MovingWall") && currentWallNetId != null)
-        {
-            CmdRemovePusher(currentWallNetId);
-            currentWallNetId = null;
-        }
+        HandleTriggerExitServer(collision);
+    }
 
+    [Server]
+    private void HandleTriggerExitServer(Collider2D collision)
+    {
         if (collision.CompareTag("FlatForm"))
         {
-            CmdRemoveRider(collision.gameObject);
+            FlatForm platform = collision.GetComponent<FlatForm>();
+            if (platform != null)
+            {
+                platform.RemoveRider(this);
+            }
         }
     }
 
-    // MovingWall를 미는 Pusher추가
-    [Command]
-    private void CmdAddPusher(NetworkIdentity wallNetId)
-    {
-        if (wallNetId == null) return;
-
-        MovingWall wall = wallNetId.GetComponent<MovingWall>();
-        if (wall == null) return;
-
-        wall.AddPusher(this);
-        wallScript = wall;
-    }
-
-    // MovingWall를 미는 Pusher 해제
-    [Command]
-    private void CmdRemovePusher(NetworkIdentity wallNetId)
-    {
-        if (wallNetId == null) return;
-
-        MovingWall wall = wallNetId.GetComponent<MovingWall>();
-        if (wall == null) return;
-
-        wall.RemovePusher(this);
-
-        if (wallScript == wall)
-            wallScript = null;
-    }
-
-    // FlatForm에 인원수 추가 Command
-    [Command]
-    private void CmdAddRider(GameObject platformObj)
-    {
-        FlatForm platform = platformObj.GetComponent<FlatForm>();
-        if (platform == null) return;
-
-        platform.AddRider(this);
-    }
-
-    // FlatForm에 인원수 감소 Command
-    [Command]
-    private void CmdRemoveRider(GameObject platformObj)
-    {
-        FlatForm platform = platformObj.GetComponent<FlatForm>();
-        if (platform == null) return;
-
-        platform.RemoveRider(this);
-    }
-
+    [Server]
     //밀기 체크
     private void CheckPush()
     {
-        // 이전 상태 저장
-        prevIsPushing = isPushing;
-        isPushing = false;
-
-        if (Mathf.Abs(moveInput.x) < 0.01f)
-        {
-            // input이 없을 경우, 밀기 상태 해제
-            EndPush();
-            return;
-        }
-
-        // 자기 콜라이더 밖에서 레이 시작
-        Vector2 dir = new Vector2(Mathf.Sign(moveInput.x), 0f); //바라보는 방향
-
-        BoxCollider2D Col = GetComponent<BoxCollider2D>(); //내 콜라이더
-        float offset = Col.size.x / 2f + 0.05f; // 콜라이더 절반 + 살짝 앞에서 발사(자기감지방지)
-        Vector2 pos = rb.position + dir * offset;
-
-        RaycastHit2D hit = Physics2D.Raycast(pos, dir, 0.3f, blockLayer);
-
-        if (hit.collider != null && isGround)
-        {
-            isPushing = true;
-        }
-        if (prevIsPushing && !isPushing)
-        {
-            // isPushiong 변경시, 밀기 상태 해제
-            EndPush();
-        }
-
-        animator.SetBool("IsPush", isPushing);
-    }
-
-    private void EndPush()
-    {
-        if (!isLocalPlayer) return;
-
-        if (currentWallNetId != null)
-        {
-            CmdRemovePusher(currentWallNetId);
-            currentWallNetId = null;
-        }
-
-        if (frontPlayer != null)
-        {
-            frontPlayer.backPlayer = null;
-            frontPlayer = null;
-        }
-
-        if (backPlayer != null)
-        {
-            backPlayer.frontPlayer = null;
-            backPlayer = null;
-        }
+        // 밀기 의도 (입력 + 착지) 판정
+        isInputPushing = groundCheck.IsGround && Mathf.Abs(moveInput.x) > 0.01f;
     }
 
     //자기 자신 콜라이더 무시
@@ -361,9 +235,13 @@ public class PlayerMove : NetworkBehaviour
 
     public void Die()
     {
-        if (isDead) return; // 죽었으면 나가
+        if (isDead) return;
+
+        if (!isServer) return;
 
         isDead = true;
+        isInputPushing = false;
+        moveInput = Vector2.zero;
 
         // Rigidbody를 Kinematic으로 변경
         rb.bodyType = RigidbodyType2D.Kinematic;
