@@ -17,7 +17,6 @@ public class MovingWall : NetworkBehaviour
     
     [SyncVar(hook = nameof(OnRemainingCntChanged))]
     private int remainingCnt;
-    private float pushDir; 
     private bool canMove = false;
 
     private Rigidbody2D rb;
@@ -39,7 +38,7 @@ public class MovingWall : NetworkBehaviour
     {
         if (!isServer) return;
 
-        int newRemaining = Mathf.Max(0, targetMoveCnt - pushers.Count);
+        int newRemaining = Mathf.Clamp(targetMoveCnt - pushers.Count, 0, targetMoveCnt);
         if (remainingCnt != newRemaining)
             remainingCnt = newRemaining;
 
@@ -49,23 +48,20 @@ public class MovingWall : NetworkBehaviour
             return;
         }
 
-        rb.linearVelocity = new Vector2(pushDir * 2f, rb.linearVelocity.y);
+        rb.linearVelocity = new Vector2(GetPushDir() * 2f, rb.linearVelocity.y);
     }
 
     // 서버 전용 로직
     public void AddPusher(PlayerMove p)
     {
         if (!isServer || p == null) return;
-        
-        pushers.Add(p);
 
-        // 방향 저장
-        pushDir = Mathf.Sign(p.transform.localScale.x);
+        if (!pushers.Add(p)) return;
 
         if (pushers.Count >= targetMoveCnt)
         {
-            rb.bodyType = RigidbodyType2D.Dynamic;
             canMove = true;
+            rb.bodyType = RigidbodyType2D.Dynamic;
         }
     }
 
@@ -73,14 +69,21 @@ public class MovingWall : NetworkBehaviour
     {
         if (!isServer || p == null) return;
 
-        pushers.Remove(p);
+        if (!pushers.Remove(p)) return;
 
         if (pushers.Count < targetMoveCnt)
         {
             canMove = false;
-            rb.bodyType = RigidbodyType2D.Kinematic;
             rb.linearVelocity = Vector2.zero;
+            rb.bodyType = RigidbodyType2D.Kinematic;
         }
+    }
+
+    private float GetPushDir()
+    {
+        foreach (var p in pushers)
+            return Mathf.Sign(p.transform.localScale.x);
+        return 0f;
     }
 
     // SyncVar Hook 설정

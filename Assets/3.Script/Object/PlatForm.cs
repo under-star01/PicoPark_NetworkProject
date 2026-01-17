@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
 
-public class FlatForm : NetworkBehaviour
+public class PlatForm : NetworkBehaviour
 {
     [Header("Á¶°Ç")]
     [SerializeField] private int targetMoveCnt = 2;
