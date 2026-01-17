@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: 4213660691945762977}
   - component: {fileID: 6990944086012135202}
   - component: {fileID: 2536212597761949553}
+  - component: {fileID: 2160393704803080122}
+  - component: {fileID: 4285796827214186617}
   m_Layer: 0
   m_Name: Door
   m_TagString: Untagged
@@ -150,7 +152,60 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18282bc275e0ad948abcda35757caae6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Door
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
   closedSprite: {fileID: 5143072091549839320, guid: f8adffecd3394b242908a9c5bbd7c54c, type: 3}
   openedSprite: {fileID: 4856990145134343996, guid: 0fc78e6b11e77e348bc2484f3cee966d, type: 3}
   totalPlayerCount: 2
-  isOpened: 0
+--- !u!114 &2160393704803080122
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3562375863293982088}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Mirror::Mirror.NetworkIdentity
+  sceneId: 0
+  _assetId: 4004795789
+  serverOnly: 0
+  visibility: 0
+  hasSpawned: 0
+--- !u!114 &4285796827214186617
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3562375863293982088}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a553cb17010b2403e8523b558bffbc14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Mirror.Components::Mirror.NetworkTransformUnreliable
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
+  target: {fileID: 8676765862272143685}
+  syncPosition: 1
+  syncRotation: 1
+  syncScale: 1
+  onlySyncOnChange: 1
+  compressRotation: 1
+  interpolatePosition: 1
+  interpolateRotation: 1
+  interpolateScale: 1
+  coordinateSpace: 0
+  timelineOffset: 1
+  showGizmos: 0
+  showOverlay: 0
+  overlayColor: {r: 0, g: 0, b: 0, a: 0.5}
+  bufferResetMultiplier: 3
+  useFixedUpdate: 1
+  positionSensitivity: 0.01
+  rotationSensitivity: 0.01
+  scaleSensitivity: 0.01

@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
 
-public class Key : MonoBehaviour
+public class Key : NetworkBehaviour
 {
+    [SyncVar(hook = nameof(OnOwnerChanged))]
+    private NetworkIdentity ownerNetId;
+
     private PlayerMove currentOwner; // 현재 열쇠를 가진 플레이어
     private bool canPickup = true; // 픽업 가능 여부
     private Rigidbody2D rb;
@@ -14,6 +17,7 @@ public class Key : MonoBehaviour
         TryGetComponent(out rb);
     }
 
+    [ServerCallback]
     private void FixedUpdate()
     {
         // 주인이 있으면 따라가기
@@ -23,6 +27,7 @@ public class Key : MonoBehaviour
         }
     }
 
+    [ServerCallback]
     private void OnTriggerEnter2D(Collider2D collision)
     {
         // 픽업 가능 상태가 아니면 무시
@@ -41,23 +46,17 @@ public class Key : MonoBehaviour
         }
     }
 
+    [Server]
     private void FollowOwner()
     {
-        if (currentOwner == null) return;
-
-        // 플레이어 뒤쪽 위치 계산
-        Vector2 pos = GetFollowPosition();
-
-        // 부드럽게 이동
-        Vector2 newPos = Vector2.Lerp(rb.position, pos, 5f * Time.fixedDeltaTime); // 속도 =5f
-        rb.MovePosition(newPos);
+        Vector2 targetPos = GetFollowPosition();
+        rb.MovePosition(Vector2.Lerp(rb.position, targetPos, 5f * Time.fixedDeltaTime));
     }
 
     private Vector2 GetFollowPosition()
     {
         // 플레이어가 보는 방향의 반대쪽 뒤로 위치
-        SpriteRenderer playerSprite = currentOwner.GetComponent<SpriteRenderer>();
-        float direction = playerSprite.flipX ? 1f : -1f; // flipX가 true면 왼쪽을 보고 있음
+        float direction = currentOwner.transform.localScale.x > 0 ? -1f : 1f;
 
         Vector2 ownerPos = currentOwner.transform.position;
         Vector2 offset = new Vector2(direction * 0.3f, 0.5f);//플레이 뒤에서 살짝 위
@@ -65,25 +64,37 @@ public class Key : MonoBehaviour
         return ownerPos + offset;
     }
 
+    [Server]
     private void SetOwner(PlayerMove newOwner)
     {
         currentOwner = newOwner;
+        ownerNetId = newOwner.netIdentity;
 
         // 픽업 딜레이
         StartCoroutine(PickupDelay_co());
     }
 
-    private IEnumerator PickupDelay_co()//픽업딜레이
+    [Server]
+    private IEnumerator PickupDelay_co()
     {
         canPickup = false;
         yield return new WaitForSeconds(0.2f);
         canPickup = true;
     }
 
+    [Server]
     public void ResetKey(Vector2 position)
     {
         currentOwner = null;
-        transform.position = position;
+        ownerNetId = null;
+
+        rb.linearVelocity = Vector2.zero;
+        rb.position = position;
+
         canPickup = true;
+    }
+    private void OnOwnerChanged(NetworkIdentity oldOwner, NetworkIdentity newOwner)
+    {
+        currentOwner = newOwner ? newOwner.GetComponent<PlayerMove>() : null;
     }
 }

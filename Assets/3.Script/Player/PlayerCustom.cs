@@ -65,6 +65,11 @@ public class PlayerCustom : MonoBehaviour
         hatSR.enabled = false;
     }
 
+    // 모자 켜기
+    public void ActiveHat()
+    {
+        hatSR.enabled = true;
+    }
 
     // Inspector에서 미리보기
     private void OnValidate()

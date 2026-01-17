@@ -110,6 +110,15 @@ public class PlayerInput : NetworkBehaviour
     private void CmdJumpStart()
     {
         if (playerMove == null) return;
+
+
+        // 문이 우선
+        if (nearDoor != null)
+        {
+            nearDoor.TryEnterDoor(playerMove);
+            return;
+        }
+        // 문 없으면 점프
         playerMove.JumpStart();
     }
 
@@ -122,6 +131,8 @@ public class PlayerInput : NetworkBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        if (!isLocalPlayer) return;
+
         // 문 근처에 도착
         if (collision.gameObject.TryGetComponent(out Door door))
         {
@@ -131,6 +142,8 @@ public class PlayerInput : NetworkBehaviour
 
     private void OnTriggerExit2D(Collider2D collision)
     {
+        if (!isLocalPlayer) return;
+
         // 문에서 멀어짐
         if (collision.gameObject.TryGetComponent(out Door door))
         {

@@ -7369,13 +7369,13 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2160393704803080122, guid: 1f7c251538c636a46aec8b6934a4e7ae, type: 3}
+      propertyPath: sceneId
+      value: 466337942
+      objectReference: {fileID: 0}
     - target: {fileID: 3562375863293982088, guid: 1f7c251538c636a46aec8b6934a4e7ae, type: 3}
       propertyPath: m_Name
       value: Door
-      objectReference: {fileID: 0}
-    - target: {fileID: 4213660691945762977, guid: 1f7c251538c636a46aec8b6934a4e7ae, type: 3}
-      propertyPath: m_SortingOrder
-      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 8676765862272143685, guid: 1f7c251538c636a46aec8b6934a4e7ae, type: 3}
       propertyPath: m_LocalPosition.x
@@ -9938,6 +9938,10 @@ PrefabInstance:
     - target: {fileID: 4809993016693248593, guid: a665cf1a9d7eedf4392c6e764444a818, type: 3}
       propertyPath: m_Name
       value: HangAhRi
+      objectReference: {fileID: 0}
+    - target: {fileID: 4809993016693248593, guid: a665cf1a9d7eedf4392c6e764444a818, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -14050,18 +14054,6 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 2672669964275229811, guid: 64df613497128ab4bbeac832dcc985be, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 2672669964275229811, guid: 64df613497128ab4bbeac832dcc985be, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 2672669964275229811, guid: 64df613497128ab4bbeac832dcc985be, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 2672669964275229811, guid: 64df613497128ab4bbeac832dcc985be, type: 3}
       propertyPath: m_LocalPosition.x
       value: -7.81
       objectReference: {fileID: 0}
@@ -14100,6 +14092,10 @@ PrefabInstance:
     - target: {fileID: 2672669964275229811, guid: 64df613497128ab4bbeac832dcc985be, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5109581034274061113, guid: 64df613497128ab4bbeac832dcc985be, type: 3}
+      propertyPath: sceneId
+      value: 1144666140
       objectReference: {fileID: 0}
     - target: {fileID: 6813856348222151652, guid: 64df613497128ab4bbeac832dcc985be, type: 3}
       propertyPath: m_Name
