@@ -161,6 +161,8 @@ MonoBehaviour:
   jumpForce: 12
   groundCheck: {fileID: 0}
   isInputPushing: 0
+  isContributingPush: 0
+  frontPlayer: {fileID: 0}
   ceilCheck: {fileID: 0}
   returnPos: {fileID: 0}
 --- !u!50 &6797068560288179526

@@ -52,7 +52,7 @@ public class MovingWall : NetworkBehaviour
 
         foreach (var p in touchingPlayers)
         {
-            if (p == null || !p.isInputPushing) continue;
+            if (p == null || !p.isContributingPush) continue;
         
             pushers.Add(p);
 

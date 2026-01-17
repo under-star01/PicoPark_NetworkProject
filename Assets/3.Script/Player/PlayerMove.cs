@@ -17,10 +17,26 @@ public class PlayerMove : NetworkBehaviour
 
     [Header("벽 밀기 관련 변수")]
     public bool isInputPushing; // 밀려고 입력 중인 상태
+    public bool isContributingPush; // 벽 밀기에 기여중인지 상태
+    public PlayerMove frontPlayer;
+    private bool touchingWall;
 
     [Header("플랫폼 관련 변수")]
     public CeilCheck ceilCheck;
     public int stackCnt => ceilCheck.ceilingCnt;
+
+    [Header("SyncVar 변수")]
+    [SyncVar(hook = nameof(OnRunChanged))]
+    private bool syncIsRun;
+
+    [SyncVar(hook = nameof(OnPushChanged))]
+    private bool syncIsPush;
+
+    [SyncVar(hook = nameof(OnGroundChanged))]
+    private bool syncIsGround;
+
+    [SyncVar(hook = nameof(OnFlipChanged))]
+    private int syncFlipDir;
 
     [Header("리턴 위치")]
     [SerializeField] private Transform returnPos;
@@ -83,6 +99,17 @@ public class PlayerMove : NetworkBehaviour
         
         CheckPush();
         Move();
+
+        // 서버에서 애니메이션 상태 계산
+        syncIsRun = Mathf.Abs(moveInput.x) > 0.01f;
+        syncIsPush = isContributingPush;
+        syncIsGround = groundCheck.IsGround;
+
+        // 방향 결정
+        if (Mathf.Abs(moveInput.x) > 0.01f)
+        {
+            syncFlipDir = (moveInput.x > 0) ? 1 : -1;
+        }
     }
 
     private void ClientPredictMove()
@@ -156,12 +183,29 @@ public class PlayerMove : NetworkBehaviour
 
         if (collision.gameObject.CompareTag("FlatForm") && collision.contacts[0].normal.y > 0.7f)
         {
-            FlatForm platform = collision.gameObject.GetComponent<FlatForm>();
+            PlatForm platform = collision.gameObject.GetComponent<PlatForm>();
             if (platform != null)
             {
                 platform.AddRider(this);
             }
         }
+    }
+
+    [ServerCallback]
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        if (!collision.gameObject.CompareTag("MovingWall")) return;
+
+        // 벽과 실제로 맞닿아 있음
+        touchingWall = true;
+    }
+
+    [ServerCallback]
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        if (!collision.gameObject.CompareTag("MovingWall")) return;
+
+        touchingWall = false;
     }
 
     private void OnTriggerExit2D(Collider2D collision)
@@ -176,7 +220,7 @@ public class PlayerMove : NetworkBehaviour
     {
         if (collision.CompareTag("FlatForm"))
         {
-            FlatForm platform = collision.GetComponent<FlatForm>();
+            PlatForm platform = collision.GetComponent<PlatForm>();
             if (platform != null)
             {
                 platform.RemoveRider(this);
@@ -190,6 +234,37 @@ public class PlayerMove : NetworkBehaviour
     {
         // 밀기 의도 (입력 + 착지) 판정
         isInputPushing = groundCheck.IsGround && Mathf.Abs(moveInput.x) > 0.01f;
+
+        // 직접 벽을 밀고 있는지 확인
+        bool pushingWall = isInputPushing && touchingWall;
+
+        // 앞 사람을 밀고 있고, 앞 사람이 이미 힘을 전달 중인지 확인
+        bool pushingFrontPlayer = isInputPushing && frontPlayer != null && frontPlayer.isContributingPush;
+
+        // 최종적으로 힘 전달 여부 결정
+        isContributingPush = pushingWall || pushingFrontPlayer;
+    }
+
+    private void OnRunChanged(bool _, bool newValue)
+    {
+        animator.SetBool("IsRun", newValue);
+    }
+
+    private void OnPushChanged(bool _, bool newValue)
+    {
+        animator.SetBool("IsPush", newValue);
+    }
+
+    private void OnGroundChanged(bool _, bool newValue)
+    {
+        animator.SetBool("IsGround", newValue);
+    }
+
+    private void OnFlipChanged(int _, int newDir)
+    {
+        Vector3 scale = transform.localScale;
+        scale.x = Mathf.Abs(scale.x) * newDir;
+        transform.localScale = scale;
     }
 
     //자기 자신 콜라이더 무시
