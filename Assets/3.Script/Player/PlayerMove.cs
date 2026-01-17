@@ -6,44 +6,40 @@ using Mirror;
 
 public class PlayerMove : NetworkBehaviour
 {
-    [Header("ÀÌµ¿ °ü·Ã º¯¼ö")]
+    [Header("ì´ë™ ê´€ë ¨ ë³€ìˆ˜")]
     [SerializeField] private float moveSpeed = 5f;
 
-    [Header("Á¡¼ö °ü·Ã º¯¼ö")]
+    [Header("ì ìˆ˜ ê´€ë ¨ ë³€ìˆ˜")]
     [SerializeField] private float jumpForce = 50f;
 
-    [Header("ÂøÁö °ü·Ã º¯¼ö")]
+    [Header("ì°©ì§€ ê´€ë ¨ ë³€ìˆ˜")]
     public GroundCheck groundCheck;
     [SerializeField] private bool isGround = false;
     [SerializeField] private LayerMask blockLayer;
 
-    [Header("º® ¹Ğ±â °ü·Ã º¯¼ö")]
+    [Header("ë²½ ë°€ê¸° ê´€ë ¨ ë³€ìˆ˜")]
     public bool isPushing;
-    public MovingWall wallScript;
     public PlayerMove frontPlayer;
     public PlayerMove backPlayer;
-    private PlayerMove detectPlayer;
-    private bool prevIsPushing; 
-    private NetworkIdentity candidateWallNetId; // ¹Ğ ¼ö ÀÖ´Â ÈÄº¸ º®
+    private NetworkIdentity candidateWallNetId; // ë°€ ìˆ˜ ìˆëŠ” í›„ë³´ ë²½
+    private NetworkIdentity currentWallNetId; // í˜„ì¬ ë°€ê³  ìˆëŠ” ë²½ì˜ NetworkIdentity
 
-    private NetworkIdentity currentWallNetId; // ÇöÀç ¹Ğ°í ÀÖ´Â º®ÀÇ NetworkIdentity
-
-    [Header("ÇÃ·§Æû °ü·Ã º¯¼ö")]
+    [Header("í”Œë«í¼ ê´€ë ¨ ë³€ìˆ˜")]
+    [SerializeField] private bool isOnPlatform = false;
+    [SerializeField] private Transform currentPlatform;
     public CeilCheck ceilCheck;
     public int stackCnt => ceilCheck.ceilingCnt;
     
-    private NetworkIdentity currentPlatFormNetId; // ÇöÀç ¹Ğ°í ÀÖ´Â ÇÃ·§ÆûÀÇ NetworkIdentity
-
-    [Header("¸®ÅÏ À§Ä¡")]
+    [Header("ë¦¬í„´ ìœ„ì¹˜")]
     [SerializeField] private Transform returnPos;
 
-    [Header("³Ë¹é")]
+    [Header("ë„‰ë°±")]
     private Coroutine knockbackCoroutine;
 
-    [Header("¹® ¾È »óÅÂ")]
+    [Header("ë¬¸ ì•ˆ ìƒíƒœ")]
     private bool isInsideDoor = false;
 
-    [Header("Á×À½")]
+    [Header("ì£½ìŒ")]
     private bool isDead = false;
 
     private Rigidbody2D rb;
@@ -61,8 +57,23 @@ public class PlayerMove : NetworkBehaviour
         ceilCheck = GetComponentInChildren<CeilCheck>();
 
         IgnoreSelfCollision();
+    }
 
-        isDead = false;
+    public override void OnStartServer()
+    {
+        rb.bodyType = RigidbodyType2D.Dynamic;
+    }
+
+    public override void OnStartClient()
+    {
+        if (isLocalPlayer)
+        {
+            rb.simulated = true;   // ë‚´ ìºë¦­í„°ëŠ” ë¬¼ë¦¬ ì¼¬
+        }
+        else
+        {
+            rb.simulated = false;  // ë‚¨ ìºë¦­í„°ëŠ” ì„œë²„ ê²°ê³¼ë§Œ
+        }
     }
 
     private void Update()
@@ -76,14 +87,22 @@ public class PlayerMove : NetworkBehaviour
 
     private void FixedUpdate()
     {
-        if (!isLocalPlayer) return;
-
         if (isDead) return;
+
+         // ì„œë²„ ì „ìš© ì²˜ë¦¬
+        if (isServer)
+        {
+            ApplyPlatformVelocity_Server();
+        }
+
+        // ë¡œì»¬ ì…ë ¥ ì²˜ë¦¬
+        if (!isLocalPlayer) return;
 
         if (knockbackCoroutine == null && !isInsideDoor)
         {
             Move();
         }
+
         CheckPush();
     }
 
@@ -104,7 +123,7 @@ public class PlayerMove : NetworkBehaviour
     {
         if (!isLocalPlayer) return;
 
-        // ¹® ¾È¿¡ ÀÖÀ¸¸é ÀÔ·Â ¹«½Ã
+        // ë¬¸ ì•ˆì— ìˆìœ¼ë©´ ì…ë ¥ ë¬´ì‹œ
         if (isInsideDoor) return;
 
         if (isDead || isInsideDoor) return;
@@ -116,9 +135,9 @@ public class PlayerMove : NetworkBehaviour
 
         if (isRun)
         {
-            //spriteRenderer.flipX = moveInput.x < 0;
+            Vector2 originScale = transform.localScale;
             float direction = moveInput.x > 0 ? 1f : -1f;
-            transform.localScale = new Vector3(direction, 1f, 1f);
+            transform.localScale = new Vector2(direction * Mathf.Abs(originScale.x), originScale.y);
         }
     }
 
@@ -153,7 +172,7 @@ public class PlayerMove : NetworkBehaviour
             }
         }
 
-        if (collision.gameObject.CompareTag("PlatForm") && currentWallNetId == null)
+        if (collision.gameObject.CompareTag("PlatForm"))
         {
             if (collision.contacts[0].normal.y > 0.7f)
             {
@@ -161,18 +180,9 @@ public class PlayerMove : NetworkBehaviour
 
                 if (netId != null)
                 {
-                    currentPlatFormNetId = netId;
-                    CmdAddRider(netId);
+                    CmdEnterPlatform(netId);
                 }
             }
-        }
-    }
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.gameObject.CompareTag("Player"))
-        {
-            detectPlayer = collision.gameObject.GetComponentInParent<PlayerMove>();
         }
     }
 
@@ -186,11 +196,6 @@ public class PlayerMove : NetworkBehaviour
             {
                 candidateWallNetId = collision.GetComponent<NetworkIdentity>();
             }
-        }
-
-        if (collision.CompareTag("Player"))
-        {
-            detectPlayer = collision.GetComponentInParent<PlayerMove>();
         }
     }
 
@@ -206,14 +211,18 @@ public class PlayerMove : NetworkBehaviour
             }
         }
 
-        if (collision.CompareTag("PlatForm") && currentWallNetId == null)
+        if (collision.gameObject.CompareTag("PlatForm"))
         {
-            CmdRemoveRider(currentPlatFormNetId);
-            currentPlatFormNetId = null;
+            NetworkIdentity netId = collision.transform.GetComponent<NetworkIdentity>();
+
+            if (netId != null)
+            {
+                CmdExitPlatform(netId);
+            }
         }
     }
 
-    // MovingWall¸¦ ¹Ì´Â PusherÃß°¡
+    // MovingWallë¥¼ ë¯¸ëŠ” Pusherì¶”ê°€
     [Command]
     private void CmdAddPusher(NetworkIdentity wallNetId)
     {
@@ -223,10 +232,9 @@ public class PlayerMove : NetworkBehaviour
         if (wall == null) return;
 
         wall.AddPusher(this);
-        wallScript = wall;
     }
 
-    // MovingWall¸¦ ¹Ì´Â Pusher ÇØÁ¦
+    // MovingWallë¥¼ ë¯¸ëŠ” Pusher í•´ì œ
     [Command]
     private void CmdRemovePusher(NetworkIdentity wallNetId)
     {
@@ -236,40 +244,82 @@ public class PlayerMove : NetworkBehaviour
         if (wall == null) return;
 
         wall.RemovePusher(this);
-        wallScript = null;
     }
 
-    // PlatForm¿¡ ÀÎ¿ø¼ö Ãß°¡ Command
+    // í”Œë«í¼ê³¼ ì¶©ëŒ Command 
     [Command]
-    private void CmdAddRider(NetworkIdentity playformNetId)
+    private void CmdEnterPlatform(NetworkIdentity platformNetId)
     {
-        if (playformNetId == null) return;
+        if (platformNetId == null) return;
 
-        PlatForm platform = playformNetId.GetComponent<PlatForm>();
+        PlatForm platform = platformNetId.GetComponent<PlatForm>();
         if (platform == null) return;
 
-        platform.AddRider(this);
+        platform.ServerAttachPlayer(this);
     }
 
-    // PlatForm¿¡ ÀÎ¿ø¼ö °¨¼Ò Command
+    // í”Œë«í¼ê³¼ ì¶©ë™ í•´ì œ Command
     [Command]
-    private void CmdRemoveRider(NetworkIdentity playformNetId)
+    private void CmdExitPlatform(NetworkIdentity platformNetId)
     {
-        if (playformNetId == null) return;
+        if (platformNetId == null) return;
 
-        PlatForm platform = playformNetId.GetComponent<PlatForm>();
+        PlatForm platform = platformNetId.GetComponent<PlatForm>();
         if (platform == null) return;
 
-        platform.RemoveRider(this);
+        platform.ServerDetachPlayer(this);
+
     }
 
-    //¹Ğ±â Ã¼Å©
+    // ì„œë²„ ì „ìš© í”Œë«í¼ ë³´ì • ë©”ì†Œë“œ
+    [Server]
+    private void ApplyPlatformVelocity_Server()
+    {
+        if (!isOnPlatform || currentPlatform == null) return;
+
+        Rigidbody2D platformRb = currentPlatform.GetComponent<Rigidbody2D>();
+        if (platformRb == null) return;
+
+        rb.linearVelocity = new Vector2(rb.linearVelocity.x + platformRb.linearVelocity.x, rb.linearVelocity.y);
+    }
+
+    [Server]
+    public void SetOnPlatform_Server(Transform platform)
+    {
+        isOnPlatform = true;
+        currentPlatform = platform;
+
+        TargetSetOnPlatform(connectionToClient, platform.GetComponent<NetworkIdentity>());
+    }
+
+    [Server]
+    public void ClearOnPlatform_Server()
+    {
+        isOnPlatform = false;
+        currentPlatform = null;
+
+        TargetClearOnPlatform(connectionToClient);
+    }
+
+    [TargetRpc]
+    private void TargetSetOnPlatform(NetworkConnection target, NetworkIdentity platformNetId)
+    {
+        currentPlatform = platformNetId.transform;
+    }
+
+    [TargetRpc]
+    private void TargetClearOnPlatform(NetworkConnection target)
+    {
+        currentPlatform = null;
+    }
+
+    //ë°€ê¸° ì²´í¬
     private void CheckPush()
     {
         bool prev = isPushing;
         bool wantPush = false;
 
-        // 1. ÀÔ·Â ¾øÀ¸¸é ¹«Á¶°Ç ÇØÁ¦
+        // 1. ì…ë ¥ ì—†ìœ¼ë©´ ë¬´ì¡°ê±´ í•´ì œ
         if (Mathf.Abs(moveInput.x) < 0.01f)
         {
             EndPush();
@@ -277,7 +327,7 @@ public class PlayerMove : NetworkBehaviour
             return;
         }
 
-        // 2. Á÷Á¢ º® ¹Ì´Â Raycast
+        // 2. ì§ì ‘ ë²½ ë¯¸ëŠ” Raycast
         Vector2 dir = new Vector2(Mathf.Sign(moveInput.x), 0f);
         BoxCollider2D col = GetComponent<BoxCollider2D>();
         float offset = col.size.x / 2f + 0.05f;
@@ -290,14 +340,14 @@ public class PlayerMove : NetworkBehaviour
             wantPush = candidateWallNetId != null;
         }
 
-        // 3. ¾Õ ÇÃ·¹ÀÌ¾î¸¦ ÅëÇØ ¹Ì´Â °æ¿ì
+        // 3. ì• í”Œë ˆì´ì–´ë¥¼ í†µí•´ ë¯¸ëŠ” ê²½ìš°
         if (!wantPush && frontPlayer != null && frontPlayer.currentWallNetId != null)
         {
             candidateWallNetId = frontPlayer.currentWallNetId;
             wantPush = true;
         }
 
-        // 4. »óÅÂ ÀüÀÌ °¨Áö
+        // 4. ìƒíƒœ ì „ì´ ê°ì§€
         if (!prev && wantPush)
         {
             StartPush();
@@ -348,16 +398,16 @@ public class PlayerMove : NetworkBehaviour
         }
     }
 
-    //ÀÚ±â ÀÚ½Å Äİ¶óÀÌ´õ ¹«½Ã
+    //ìê¸° ìì‹  ì½œë¼ì´ë” ë¬´ì‹œ
     private void IgnoreSelfCollision()
     {
-        Collider2D[] Cols = GetComponents<Collider2D>(); // ³» Äİ¶óÀÌ´õ
-        Collider2D[] childCols = GetComponentsInChildren<Collider2D>(); //ÀÚ½Äµé Äİ¶óÀÌ´õ
+        Collider2D[] Cols = GetComponents<Collider2D>(); // ë‚´ ì½œë¼ì´ë”
+        Collider2D[] childCols = GetComponentsInChildren<Collider2D>(); //ìì‹ë“¤ ì½œë¼ì´ë”
 
-        //ÀÚ½Ä Äİ¶óÀÌ´õ °¹¼ö¸¸Å­ °¡Á®¿Í¼­ ¹«½ÃÇÏ±â
+        //ìì‹ ì½œë¼ì´ë” ê°¯ìˆ˜ë§Œí¼ ê°€ì ¸ì™€ì„œ ë¬´ì‹œí•˜ê¸°
         foreach (var child in childCols)
         {
-            if (child.transform == transform) continue; // ÀÚ±â ÀÚ½Å Á¦¿Ü
+            if (child.transform == transform) continue; // ìê¸° ìì‹  ì œì™¸
 
             foreach (var parent in Cols)
             {
@@ -366,7 +416,7 @@ public class PlayerMove : NetworkBehaviour
         }
     }
 
-    // ³Ë¹é ÇÔ¼ö
+    // ë„‰ë°± í•¨ìˆ˜
     public void Knockback(Vector2 force)
     {
         if (knockbackCoroutine != null)
@@ -391,52 +441,52 @@ public class PlayerMove : NetworkBehaviour
 
     public void Die()
     {
-        if (isDead) return; // Á×¾úÀ¸¸é ³ª°¡
+        if (isDead) return; // ì£½ì—ˆìœ¼ë©´ ë‚˜ê°€
 
         isDead = true;
 
-        // Rigidbody¸¦ KinematicÀ¸·Î º¯°æ
+        // Rigidbodyë¥¼ Kinematicìœ¼ë¡œ ë³€ê²½
         rb.bodyType = RigidbodyType2D.Kinematic;
         rb.linearVelocity = Vector2.zero;
         SetMove(Vector2.zero);
 
-        // ´Ù¸¥ ¾Ö´Ï¸ŞÀÌ¼Ç ÆÄ¶ó¹ÌÅÍ ÃÊ±âÈ­
+        // ë‹¤ë¥¸ ì• ë‹ˆë©”ì´ì…˜ íŒŒë¼ë¯¸í„° ì´ˆê¸°í™”
         animator.SetBool("IsGround", true);
         animator.SetBool("IsRun", false);
         animator.SetBool("IsPush", false);
-        animator.SetTrigger("Dead"); // Dead Æ®¸®°Å
+        animator.SetTrigger("Dead"); // Dead íŠ¸ë¦¬ê±°
 
-        // Äİ¶óÀÌ´õ ²ô±â
+        // ì½œë¼ì´ë” ë„ê¸°
         Collider2D[] allColliders = GetComponentsInChildren<Collider2D>();
         foreach (var col in allColliders)
         {
             col.enabled = false;
         }
 
-        // ¸ğÀÚ ²ô±â
+        // ëª¨ì ë„ê¸°
         PlayerCustom custom = GetComponent<PlayerCustom>();
         if (custom != null)
         {
             custom.HideHat();
         }
 
-        // Á×´Â ¾Ö´Ï¸ŞÀÌ¼Ç
+        // ì£½ëŠ” ì• ë‹ˆë©”ì´ì…˜
         StartCoroutine(DeathAnimation());
     }
 
-    // ¾Ö´Ï¸ŞÀÌÅÍ·Î ¾ÈµÅ¼­ ÄÚµå·Î ±¸ÇöÇÑ ¾Ö´Ï¸ŞÀÌ¼Ç..
+    // ì• ë‹ˆë©”ì´í„°ë¡œ ì•ˆë¼ì„œ ì½”ë“œë¡œ êµ¬í˜„í•œ ì• ë‹ˆë©”ì´ì…˜..
     private IEnumerator DeathAnimation()
     {
         Vector3 startPos = transform.position;
 
-        // 1ÃÊ ¸ØÃã
+        // 1ì´ˆ ë©ˆì¶¤
         yield return new WaitForSeconds(1f);
 
         float time = 0f;
         while (time < 0.3f)
         {
             time += Time.deltaTime;
-            transform.position = startPos + Vector3.up * (time / 0.3f) * 1.2f; //0.3ÃÊ µ¿¾È 1.2¸¸Å­ ¿Ã¶ó°¨
+            transform.position = startPos + Vector3.up * (time / 0.3f) * 1.2f; //0.3ì´ˆ ë™ì•ˆ 1.2ë§Œí¼ ì˜¬ë¼ê°
             yield return null;
         }
 
@@ -448,11 +498,11 @@ public class PlayerMove : NetworkBehaviour
         //while (time < 4f)
         //{
         //    time += Time.deltaTime;
-        //    transform.position = topPos - Vector3.up * (time / 5f) * 30f; // ÃÊ µ¿¾È 30¸¸Å­ ³»·Á°¨
+        //    transform.position = topPos - Vector3.up * (time / 5f) * 30f; // ì´ˆ ë™ì•ˆ 30ë§Œí¼ ë‚´ë ¤ê°
         //    yield return null;
         //}
 
-        // (¿©±â¿¡ °ÔÀÓ¿À¹ö ³ÖÀ¸¸é µË´Ï´Ù)
-        Debug.Log("°ÔÀÓ¿À¹ö!");
+        // (ì—¬ê¸°ì— ê²Œì„ì˜¤ë²„ ë„£ìœ¼ë©´ ë©ë‹ˆë‹¤)
+        Debug.Log("ê²Œì„ì˜¤ë²„!");
     }
 }
