@@ -10,71 +10,50 @@ public class DeathButton : NetworkBehaviour
     [SerializeField] private Sprite pressed;
     [SerializeField] private Sprite notPressed;
 
+    [SyncVar(hook = nameof(OnPressedChanged))]
     private bool isPressed = false;
-    private List<PlayerMove> playersOnButton = new List<PlayerMove>();
 
     private void Awake()
     {
         buttonSR.sprite = notPressed;
     }
 
+    [ServerCallback]
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (isPressed) return; // 이미 눌렸으면 무시
+        if (isPressed) return;
+        if (!collision.CompareTag("Player")) return;
 
-        if (collision.CompareTag("Player"))
-        {
-            PlayerMove player = collision.GetComponentInParent<PlayerMove>();
-            if (player != null && !playersOnButton.Contains(player))
-            {
-                playersOnButton.Add(player);
-                Press();
-            }
-        }
+        PressServer();
     }
 
-    private void Press()
+    [Server]
+    private void PressServer()
     {
         if (isPressed) return;
 
         isPressed = true;
-        buttonSR.sprite = pressed;
 
-        Kill();
+        KillAllPlayersServer();
     }
 
-    private void Kill()
+    [Server]
+    private void KillAllPlayersServer()
     {
-        foreach (PlayerMove player in playersOnButton)
+        foreach (var conn in NetworkServer.connections.Values)
         {
-            if (player != null && player.isLocalPlayer)
+            if (conn.identity == null) continue;
+
+            PlayerMove player = conn.identity.GetComponent<PlayerMove>();
+            if (player != null)
             {
-                CmdKill(player.netIdentity);
+                player.Die(); // 서버에서 사망 처리
             }
         }
     }
 
-    [Command(requiresAuthority = false)]
-    private void CmdKill(NetworkIdentity playerNetId)
+    private void OnPressedChanged(bool oldValue, bool newValue)
     {
-        if (playerNetId == null) return;
-
-        PlayerMove player = playerNetId.GetComponent<PlayerMove>();
-        if (player != null)
-        {
-            RpcKill(playerNetId);
-        }
-    }
-
-    [ClientRpc]
-    private void RpcKill(NetworkIdentity playerNetId)
-    {
-        if (playerNetId == null) return;
-
-        PlayerMove player = playerNetId.GetComponent<PlayerMove>();
-        if (player != null)
-        {
-            player.Die();
-        }
+        buttonSR.sprite = newValue ? pressed : notPressed;
     }
 }

@@ -1,9 +1,10 @@
+using Mirror;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class ButtonOb : MonoBehaviour
+public class ButtonOb : NetworkBehaviour
 {
     [Header("버튼 타입")]
     [SerializeField] private ButtonType buttonType = ButtonType.Toggle;
@@ -17,7 +18,9 @@ public class ButtonOb : MonoBehaviour
     [SerializeField] private UnityEvent onPress; // 활성화 시
     [SerializeField] private UnityEvent offPress; // 비활성화 시
 
+    [SyncVar(hook = nameof(OnPressedChanged))]
     private bool isPressed = false;
+
     private int playerCount = 0; // 버튼 위에 있는 플레이어 수
 
     public enum ButtonType
@@ -28,63 +31,62 @@ public class ButtonOb : MonoBehaviour
 
     private void Awake()
     {
+        if (buttonSR == null)
+        {
+            TryGetComponent(out buttonSR);
+        }
+
         buttonSR.sprite = notpressed;
     }
 
+    [ServerCallback]
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Player"))
-        {
-            playerCount++;
+        if (!collision.CompareTag("Player")) return;
 
-            if (playerCount == 1) // 첫 플레이어가 들어왔을 때
-            {
-                Press(); //눌러잇
-            }
+        playerCount++;
+
+        if (playerCount == 1)
+        {
+            PressServer();
         }
     }
 
+    [ServerCallback]
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.CompareTag("Player"))
+        if (!collision.CompareTag("Player")) return;
+
+        playerCount--;
+        playerCount = Mathf.Max(0, playerCount);
+
+        if (playerCount == 0 && buttonType == ButtonType.Hold)
         {
-            playerCount--;
-
-            if (playerCount <= 0) // 모든 플레이어가 나갔을 때
-            {
-                playerCount = 0;
-
-                if (buttonType == ButtonType.Hold) //홀드만
-                {
-                    Release(); //놔
-                }
-            }
+            ReleaseServer();
         }
     }
 
-    // 버튼 누름
-    private void Press()
+    [Server]
+    private void PressServer()
     {
-        if (buttonType == ButtonType.Toggle && isPressed) return; // Toggle은 이미 눌렸으면 무시
+        if (buttonType == ButtonType.Toggle && isPressed) return;
 
         isPressed = true;
-        UpdateSprite();
         onPress?.Invoke();
     }
 
-    // 버튼 해제 (홀드만)
-    private void Release()
+    [Server]
+    private void ReleaseServer()
     {
         if (!isPressed) return;
 
         isPressed = false;
-        UpdateSprite();
         offPress?.Invoke();
     }
 
     // 스프라이트 업데이트
-    private void UpdateSprite()
+    private void OnPressedChanged(bool oldValue, bool newValue)
     {
-        buttonSR.sprite = isPressed ? pressed : notpressed;
+        buttonSR.sprite = newValue ? pressed : notpressed;
     }
 }

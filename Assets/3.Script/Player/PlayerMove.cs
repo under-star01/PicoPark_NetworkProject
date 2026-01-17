@@ -308,13 +308,18 @@ public class PlayerMove : NetworkBehaviour
         isInsideDoor = inside;
     }
 
+    [Server]
     public void Die()
     {
         if (isDead) return;
-
-        if (!isServer) return;
-
         isDead = true;
+
+        RpcDie();
+    }
+
+    [ClientRpc]
+    public void RpcDie()
+    {
         isInputPushing = false;
         moveInput = Vector2.zero;
 

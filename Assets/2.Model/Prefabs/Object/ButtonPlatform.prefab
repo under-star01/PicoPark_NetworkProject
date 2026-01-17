@@ -44,6 +44,8 @@ GameObject:
   - component: {fileID: 6993770487745073247}
   - component: {fileID: 5131021193569206530}
   - component: {fileID: 1063157914516063442}
+  - component: {fileID: 3843353393265433579}
+  - component: {fileID: 5399986271667728135}
   m_Layer: 9
   m_Name: ButtonPlatform
   m_TagString: Untagged
@@ -210,5 +212,59 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06ee560a0a6ddf043a812d4136d57d86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ButtonPlatform
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
   targetPos: {fileID: 8536071812951995550}
   moveSpeed: 2
+--- !u!114 &3843353393265433579
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8682397364925781635}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Mirror::Mirror.NetworkIdentity
+  sceneId: 0
+  _assetId: 2992287304
+  serverOnly: 0
+  visibility: 0
+  hasSpawned: 0
+--- !u!114 &5399986271667728135
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8682397364925781635}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a553cb17010b2403e8523b558bffbc14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Mirror.Components::Mirror.NetworkTransformUnreliable
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
+  target: {fileID: 1396865397116578601}
+  syncPosition: 1
+  syncRotation: 1
+  syncScale: 1
+  onlySyncOnChange: 1
+  compressRotation: 1
+  interpolatePosition: 1
+  interpolateRotation: 1
+  interpolateScale: 1
+  coordinateSpace: 0
+  timelineOffset: 1
+  showGizmos: 0
+  showOverlay: 0
+  overlayColor: {r: 0, g: 0, b: 0, a: 0.5}
+  bufferResetMultiplier: 3
+  useFixedUpdate: 1
+  positionSensitivity: 0.01
+  rotationSensitivity: 0.01
+  scaleSensitivity: 0.01

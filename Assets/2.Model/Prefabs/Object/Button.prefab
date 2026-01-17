@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 3199558480822217594}
   - component: {fileID: 1399252419509288555}
   - component: {fileID: 7200271828857537256}
+  - component: {fileID: 2969039872132319509}
   m_Layer: 0
   m_Name: Button
   m_TagString: Untagged
@@ -104,16 +105,43 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 995cdda62e430744689330619193a354, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ButtonOb
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
   buttonType: 1
   buttonSR: {fileID: 3199558480822217594}
   pressed: {fileID: -8984174494225732007, guid: 9ffecff9ba57e774db8c7769f0c8e3b9, type: 3}
   notpressed: {fileID: 649223268058989734, guid: 825909afd8cd40b429594d4960711fc8, type: 3}
   onPress:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: ButtonPlatform, Assembly-CSharp
+        m_MethodName: MoveToTarget
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   offPress:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: ButtonPlatform, Assembly-CSharp
+        m_MethodName: MoveToStart
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!61 &7200271828857537256
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -160,3 +188,20 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.21, y: 0.3}
   m_EdgeRadius: 0
+--- !u!114 &2969039872132319509
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2895637794913843298}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Mirror::Mirror.NetworkIdentity
+  sceneId: 0
+  _assetId: 2925480730
+  serverOnly: 0
+  visibility: 0
+  hasSpawned: 0
