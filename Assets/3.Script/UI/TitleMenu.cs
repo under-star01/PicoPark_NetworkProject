@@ -137,6 +137,7 @@ public class TitleMenu : MonoBehaviour
     {
         vc.value = Mathf.Clamp(vc.value - 1, 0, 10);
         UpdateVolumeDisplay(vc); // 화면에서도 바꿔주고
+        AudioManager.Instance.ApplyVolumes();
         //SaveVolume(vc); // 값도 저장해서 다시 켜도 유지되게 해줘
     }
 
@@ -144,6 +145,7 @@ public class TitleMenu : MonoBehaviour
     {
         vc.value = Mathf.Clamp(vc.value + 1, 0, 10);
         UpdateVolumeDisplay(vc); // 화면에 뜨는거 바꾸고!
+        AudioManager.Instance.ApplyVolumes();
         //SaveVolume(vc); // 유지시켜!
     }
 

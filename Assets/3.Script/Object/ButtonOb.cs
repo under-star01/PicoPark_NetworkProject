@@ -71,6 +71,8 @@ public class ButtonOb : NetworkBehaviour
     {
         if (buttonType == ButtonType.Toggle && isPressed) return;
 
+        AudioManager.Instance.PlaySFX("Button");
+
         isPressed = true;
         onPress?.Invoke();
     }
