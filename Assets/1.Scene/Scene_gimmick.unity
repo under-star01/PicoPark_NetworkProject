@@ -838,6 +838,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: DeathButton (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 8388508766787811552, guid: c2c5ad9170add40418270c074c6e0487, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1247,7 +1251,22 @@ MonoBehaviour:
   playerPrefab: {fileID: 459922248547352802, guid: 9de328331ace5d24ca5e449cd7d4bbd3, type: 3}
   autoCreatePlayer: 1
   playerSpawnMethod: 0
-  spawnPrefabs: []
+  spawnPrefabs:
+  - {fileID: 6813856348222151652, guid: 64df613497128ab4bbeac832dcc985be, type: 3}
+  - {fileID: 2895637794913843298, guid: edbd204b6cd402b4abf0e15a2ef7b71b, type: 3}
+  - {fileID: 8682397364925781635, guid: b3cfd66ca3dc18c4082a3a94f0f16b8d, type: 3}
+  - {fileID: 1024156907348895572, guid: 858a91f1d60691e4481a6842fea9c6ca, type: 3}
+  - {fileID: 8256551358351774673, guid: 3d158fa84ae61ff46988fd6ada270b9a, type: 3}
+  - {fileID: 8388508766787811552, guid: c2c5ad9170add40418270c074c6e0487, type: 3}
+  - {fileID: 3562375863293982088, guid: 1f7c251538c636a46aec8b6934a4e7ae, type: 3}
+  - {fileID: 4809993016693248593, guid: a665cf1a9d7eedf4392c6e764444a818, type: 3}
+  - {fileID: 301699306936596359, guid: 08275163c8b73b94cb07dabdc0e6dc92, type: 3}
+  - {fileID: 8835598428880081341, guid: f0b444a1685a182409b294d7fd6a0b74, type: 3}
+  - {fileID: 6216941352845595406, guid: 41f94573459ba9b43a7c680e267a2405, type: 3}
+  - {fileID: 895642227466479077, guid: a3d2a89cb3ac476498bf9ee765d8ea6b, type: 3}
+  - {fileID: 459922248547352802, guid: 9de328331ace5d24ca5e449cd7d4bbd3, type: 3}
+  - {fileID: 459922248547352802, guid: edb1d0a2cbec1c944aba03ede2be5612, type: 3}
+  - {fileID: 459922248547352802, guid: 98b8ed5a87136174fa98f63491d8b02d, type: 3}
   exceptionsDisconnect: 1
   snapshotSettings:
     bufferTimeMultiplier: 2
@@ -5583,6 +5602,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ButtonPlatform
       objectReference: {fileID: 0}
+    - target: {fileID: 8682397364925781635, guid: b3cfd66ca3dc18c4082a3a94f0f16b8d, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -6158,7 +6181,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 895642227466479077, guid: a3d2a89cb3ac476498bf9ee765d8ea6b, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1165543919797903417, guid: a3d2a89cb3ac476498bf9ee765d8ea6b, type: 3}
       propertyPath: useFixedUpdate
@@ -6431,6 +6454,10 @@ PrefabInstance:
     - target: {fileID: 301699306936596359, guid: 08275163c8b73b94cb07dabdc0e6dc92, type: 3}
       propertyPath: m_Name
       value: Laser
+      objectReference: {fileID: 0}
+    - target: {fileID: 301699306936596359, guid: 08275163c8b73b94cb07dabdc0e6dc92, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4611311826754503463, guid: 08275163c8b73b94cb07dabdc0e6dc92, type: 3}
       propertyPath: sceneId
@@ -7445,6 +7472,10 @@ PrefabInstance:
     - target: {fileID: 3562375863293982088, guid: 1f7c251538c636a46aec8b6934a4e7ae, type: 3}
       propertyPath: m_Name
       value: Door
+      objectReference: {fileID: 0}
+    - target: {fileID: 3562375863293982088, guid: 1f7c251538c636a46aec8b6934a4e7ae, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8676765862272143685, guid: 1f7c251538c636a46aec8b6934a4e7ae, type: 3}
       propertyPath: m_LocalPosition.x
@@ -9699,6 +9730,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: MovingWall
       objectReference: {fileID: 0}
+    - target: {fileID: 6216941352845595406, guid: 41f94573459ba9b43a7c680e267a2405, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8801761180627971892, guid: 41f94573459ba9b43a7c680e267a2405, type: 3}
       propertyPath: sceneId
       value: 4040370981
@@ -10024,6 +10059,10 @@ PrefabInstance:
     - target: {fileID: 4809993016693248593, guid: a665cf1a9d7eedf4392c6e764444a818, type: 3}
       propertyPath: m_Name
       value: HangAhRi
+      objectReference: {fileID: 0}
+    - target: {fileID: 4809993016693248593, guid: a665cf1a9d7eedf4392c6e764444a818, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -11022,6 +11061,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 11
       objectReference: {fileID: 0}
+    - target: {fileID: 1024156907348895572, guid: 858a91f1d60691e4481a6842fea9c6ca, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7251133226132017543, guid: 858a91f1d60691e4481a6842fea9c6ca, type: 3}
       propertyPath: m_LocalPosition.x
       value: 7.8
@@ -11459,6 +11502,10 @@ PrefabInstance:
     - target: {fileID: 2895637794913843298, guid: edbd204b6cd402b4abf0e15a2ef7b71b, type: 3}
       propertyPath: m_Name
       value: Button
+      objectReference: {fileID: 0}
+    - target: {fileID: 2895637794913843298, guid: edbd204b6cd402b4abf0e15a2ef7b71b, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2969039872132319509, guid: edbd204b6cd402b4abf0e15a2ef7b71b, type: 3}
       propertyPath: sceneId
@@ -13426,6 +13473,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: LongMovingWall
       objectReference: {fileID: 0}
+    - target: {fileID: 8835598428880081341, guid: f0b444a1685a182409b294d7fd6a0b74, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 2814411244309635355, guid: f0b444a1685a182409b294d7fd6a0b74, type: 3}
@@ -14141,6 +14192,10 @@ PrefabInstance:
     - target: {fileID: 6813856348222151652, guid: 64df613497128ab4bbeac832dcc985be, type: 3}
       propertyPath: m_Name
       value: 10Soe
+      objectReference: {fileID: 0}
+    - target: {fileID: 6813856348222151652, guid: 64df613497128ab4bbeac832dcc985be, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -15027,19 +15082,19 @@ SceneRoots:
   - {fileID: 6040470799588617345}
   - {fileID: 8147678831563273850}
   - {fileID: 3843699075479973537}
-  - {fileID: 1242321699}
-  - {fileID: 396324553}
   - {fileID: 6708460160704073947}
   - {fileID: 6227237948559643207}
   - {fileID: 8642416870146065457}
   - {fileID: 4611379869591998636}
+  - {fileID: 7038531026954535214}
+  - {fileID: 3443684181402310832}
+  - {fileID: 4037164518559242786}
+  - {fileID: 907932853}
+  - {fileID: 1242321699}
+  - {fileID: 396324553}
   - {fileID: 1253450657}
   - {fileID: 3391791562001210597}
   - {fileID: 1339652601425905419}
   - {fileID: 2917754974431665972}
   - {fileID: 2067517728}
   - {fileID: 1526000658}
-  - {fileID: 7038531026954535214}
-  - {fileID: 3443684181402310832}
-  - {fileID: 4037164518559242786}
-  - {fileID: 907932853}
