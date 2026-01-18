@@ -123,10 +123,8 @@ public class HostMenuController : MonoBehaviour
     // Create 버튼 -> 현재 선택 내용 GameFlowManager에 저장
     public void OnClickCreate()
     {
-        int selectedHat = hatIndex;
-        int selectedColor = colorIndex;
-
-        CmdSubmitPlayerMeta(selectedColor, selectedHat);
+        LobbyCustomCache.Instance.myCustomizeData.colorIndex = colorIndex;
+        LobbyCustomCache.Instance.myCustomizeData.hatIndex = hatIndex;
     }
 
     public void UpdateHostPanelSelection(int panelIndex)

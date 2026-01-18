@@ -228,6 +228,53 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 12.76, y: 0.5}
   m_EdgeRadius: 0
+--- !u!1 &497960525
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 497960527}
+  - component: {fileID: 497960526}
+  m_Layer: 0
+  m_Name: LobbyCustomCache
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &497960526
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 497960525}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 621408a1cdb53ab479177c616b7a738f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LobbyCustomCache
+  myCustomizeData:
+    colorIndex: 0
+    hatIndex: 0
+--- !u!4 &497960527
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 497960525}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -847,72 +894,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c2c5ad9170add40418270c074c6e0487, type: 3}
---- !u!1 &1180567376
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1180567378}
-  - component: {fileID: 1180567377}
-  - component: {fileID: 1180567379}
-  m_Layer: 0
-  m_Name: GameFlowManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1180567377
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1180567376}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3471a7b33322b4a49bf90df000cfb1c6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::GameFlowManager
-  syncDirection: 0
-  syncMode: 0
-  syncInterval: 0
-  CurrentState: 0
---- !u!4 &1180567378
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1180567376}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1180567379
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1180567376}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Mirror::Mirror.NetworkIdentity
-  sceneId: 3219484630
-  _assetId: 0
-  serverOnly: 0
-  visibility: 0
-  hasSpawned: 0
 --- !u!1 &1242321696
 GameObject:
   m_ObjectHideFlags: 0
@@ -1254,6 +1235,7 @@ GameObject:
   - component: {fileID: 2067517728}
   - component: {fileID: 2067517725}
   - component: {fileID: 2067517729}
+  - component: {fileID: 2067517731}
   m_Layer: 0
   m_Name: NetworkManager
   m_TagString: Untagged
@@ -1297,9 +1279,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 2067517724}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bc351e5b9dfdab5428f6b10620154f81, type: 3}
+  m_Script: {fileID: 11500000, guid: 8aab4c8111b7c411b9b92cf3dbc5bd4e, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CustomNetworkManager
+  m_EditorClassIdentifier: Mirror::Mirror.NetworkManager
   dontDestroyOnLoad: 1
   runInBackground: 1
   headlessStartMode: 0
@@ -1308,7 +1290,7 @@ MonoBehaviour:
   offlineScene: Assets/1.Scene/Scene_1Q.unity
   onlineScene: Assets/1.Scene/Scene_1Q.unity
   offlineSceneLoadDelay: 0
-  transport: {fileID: 2067517725}
+  transport: {fileID: 0}
   networkAddress: localhost
   maxConnections: 100
   disconnectInactiveConnections: 0
@@ -1349,6 +1331,23 @@ MonoBehaviour:
   evaluationMethod: 0
   evaluationInterval: 3
   timeInterpolationGui: 0
+--- !u!114 &2067517731
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2067517724}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Mirror::Mirror.NetworkIdentity
+  sceneId: 2672296838
+  _assetId: 0
+  serverOnly: 0
+  visibility: 0
+  hasSpawned: 0
 --- !u!1 &15442176173266012
 GameObject:
   m_ObjectHideFlags: 0
@@ -1912,7 +1911,6 @@ MonoBehaviour:
   joinProgressText: {fileID: 6321873710192889090}
   hatImage: {fileID: 3117848791790489152}
   colorImage: {fileID: 5088184550688919566}
-  createButton: {fileID: 1300235718451454803}
   numberSprites:
   - {fileID: 21300000, guid: 9989410fc3c51354595a756854d9c282, type: 3}
   - {fileID: 21300000, guid: af2b7fade38cd48429bf6f3f926b6843, type: 3}
@@ -15163,4 +15161,4 @@ SceneRoots:
   - {fileID: 2917754974431665972}
   - {fileID: 2067517728}
   - {fileID: 1526000658}
-  - {fileID: 1180567378}
+  - {fileID: 497960527}

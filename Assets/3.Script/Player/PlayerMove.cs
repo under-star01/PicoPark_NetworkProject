@@ -77,11 +77,18 @@ public class PlayerMove : NetworkBehaviour
         isDead = false;
     }
 
-    public override void OnStartServer()
+    public override void OnStartClient()
     {
-        base.OnStartServer();
-        GameFlowManager.Instance.ApplyMetaToPlayer(this);
+        base.OnStartClient();
+        playerCustom = GetComponent<PlayerCustom>();
     }
+    
+    public override void OnStartLocalPlayer()
+    {
+        var data = LobbyCustomCache.Instance.myCustomizeData;
+        CmdSetCustomize(data.colorIndex, data.hatIndex);
+    }
+
 
     private void Update()
     {
@@ -241,16 +248,15 @@ public class PlayerMove : NetworkBehaviour
             }
         }
     }
-    // GameFlowManager에서 서버가 호출
-    [Server]
-    public void ApplyMetaData(int newColorIndex, int newHatIndex)
+
+    [Command]
+    private void CmdSetCustomize(int color, int hat)
     {
-        colorIndex = newColorIndex;
-        hatIndex = newHatIndex;
+        colorIndex = color;
+        hatIndex = hat;
     }
 
-    // 색상 변경(모든 클라이언트)
-    private void OnColorChanged(int oldValue, int newValue)
+    private void OnColorChanged(int _, int newValue)
     {
         if (playerCustom != null)
         {
@@ -258,8 +264,7 @@ public class PlayerMove : NetworkBehaviour
         }
     }
 
-    // 모자 변경(모든 클라이언트)
-    private void OnHatChanged(int oldValue, int newValue)
+    private void OnHatChanged(int _, int newValue)
     {
         if (playerCustom != null)
         {

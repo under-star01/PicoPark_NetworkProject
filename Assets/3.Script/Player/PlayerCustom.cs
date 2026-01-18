@@ -30,13 +30,6 @@ public class PlayerCustom : MonoBehaviour
     // 색상 적용
     public void ApplyColor(int colorIndex)
     {
-        // 스프라이트 변경
-        if (playerSR != null && colorSprites != null &&
-            colorIndex >= 0 && colorIndex < colorSprites.Length)
-        {
-            playerSR.sprite = colorSprites[colorIndex];
-        }
-
         // 애니메이터 변경
         if (playerAni != null && colorAni != null &&
             colorIndex >= 0 && colorIndex < colorAni.Length)
