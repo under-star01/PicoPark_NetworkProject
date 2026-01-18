@@ -38,6 +38,12 @@ public class PlayerMove : NetworkBehaviour
     [SyncVar(hook = nameof(OnFlipChanged))]
     private int syncFlipDir;
 
+    [SyncVar(hook = nameof(OnColorChanged))]
+    private int colorIndex;
+
+    [SyncVar(hook = nameof(OnHatChanged))]
+    private int hatIndex;
+
     [Header("리턴 위치")]
     [SerializeField] private Transform returnPos;
 
@@ -53,6 +59,7 @@ public class PlayerMove : NetworkBehaviour
     private Rigidbody2D rb;
     private Animator animator;
     private SpriteRenderer spriteRenderer;
+    private PlayerCustom playerCustom;
     private Vector2 moveInput;
 
     private void Awake()
@@ -60,6 +67,7 @@ public class PlayerMove : NetworkBehaviour
         TryGetComponent(out rb);
         TryGetComponent(out animator);
         TryGetComponent(out spriteRenderer);
+        TryGetComponent(out playerCustom);
 
         groundCheck = GetComponentInChildren<GroundCheck>();
         ceilCheck = GetComponentInChildren<CeilCheck>();
@@ -67,6 +75,12 @@ public class PlayerMove : NetworkBehaviour
         IgnoreSelfCollision();
 
         isDead = false;
+    }
+
+    public override void OnStartServer()
+    {
+        base.OnStartServer();
+        GameFlowManager.Instance.ApplyMetaToPlayer(this);
     }
 
     private void Update()
@@ -225,6 +239,31 @@ public class PlayerMove : NetworkBehaviour
             {
                 platform.RemoveRider(this);
             }
+        }
+    }
+    // GameFlowManager에서 서버가 호출
+    [Server]
+    public void ApplyMetaData(int newColorIndex, int newHatIndex)
+    {
+        colorIndex = newColorIndex;
+        hatIndex = newHatIndex;
+    }
+
+    // 색상 변경(모든 클라이언트)
+    private void OnColorChanged(int oldValue, int newValue)
+    {
+        if (playerCustom != null)
+        {
+            playerCustom.ApplyColor(newValue);
+        }
+    }
+
+    // 모자 변경(모든 클라이언트)
+    private void OnHatChanged(int oldValue, int newValue)
+    {
+        if (playerCustom != null)
+        {
+            playerCustom.ApplyHat(newValue);
         }
     }
 

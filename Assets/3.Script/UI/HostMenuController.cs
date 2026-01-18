@@ -4,6 +4,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
+using Unity.VisualScripting;
+using Mirror;
 
 public class HostMenuController : MonoBehaviour
 {
@@ -116,6 +118,15 @@ public class HostMenuController : MonoBehaviour
     {
         Debug.Log("종료버튼 눌렸다!");
         gameObject.SetActive(false);
+    }
+
+    // Create 버튼 -> 현재 선택 내용 GameFlowManager에 저장
+    public void OnClickCreate()
+    {
+        int selectedHat = hatIndex;
+        int selectedColor = colorIndex;
+
+        CmdSubmitPlayerMeta(selectedColor, selectedHat);
     }
 
     public void UpdateHostPanelSelection(int panelIndex)

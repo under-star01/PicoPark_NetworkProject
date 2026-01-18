@@ -8,7 +8,6 @@ public class PlayerCustom : MonoBehaviour
     [Header("모자 설정")]
     [SerializeField] private SpriteRenderer hatSR; // 모자 스프라이트 렌더러
     [SerializeField] private Sprite[] hatSprites; // 사용 가능한 모자들
-    [SerializeField] private int selectHat = 0; // 선택한 모자 인덱스
 
     [Header("플레이어 색상 설정")]
     [SerializeField] private SpriteRenderer playerSR; // 플레이어 스프라이트 렌더러
@@ -17,64 +16,61 @@ public class PlayerCustom : MonoBehaviour
     [Header("색상별 애니메이터 컨트롤러")]
     [SerializeField] private RuntimeAnimatorController[] colorAni; // 색상별 애니메이터 컨트롤러
     [SerializeField] private Sprite[] colorSprites; // 색상별 기본 스프라이트
-    [SerializeField] private int selectColor = 0; // 색상 선택
-
-    private void Awake()
-    {
-        // 모자 적용
-        ApplyHat();
-
-        // 색상 적용
-        ApplyColor();
-    }
 
     // 모자 적용
-    private void ApplyHat()
+    public void ApplyHat(int hatIndex)
     {
         if (hatSR == null || hatSprites == null || hatSprites.Length == 0) return;
+        if (hatIndex < 0 || hatIndex >= hatSprites.Length) return;
 
-        if (selectHat >= 0 && selectHat < hatSprites.Length)
-        {
-            hatSR.sprite = hatSprites[selectHat];
-        }
+        hatSR.sprite = hatSprites[hatIndex];
+        hatSR.enabled = true;
     }
 
     // 색상 적용
-    private void ApplyColor()
+    public void ApplyColor(int colorIndex)
     {
         // 스프라이트 변경
-        if (playerSR != null && colorSprites != null && colorSprites.Length > 0)
+        if (playerSR != null && colorSprites != null &&
+            colorIndex >= 0 && colorIndex < colorSprites.Length)
         {
-            if (selectColor >= 0 && selectColor < colorSprites.Length)
-            {
-                playerSR.sprite = colorSprites[selectColor];
-            }
+            playerSR.sprite = colorSprites[colorIndex];
         }
 
         // 애니메이터 변경
-        if (playerAni == null || colorAni == null || colorAni.Length == 0) return;
-        if (selectColor >= 0 && selectColor < colorAni.Length)
+        if (playerAni != null && colorAni != null &&
+            colorIndex >= 0 && colorIndex < colorAni.Length)
         {
-            playerAni.runtimeAnimatorController = colorAni[selectColor];
+            playerAni.runtimeAnimatorController = colorAni[colorIndex];
         }
     }
 
     // 모자 끄기
     public void HideHat()
     {
-        hatSR.enabled = false;
+        if (hatSR != null)
+            hatSR.enabled = false;
     }
 
     // 모자 켜기
     public void ActiveHat()
     {
-        hatSR.enabled = true;
+        if (hatSR != null)
+            hatSR.enabled = true;
     }
 
-    // Inspector에서 미리보기
+#if UNITY_EDITOR
+    // 에디터 미리보기용
     private void OnValidate()
     {
-        ApplyHat();
-        ApplyColor();
+        if (!Application.isPlaying)
+        {
+            if (hatSprites != null && hatSprites.Length > 0 && hatSR != null)
+                hatSR.sprite = hatSprites[0];
+
+            if (colorSprites != null && colorSprites.Length > 0 && playerSR != null)
+                playerSR.sprite = colorSprites[0];
+        }
     }
+#endif
 }

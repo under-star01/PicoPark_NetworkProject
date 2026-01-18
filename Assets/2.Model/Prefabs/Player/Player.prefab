@@ -13,12 +13,13 @@ GameObject:
   - component: {fileID: 843471294947913791}
   - component: {fileID: 8563591987328722844}
   - component: {fileID: 5287936311857421588}
+  - component: {fileID: 3746403909291097395}
+  - component: {fileID: 8066185298300297452}
   - component: {fileID: 6797068560288179526}
   - component: {fileID: 359252821449748799}
   - component: {fileID: 6345019482505241538}
   - component: {fileID: 4026308688082644733}
   - component: {fileID: 7634458753017272158}
-  - component: {fileID: 3746403909291097395}
   m_Layer: 6
   m_Name: Player
   m_TagString: Player
@@ -93,7 +94,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 2
-  m_Sprite: {fileID: 4121880872312635667, guid: 824b75380498e1e4f9e97fd186eabced, type: 3}
+  m_Sprite: {fileID: 696028674454927066, guid: 5a207b6a6e74fc348a7d00b5bd5559d2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -165,6 +166,58 @@ MonoBehaviour:
   frontPlayer: {fileID: 0}
   ceilCheck: {fileID: 0}
   returnPos: {fileID: 0}
+--- !u!114 &3746403909291097395
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 459922248547352802}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 46c025947af23994b88b424e44f177f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerCustom
+  hatSR: {fileID: 2376193634161332872}
+  hatSprites:
+  - {fileID: 0}
+  - {fileID: 3203225338369415249, guid: 47f26f556b0151d4a9f516eb6b17259d, type: 3}
+  - {fileID: -8888383945178657615, guid: f864c4eef85dc5e489d83e2223e3ab1a, type: 3}
+  - {fileID: 2091929546744797159, guid: 26192065ec266ef48a05caf1b487b20d, type: 3}
+  - {fileID: -5654165801028664890, guid: 721f4528609c30d4c8bfbb6427a3a0b5, type: 3}
+  playerSR: {fileID: 436328685094635347}
+  playerAni: {fileID: 843471294947913791}
+  colorAni:
+  - {fileID: 9100000, guid: ae35c022626eb64499dfb88aaac1a27a, type: 2}
+  - {fileID: 9100000, guid: 5a2b62f048d507743b0311e528e00a36, type: 2}
+  - {fileID: 9100000, guid: 5e366d5c1beebb044a6a81b34c4ee41a, type: 2}
+  - {fileID: 9100000, guid: f642b53aaadefe54d8bd50a2b5ecf03c, type: 2}
+  - {fileID: 9100000, guid: 28886ebd4ee217a418682a54f61a2879, type: 2}
+  - {fileID: 9100000, guid: 2042879830af8344f869a10c59fe4c9d, type: 2}
+  - {fileID: 9100000, guid: b0b75d460a10657478652bfbaa281433, type: 2}
+  colorSprites:
+  - {fileID: 696028674454927066, guid: 5a207b6a6e74fc348a7d00b5bd5559d2, type: 3}
+  - {fileID: -4987337320017983735, guid: 88afe644bf3530a4695b42792de53431, type: 3}
+  - {fileID: -8763959088390978859, guid: 0b4ee268ce2125140b7fb30640f43872, type: 3}
+  - {fileID: 4121880872312635667, guid: 824b75380498e1e4f9e97fd186eabced, type: 3}
+  - {fileID: -8923911374754931897, guid: 5d605bf90fe1a5049b43f06768d7b0af, type: 3}
+  - {fileID: 6286595657586805340, guid: d49ac906d939db74b8a1598fa2a738bb, type: 3}
+  - {fileID: 6358040702757662528, guid: 2e5418d0099f75c498ef641991ed6c8f, type: 3}
+--- !u!114 &8066185298300297452
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 459922248547352802}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ffa07434b527df4ebf96b0587e7986d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LocalPlayerBridge
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
 --- !u!50 &6797068560288179526
 Rigidbody2D:
   serializedVersion: 5
@@ -306,45 +359,6 @@ MonoBehaviour:
   positionSensitivity: 0.01
   rotationSensitivity: 0.01
   scaleSensitivity: 0.01
---- !u!114 &3746403909291097395
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 459922248547352802}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 46c025947af23994b88b424e44f177f7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerCustom
-  hatSR: {fileID: 2376193634161332872}
-  hatSprites:
-  - {fileID: 0}
-  - {fileID: 3203225338369415249, guid: 47f26f556b0151d4a9f516eb6b17259d, type: 3}
-  - {fileID: -8888383945178657615, guid: f864c4eef85dc5e489d83e2223e3ab1a, type: 3}
-  - {fileID: 2091929546744797159, guid: 26192065ec266ef48a05caf1b487b20d, type: 3}
-  - {fileID: -5654165801028664890, guid: 721f4528609c30d4c8bfbb6427a3a0b5, type: 3}
-  selectHat: 4
-  playerSR: {fileID: 436328685094635347}
-  playerAni: {fileID: 843471294947913791}
-  colorAni:
-  - {fileID: 9100000, guid: ae35c022626eb64499dfb88aaac1a27a, type: 2}
-  - {fileID: 9100000, guid: 5a2b62f048d507743b0311e528e00a36, type: 2}
-  - {fileID: 9100000, guid: 5e366d5c1beebb044a6a81b34c4ee41a, type: 2}
-  - {fileID: 9100000, guid: f642b53aaadefe54d8bd50a2b5ecf03c, type: 2}
-  - {fileID: 9100000, guid: 28886ebd4ee217a418682a54f61a2879, type: 2}
-  - {fileID: 9100000, guid: 2042879830af8344f869a10c59fe4c9d, type: 2}
-  - {fileID: 9100000, guid: b0b75d460a10657478652bfbaa281433, type: 2}
-  colorSprites:
-  - {fileID: 696028674454927066, guid: 5a207b6a6e74fc348a7d00b5bd5559d2, type: 3}
-  - {fileID: -4987337320017983735, guid: 88afe644bf3530a4695b42792de53431, type: 3}
-  - {fileID: -8763959088390978859, guid: 0b4ee268ce2125140b7fb30640f43872, type: 3}
-  - {fileID: 4121880872312635667, guid: 824b75380498e1e4f9e97fd186eabced, type: 3}
-  - {fileID: -8923911374754931897, guid: 5d605bf90fe1a5049b43f06768d7b0af, type: 3}
-  - {fileID: 6286595657586805340, guid: d49ac906d939db74b8a1598fa2a738bb, type: 3}
-  - {fileID: 6358040702757662528, guid: 2e5418d0099f75c498ef641991ed6c8f, type: 3}
-  selectColor: 3
 --- !u!1 &2323101840052430765
 GameObject:
   m_ObjectHideFlags: 0
@@ -516,7 +530,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 3
-  m_Sprite: {fileID: -5654165801028664890, guid: 721f4528609c30d4c8bfbb6427a3a0b5, type: 3}
+  m_Sprite: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -524,7 +538,7 @@ SpriteRenderer:
   m_Size: {x: 0.93, y: 0.62}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &5538756858665723588
