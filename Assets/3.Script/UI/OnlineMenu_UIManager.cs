@@ -29,6 +29,7 @@ public class OnlineMenu_UIManager : MonoBehaviour
     [SerializeField] private GameObject[] OnlineMenuButtons;
 
     [Header("LobbyEntry")] // HostMenu, JoinMenu
+    [SerializeField] private GameObject Lobby;
     [SerializeField] private GameObject[] LobbyEntryPanels;
     [SerializeField] private HostMenuController hostMenuController;
     [SerializeField] private JoinMenuController joinMenuController;
@@ -38,9 +39,12 @@ public class OnlineMenu_UIManager : MonoBehaviour
 
 
     [Header("StagePanel")] // Stage1 ~ 6
+    [SerializeField] private StageMenuController stageMenuController;
     [SerializeField] private GameObject StageSelectPanel;
 
+
     private int panelIndex = 0;   // 옵션 - 사운드 패널 수직 인덱스 번호 (0: Master, 1: BGM, 2: SE, 3: OK/Cancel 등)
+    private const int STAGE_COLUMNS = 3;
 
     public static OnlineMenu_UIManager Instance = null;
 
@@ -230,6 +234,10 @@ public class OnlineMenu_UIManager : MonoBehaviour
                 titleMenuController.MoveLeft();
                 break;
             case UIState.StageSelect:
+                if (panelIndex % STAGE_COLUMNS > 0)
+                    panelIndex--;
+
+                stageMenuController.UpdateSelection(panelIndex);
                 break;
         }
 
@@ -292,6 +300,11 @@ public class OnlineMenu_UIManager : MonoBehaviour
                 titleMenuController.MoveRight();
                 break;
             case UIState.StageSelect:
+                if (panelIndex % STAGE_COLUMNS < STAGE_COLUMNS - 1 &&
+                  panelIndex + 1 < stageMenuController.GetTotalStages())
+                    panelIndex++;
+
+                stageMenuController.UpdateSelection(panelIndex);
                 break;
         }
     }
@@ -322,6 +335,11 @@ public class OnlineMenu_UIManager : MonoBehaviour
                 }
                 break;
             case UIState.StageSelect:
+                int next = panelIndex - STAGE_COLUMNS;
+                if (next >= 0)
+                    panelIndex = next;
+
+                stageMenuController.UpdateSelection(panelIndex);
                 break;
         }
 
@@ -354,6 +372,11 @@ public class OnlineMenu_UIManager : MonoBehaviour
                 }
                 break;
             case UIState.StageSelect:
+                int next = panelIndex + STAGE_COLUMNS;
+                if (next < stageMenuController.GetTotalStages())
+                    panelIndex = next;
+
+                stageMenuController.UpdateSelection(panelIndex);
                 break;
         }
 
@@ -398,7 +421,6 @@ public class OnlineMenu_UIManager : MonoBehaviour
                 }
                 break;
             case UIState.Title:
-                Debug.Log($"[Select] pressbutton.activeSelf = {titleMenuController.pressbutton.activeSelf}");
                 // 1. 만약 "Press Enter" 글자가 켜져 있는 상태라면? -> 메뉴 패널을 연다.
                 if (titleMenuController.pressbutton.activeSelf)
                 {
@@ -414,6 +436,7 @@ public class OnlineMenu_UIManager : MonoBehaviour
                 }
                 break;
             case UIState.StageSelect:
+                stageMenuController.ExecuteSelection();
                 break;
         }
     }
@@ -460,13 +483,21 @@ public class OnlineMenu_UIManager : MonoBehaviour
                 }
                 break;
             case UIState.StageSelect:
-
+                StageSelectPanel.SetActive(false);
+                changeState(2); // Title 상태로 복귀
                 break;
         }
 
     }
 
-    
+    public void ShowStageSelect()
+    {
+        state = UIState.StageSelect;
+        StageSelectPanel.SetActive(true);
+        panelIndex = 0;
+        stageMenuController.UpdateSelection(panelIndex);
+        EnableUIMode(); // 캐릭터 조작 대신 UI 조작 활성화
+    }
 
     public void changeState(int state)
     {
@@ -482,11 +513,11 @@ public class OnlineMenu_UIManager : MonoBehaviour
             hostMenuController.SetActive(false);
             joinMenuController.SetActive(false);
             this.state = UIState.Title;
-
+            Lobby.SetActive(true);
             titleMenuController.SetPressButtonActive(true);
         }else if (state.Equals(3))
         {
-            this.state = UIState.Title;
+            this.state = UIState.StageSelect;
             StageSelectPanel.SetActive(true);
         }
     }
