@@ -34,8 +34,9 @@ public class HostMenuController : MonoBehaviour
     private const int MAX_PLAYERS = 6;
 
     [SerializeField] private GameObject[] HostMenuButtons;
- 
 
+    [SerializeField] private Button CreateRoomButton;
+    [SerializeField] private Button CancelButton;
 
     // MAX PLAYER수 증감 및 적용
     public void OnMaxPlayerLeft()
@@ -114,7 +115,6 @@ public class HostMenuController : MonoBehaviour
     // CANCEL 눌렀으면 그냥 꺼주기
     public void OnCancel()
     {
-        Debug.Log("종료버튼 눌렸다!");
         gameObject.SetActive(false);
     }
 
@@ -125,5 +125,26 @@ public class HostMenuController : MonoBehaviour
             HostMenuButtons[panelIndex].GetComponent<ButtonHover>().OutFocus();
         }
         HostMenuButtons[panelIndex].GetComponent<ButtonHover>().OnFocus();
+    }
+
+    public void InvokeCreate()
+    {
+        if (CreateRoomButton != null)
+        {
+            CreateRoomButton.onClick.Invoke();
+        }
+    }
+
+    public void InvokeCancel()
+    {
+        if (CancelButton != null)
+        {
+            CancelButton.onClick.Invoke();
+        }
+    }
+
+    public void SetActive(bool isActive)
+    {
+        gameObject.SetActive(isActive);
     }
 }

@@ -10,7 +10,7 @@ public class PlayerInput : NetworkBehaviour
     [Header("플레이어 조작 방식")]
     [SerializeField] private bool isWASD;
 
-    private IA_Player playerInput;
+    public IA_Player playerInput;
     private PlayerMove playerMove;
     private Door nearDoor; // 근처 문
 
@@ -20,8 +20,19 @@ public class PlayerInput : NetworkBehaviour
         TryGetComponent(out playerMove);
     }
 
+    public IA_Player GetPlayerInput() => playerInput;
+
     public override void OnStartLocalPlayer()
     {
+
+        if (playerInput == null) playerInput = new IA_Player();
+        playerInput.Enable();
+
+        var uiManager = FindFirstObjectByType<OnlineMenu_UIManager>();
+        if (uiManager != null)
+        {
+            uiManager.RegisterLocalPlayer(this);
+        }
 
         if (isWASD)
         {
