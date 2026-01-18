@@ -14,8 +14,8 @@ public class JoinMenuController : MonoBehaviour
 
     // 메뉴 항목의 value 초기화(기본값)
     [Header("Settings")]
-    private int hatIndex = 0;
-    private int colorIndex = 0;
+    [SerializeField] private int hatIndex = 0;
+    [SerializeField] private int colorIndex = 0;
 
     // 모자 및 플레이어 색 담을 상자
     [Header("Data")]
@@ -64,6 +64,12 @@ public class JoinMenuController : MonoBehaviour
     public void ResetjoinInputField()
     {
         joinInputField.text = string.Empty;
+    }
+
+    public void OnJoinUI()
+    {
+        LobbyCustomCache.Instance.myCustomizeData.hatIndex = hatIndex;
+        LobbyCustomCache.Instance.myCustomizeData.colorIndex = colorIndex;
     }
 
     // CANCEL 눌렀으면 그냥 꺼주기

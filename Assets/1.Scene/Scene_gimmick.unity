@@ -1083,6 +1083,53 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1253450655}
   m_CullTransparentMesh: 1
+--- !u!1 &1391203719
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1391203721}
+  - component: {fileID: 1391203720}
+  m_Layer: 0
+  m_Name: LobbyCustomCache
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1391203720
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1391203719}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 621408a1cdb53ab479177c616b7a738f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LobbyCustomCache
+  myCustomizeData:
+    colorIndex: 0
+    hatIndex: 0
+--- !u!4 &1391203721
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1391203719}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.45234, y: -3.44001, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1526000655
 GameObject:
   m_ObjectHideFlags: 0
@@ -1247,7 +1294,21 @@ MonoBehaviour:
   playerPrefab: {fileID: 459922248547352802, guid: 9de328331ace5d24ca5e449cd7d4bbd3, type: 3}
   autoCreatePlayer: 1
   playerSpawnMethod: 0
-  spawnPrefabs: []
+  spawnPrefabs:
+  - {fileID: 6813856348222151652, guid: 64df613497128ab4bbeac832dcc985be, type: 3}
+  - {fileID: 2895637794913843298, guid: edbd204b6cd402b4abf0e15a2ef7b71b, type: 3}
+  - {fileID: 8682397364925781635, guid: b3cfd66ca3dc18c4082a3a94f0f16b8d, type: 3}
+  - {fileID: 1024156907348895572, guid: 858a91f1d60691e4481a6842fea9c6ca, type: 3}
+  - {fileID: 8256551358351774673, guid: 3d158fa84ae61ff46988fd6ada270b9a, type: 3}
+  - {fileID: 8388508766787811552, guid: c2c5ad9170add40418270c074c6e0487, type: 3}
+  - {fileID: 3562375863293982088, guid: 1f7c251538c636a46aec8b6934a4e7ae, type: 3}
+  - {fileID: 4809993016693248593, guid: a665cf1a9d7eedf4392c6e764444a818, type: 3}
+  - {fileID: 301699306936596359, guid: 08275163c8b73b94cb07dabdc0e6dc92, type: 3}
+  - {fileID: 8835598428880081341, guid: f0b444a1685a182409b294d7fd6a0b74, type: 3}
+  - {fileID: 6216941352845595406, guid: 41f94573459ba9b43a7c680e267a2405, type: 3}
+  - {fileID: 895642227466479077, guid: a3d2a89cb3ac476498bf9ee765d8ea6b, type: 3}
+  - {fileID: 459922248547352802, guid: edb1d0a2cbec1c944aba03ede2be5612, type: 3}
+  - {fileID: 459922248547352802, guid: 98b8ed5a87136174fa98f63491d8b02d, type: 3}
   exceptionsDisconnect: 1
   snapshotSettings:
     bufferTimeMultiplier: 2
@@ -3206,6 +3267,18 @@ MonoBehaviour:
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
         m_MethodName: SetActive
         m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 475305185892156458}
+        m_TargetAssemblyTypeName: HostMenuController, Assembly-CSharp
+        m_MethodName: OnCreateUI
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -14476,6 +14549,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 9129904274490989222}
+        m_TargetAssemblyTypeName: JoinMenuController, Assembly-CSharp
+        m_MethodName: OnJoinUI
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &8926613077279860876
 GameObject:
   m_ObjectHideFlags: 0
@@ -14873,6 +14958,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::JoinMenuController
   hatImage: {fileID: 1890032416147941471}
   colorImage: {fileID: 4640437548150803106}
+  hatIndex: 0
+  colorIndex: 0
   hatSprites:
   - {fileID: -3422052747087038778, guid: 57ff8d979887ed5489b3262070f7c8c4, type: 3}
   - {fileID: 9193511315674399393, guid: baf49d4ec452b7346b06aa5c0c52c99b, type: 3}
@@ -15043,3 +15130,4 @@ SceneRoots:
   - {fileID: 3443684181402310832}
   - {fileID: 4037164518559242786}
   - {fileID: 907932853}
+  - {fileID: 1391203721}

@@ -110,6 +110,12 @@ public class HostMenuController : MonoBehaviour
         colorImage.sprite = playerColors[colorIndex];
     }
 
+    public void OnCreateUI()
+    {
+        LobbyCustomCache.Instance.myCustomizeData.hatIndex = hatIndex;
+        LobbyCustomCache.Instance.myCustomizeData.colorIndex = colorIndex;
+    }
+
 
     // CANCEL ´­·¶À¸¸é ±×³É ²¨ÁÖ±â
     public void OnCancel()

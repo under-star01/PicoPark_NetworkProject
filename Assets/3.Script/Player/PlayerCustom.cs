@@ -8,7 +8,7 @@ public class PlayerCustom : MonoBehaviour
     [Header("모자 설정")]
     [SerializeField] private SpriteRenderer hatSR; // 모자 스프라이트 렌더러
     [SerializeField] private Sprite[] hatSprites; // 사용 가능한 모자들
-    [SerializeField] private int selectHat = 0; // 선택한 모자 인덱스
+    public int selectHat = 0; // 선택한 모자 인덱스
 
     [Header("플레이어 색상 설정")]
     [SerializeField] private SpriteRenderer playerSR; // 플레이어 스프라이트 렌더러
@@ -17,19 +17,19 @@ public class PlayerCustom : MonoBehaviour
     [Header("색상별 애니메이터 컨트롤러")]
     [SerializeField] private RuntimeAnimatorController[] colorAni; // 색상별 애니메이터 컨트롤러
     [SerializeField] private Sprite[] colorSprites; // 색상별 기본 스프라이트
-    [SerializeField] private int selectColor = 0; // 색상 선택
+    public int selectColor = 0; // 색상 선택
 
-    private void Awake()
+    public void SetAppearance(int color, int hat)
     {
-        // 모자 적용
-        ApplyHat();
+        selectColor = color;
+        selectHat = hat;
 
-        // 색상 적용
         ApplyColor();
+        ApplyHat();
     }
 
     // 모자 적용
-    private void ApplyHat()
+    public void ApplyHat()
     {
         if (hatSR == null || hatSprites == null || hatSprites.Length == 0) return;
 
@@ -40,7 +40,7 @@ public class PlayerCustom : MonoBehaviour
     }
 
     // 색상 적용
-    private void ApplyColor()
+    public void ApplyColor()
     {
         // 스프라이트 변경
         if (playerSR != null && colorSprites != null && colorSprites.Length > 0)
@@ -71,10 +71,14 @@ public class PlayerCustom : MonoBehaviour
         hatSR.enabled = true;
     }
 
-    // Inspector에서 미리보기
+#if UNITY_EDITOR
     private void OnValidate()
     {
-        ApplyHat();
-        ApplyColor();
+        if (!Application.isPlaying)
+        {
+            ApplyHat();
+            ApplyColor();
+        }
     }
+#endif
 }

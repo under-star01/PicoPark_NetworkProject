@@ -38,6 +38,12 @@ public class PlayerMove : NetworkBehaviour
     [SyncVar(hook = nameof(OnFlipChanged))]
     private int syncFlipDir;
 
+    [SyncVar(hook = nameof(OnColorChanged))]
+    private int colorIndex;
+
+    [SyncVar(hook = nameof(OnHatChanged))]
+    private int hatIndex;
+
     [Header("리턴 위치")]
     [SerializeField] private Transform returnPos;
 
@@ -53,6 +59,7 @@ public class PlayerMove : NetworkBehaviour
     private Rigidbody2D rb;
     private Animator animator;
     private SpriteRenderer spriteRenderer;
+    private PlayerCustom playerCustom;
     private Vector2 moveInput;
 
     private void Awake()
@@ -60,6 +67,7 @@ public class PlayerMove : NetworkBehaviour
         TryGetComponent(out rb);
         TryGetComponent(out animator);
         TryGetComponent(out spriteRenderer);
+        TryGetComponent(out playerCustom);
 
         groundCheck = GetComponentInChildren<GroundCheck>();
         ceilCheck = GetComponentInChildren<CeilCheck>();
@@ -67,6 +75,35 @@ public class PlayerMove : NetworkBehaviour
         IgnoreSelfCollision();
 
         isDead = false;
+    }
+
+    public override void OnStartClient()
+    {
+        base.OnStartClient();
+        ApplyAppearance();
+    }
+
+    public override void OnStartLocalPlayer()
+    {
+        base.OnStartLocalPlayer();
+
+        var data = LobbyCustomCache.Instance.myCustomizeData;
+        CmdSetAppearance(data.colorIndex, data.hatIndex);
+    }
+
+    [Command]
+    private void CmdSetAppearance(int color, int hat)
+    {
+        colorIndex = color;
+        hatIndex = hat;
+    }
+
+    private void ApplyAppearance()
+    {
+        if (playerCustom == null)
+            playerCustom = GetComponent<PlayerCustom>();
+
+        playerCustom.SetAppearance(colorIndex, hatIndex);
     }
 
     private void Update()
@@ -96,7 +133,7 @@ public class PlayerMove : NetworkBehaviour
         if (isDead) return;
 
         if (knockbackCoroutine != null || isInsideDoor) return;
-        
+
         CheckPush();
         Move();
 
@@ -265,6 +302,16 @@ public class PlayerMove : NetworkBehaviour
         Vector3 scale = transform.localScale;
         scale.x = Mathf.Abs(scale.x) * newDir;
         transform.localScale = scale;
+    }
+
+    private void OnColorChanged(int oldValue, int newValue)
+    {
+        ApplyAppearance();
+    }
+
+    private void OnHatChanged(int oldValue, int newValue)
+    {
+        ApplyAppearance();
     }
 
     //자기 자신 콜라이더 무시
