@@ -59,8 +59,11 @@ public class PlayerMove : NetworkBehaviour
     private Rigidbody2D rb;
     private Animator animator;
     private SpriteRenderer spriteRenderer;
-    private PlayerCustom playerCustom;
     private Vector2 moveInput;
+
+    // 네트워크 매니저 관련해서 추가 요소들 정리
+    [SerializeField] private int playerIndex;
+    [SerializeField] private PlayerCustom playerCustom;
 
     private void Awake()
     {
@@ -75,6 +78,13 @@ public class PlayerMove : NetworkBehaviour
         IgnoreSelfCollision();
 
         isDead = false;
+    }
+
+    public void ApplyMetaData(PlayerMetaData meta)
+    {
+        playerIndex = meta.playerIndex;
+        playerCustom.SetColor(meta.colorIndex);
+        playerCustom.SetHat(meta.hatIndex);
     }
 
     public override void OnStartClient()
