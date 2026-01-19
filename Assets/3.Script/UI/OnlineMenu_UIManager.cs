@@ -85,6 +85,7 @@ public class OnlineMenu_UIManager : MonoBehaviour
     }
     void Start()
     {
+
         // 씬이 시작될 때 이 값이 true라면 자동으로 스테이지 선택창을 켭니다.
         if (shouldShowStageSelect)
         {
@@ -94,6 +95,22 @@ public class OnlineMenu_UIManager : MonoBehaviour
         else
         {
             SetEntryState(); // 기본 시작 상태
+        }
+    }
+
+    public void OnStageClick(int stageNum)
+    {
+        string sceneName = "3.Stage_" + stageNum;
+        Debug.Log($"씬 전환 시도: {sceneName}");
+
+        if (NetworkManager.singleton != null)
+        {
+            // NetworkManager를 직접 연결하지 않아도 singleton으로 접근 가능
+            NetworkManager.singleton.ServerChangeScene(sceneName);
+        }
+        else
+        {
+            Debug.LogError("NetworkManager를 못 찾겠네 도령!");
         }
     }
 
