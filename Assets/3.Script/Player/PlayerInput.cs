@@ -22,6 +22,8 @@ public class PlayerInput : NetworkBehaviour
         playerInput.Disable();
     }
 
+    public IA_Player GetPlayerInput() => playerInput;
+
     // * Network Lifecycle
 
     public override void OnStartLocalPlayer()
