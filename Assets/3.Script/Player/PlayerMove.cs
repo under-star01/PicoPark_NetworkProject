@@ -190,6 +190,7 @@ public class PlayerMove : NetworkBehaviour
         if (!groundCheck.IsGround) return;
         if (isDead || isInsideDoor) return;
 
+        AudioManager.Instance.PlaySFX("Jump");
         rb.linearVelocityY = jumpForce;
     }
 
@@ -367,6 +368,8 @@ public class PlayerMove : NetworkBehaviour
     [ClientRpc]
     public void RpcDie()
     {
+        AudioManager.Instance.PlaySFX("Dead");
+
         isInputPushing = false;
         moveInput = Vector2.zero;
 

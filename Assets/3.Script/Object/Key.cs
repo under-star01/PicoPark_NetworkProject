@@ -36,6 +36,7 @@ public class Key : NetworkBehaviour
         // 플레이어와 충돌
         if (collision.gameObject.CompareTag("Player"))
         {
+            AudioManager.Instance.PlayUI();
             PlayerMove newOwner = collision.gameObject.GetComponent<PlayerMove>();
 
             // 새로운 플레이어이거나 주인이 없을 때만 변경
