@@ -211,6 +211,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 42496d56c3ba1d240b6f5b9f1622c2b1, type: 3}
+--- !u!212 &489661764 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 403647905545885530, guid: 08275163c8b73b94cb07dabdc0e6dc92, type: 3}
+  m_PrefabInstance: {fileID: 4037164518559242786}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &497552171
 GameObject:
   m_ObjectHideFlags: 0
@@ -6578,6 +6583,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: Laser
       objectReference: {fileID: 0}
+    - target: {fileID: 1294332026608469177, guid: 08275163c8b73b94cb07dabdc0e6dc92, type: 3}
+      propertyPath: onoff
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1294332026608469177, guid: 08275163c8b73b94cb07dabdc0e6dc92, type: 3}
+      propertyPath: spriteR
+      value: 
+      objectReference: {fileID: 489661764}
+    - target: {fileID: 1294332026608469177, guid: 08275163c8b73b94cb07dabdc0e6dc92, type: 3}
+      propertyPath: laserVisual
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 4611311826754503463, guid: 08275163c8b73b94cb07dabdc0e6dc92, type: 3}
       propertyPath: sceneId
       value: 2839873485
@@ -7600,6 +7617,10 @@ PrefabInstance:
     - target: {fileID: 2160393704803080122, guid: 1f7c251538c636a46aec8b6934a4e7ae, type: 3}
       propertyPath: sceneId
       value: 466337942
+      objectReference: {fileID: 0}
+    - target: {fileID: 2536212597761949553, guid: 1f7c251538c636a46aec8b6934a4e7ae, type: 3}
+      propertyPath: totalPlayerCount
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3562375863293982088, guid: 1f7c251538c636a46aec8b6934a4e7ae, type: 3}
       propertyPath: m_Name
