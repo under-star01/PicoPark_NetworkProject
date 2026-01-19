@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class StageMenuController : MonoBehaviour
 {
@@ -19,7 +20,7 @@ public class StageMenuController : MonoBehaviour
     public void ExecuteSelection()
     {
         Debug.Log($"{currentIndex + 1} 스테이지를 시작합니다!");
-        // 여기에 씬 전환 로직 추가 (예: SceneManager.LoadScene)
+        stageButtons[currentIndex].GetComponent<Button>().onClick.Invoke();
     }
 
     public int GetTotalStages() => stageButtons.Length;

@@ -6984,7 +6984,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2594975525290390023}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2067517727}
+        m_TargetAssemblyTypeName: Mirror.NetworkManager, Mirror
+        m_MethodName: ServerChangeScene
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 3.Stage_3
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!224 &3342439969632146457
 RectTransform:
   m_ObjectHideFlags: 0
@@ -7600,7 +7612,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2940642530795241224}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2067517727}
+        m_TargetAssemblyTypeName: Mirror.NetworkManager, Mirror
+        m_MethodName: ServerChangeScene
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 3.Stage_2
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!224 &3698203924681348224
 RectTransform:
   m_ObjectHideFlags: 0
@@ -9881,7 +9905,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 7274853486646005210}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2067517727}
+        m_TargetAssemblyTypeName: Mirror.NetworkManager, Mirror
+        m_MethodName: ServerChangeScene
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 3.Stage_1
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &4914514124682573119
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10830,7 +10866,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 215231481714118941}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2067517727}
+        m_TargetAssemblyTypeName: Mirror.NetworkManager, Mirror
+        m_MethodName: ServerChangeScene
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 3.Stage_6
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!222 &5587017483324892975
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -14766,7 +14814,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1431752441087548540}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2067517727}
+        m_TargetAssemblyTypeName: Mirror.NetworkManager, Mirror
+        m_MethodName: ServerChangeScene
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 3.Stage_4
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!222 &8061482647812589917
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -15691,7 +15751,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2065262652643525846}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2067517727}
+        m_TargetAssemblyTypeName: Mirror.NetworkManager, Mirror
+        m_MethodName: ServerChangeScene
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 3.Stage_5
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &8702031842585755026
 GameObject:
   m_ObjectHideFlags: 0
