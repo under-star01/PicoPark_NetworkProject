@@ -138,8 +138,23 @@ public class AudioManager : NetworkBehaviour
         float bgm = PlayerPrefs.GetInt("BGMVolume", 5) / 10f;
         float sfx = PlayerPrefs.GetInt("SFXVolume", 5) / 10f;
 
-        bgmSource.volume = master * bgm;
-        sfxSource.volume = master * sfx;
-        systemSource.volume = master * sfx;
+        Apply(master, bgm, sfx);
+    }
+
+    public void ApplyVolumesRealtime(int masterInt, int bgmInt, int sfxInt)
+    {
+        float master = masterInt / 10f;
+        float bgm = bgmInt / 10f;
+        float sfx = sfxInt / 10f;
+
+        Apply(master, bgm, sfx);
+    }
+
+    // 실제 적용 로직 통합
+    private void Apply(float m, float b, float s)
+    {
+        bgmSource.volume = m * b;
+        sfxSource.volume = m * s;
+        systemSource.volume = m * s;
     }
 }

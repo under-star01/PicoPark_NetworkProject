@@ -150,26 +150,46 @@ public class TitleMenu : MonoBehaviour
     public void MasterVolumeLeft()
     {
         VolumeLeft(masterVolume);
+        RefreshAudio(); // 실시간 반영
+        AudioManager.Instance.PlayUI();
     }
     public void MasterVolumeRight()
     {
         VolumeRight(masterVolume);
+        RefreshAudio(); // 실시간 반영
+        AudioManager.Instance.PlayUI();
     }
     public void BGMVolumeLeft()
     {
         VolumeLeft(bgmVolume);
+        RefreshAudio(); // 실시간 반영
     }
     public void BGMVolumeRight()
     {
         VolumeRight(bgmVolume);
+        RefreshAudio(); // 실시간 반영
     }
     public void SFXVolumeLeft()
     {
         VolumeLeft(sfxVolume);
+        RefreshAudio(); // 실시간 반영
+        AudioManager.Instance.PlayUI();
     }
     public void SFXVolumeRight()
     {
         VolumeRight(sfxVolume);
+        RefreshAudio(); // 실시간 반영
+        AudioManager.Instance.PlayUI();
+    }
+
+    private void RefreshAudio()
+    {
+        // 아직 PlayerPrefs에 저장되지 않은 실시간 .value 값을 전달합니다.
+        AudioManager.Instance.ApplyVolumesRealtime(
+            masterVolume.value,
+            bgmVolume.value,
+            sfxVolume.value
+        );
     }
 
     void SaveVolume(VolumeControl vc)
@@ -278,6 +298,8 @@ public class TitleMenu : MonoBehaviour
         UpdateVolumeDisplay(masterVolume);
         UpdateVolumeDisplay(bgmVolume);
         UpdateVolumeDisplay(sfxVolume);
+
+        RefreshAudio();
 
         CloseOptionPanel();
     }
