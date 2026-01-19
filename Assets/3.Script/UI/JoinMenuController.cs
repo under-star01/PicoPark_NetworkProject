@@ -22,11 +22,8 @@ public class JoinMenuController : MonoBehaviour
     public Sprite[] hatSprites; // 5개
     public Sprite[] playerColors; // 6개
 
-    [SerializeField] private GameObject[] joinMenuButtons;
-    [SerializeField] private TMP_InputField joinInputField;
-
-    [SerializeField] private Button JoinRoomButton;
-    [SerializeField] private Button JoinCancelButton;
+   [SerializeField] private GameObject[] joinMenuButtons;
+   [SerializeField] private TMP_InputField joinInputField;
 
     // 모자 이미지 전환(배열의 인덱스 순서대로 증감)
     public void OnHatLeft()
@@ -94,27 +91,5 @@ public class JoinMenuController : MonoBehaviour
     {
         joinInputField.Select();
         joinInputField.ActivateInputField();
-    }
-
-    public void InvokeJoin()
-    {
-        if (JoinRoomButton != null)
-        {
-            JoinRoomButton.onClick.Invoke();
-        }
-    }
-
-    public void InvokeCancel()
-    {
-        if (JoinCancelButton != null)
-        {
-            JoinCancelButton.onClick.Invoke();
-        }
-    }
-
-
-    public void SetActive(bool isActive)
-    {
-        gameObject.SetActive(isActive);
     }
 }
