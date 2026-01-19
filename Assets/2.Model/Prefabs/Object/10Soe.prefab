@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 8158822903806561500}
   - component: {fileID: 4568873211207184486}
   - component: {fileID: 3997999363493041634}
+  - component: {fileID: -933741611688632574}
   m_Layer: 0
   m_Name: 10Soe
   m_TagString: Key
@@ -178,3 +179,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62e859fa402e91a418ccbd08c7c55aab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Key
+--- !u!114 &-933741611688632574
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6813856348222151652}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Mirror::Mirror.NetworkIdentity
+  sceneId: 0
+  _assetId: 1646712129
+  serverOnly: 0
+  visibility: 0
+  hasSpawned: 0

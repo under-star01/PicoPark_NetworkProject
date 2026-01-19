@@ -116,7 +116,7 @@ public class PlayerMove : NetworkBehaviour
     {
         Vector2 velocity = rb.linearVelocity;
 
-        if (velocity.y > 0f)
+        if (velocity.y > 0f) 
         {
             velocity.y *= 0.5f;
             rb.linearVelocity = velocity;

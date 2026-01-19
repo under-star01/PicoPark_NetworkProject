@@ -17,13 +17,19 @@ public class RelayManager : MonoBehaviour
 
     async void Start()
     {
+        if (NetworkManager.singleton != null)
+        {
+            transport = NetworkManager.singleton.GetComponent<UTPTransport>();
+        }
         await UnityServices.InitializeAsync();
         if (!AuthenticationService.Instance.IsSignedIn) await AuthenticationService.Instance.SignInAnonymouslyAsync();
-        transport = NetworkManager.singleton.GetComponent<UTPTransport>();
     }
 
     public async void StartRelayHost(int maxPlayers = 6)
     {
+        if (transport == null)
+            transport = NetworkManager.singleton.GetComponent<Mirror.Transports.Utp.UTPTransport>();
+
         try 
         {
             Allocation allocation = await RelayService.Instance.CreateAllocationAsync(maxPlayers);
