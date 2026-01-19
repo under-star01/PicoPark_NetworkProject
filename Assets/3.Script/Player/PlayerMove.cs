@@ -361,6 +361,7 @@ public class PlayerMove : NetworkBehaviour
     {
         if (isDead) return;
         isDead = true;
+        AudioManager.Instance.PlaySFX("Dead");
 
         RpcDie();
     }
@@ -368,7 +369,6 @@ public class PlayerMove : NetworkBehaviour
     [ClientRpc]
     public void RpcDie()
     {
-        AudioManager.Instance.PlaySFX("Dead");
 
         isInputPushing = false;
         moveInput = Vector2.zero;
