@@ -10,7 +10,6 @@ public class OnlineMenu_UIManager : MonoBehaviour
     // 기존 변수들 아래에 추가
     private PlayerInput _localPlayerController;
 
-
     private enum UIState
     {
         Entry,          // 엔트리 화면(Enter만 허용)
@@ -73,6 +72,7 @@ public class OnlineMenu_UIManager : MonoBehaviour
     public void RegisterLocalPlayer(PlayerInput player)
     {
         _localPlayerController = player;
+  
         // 이제 플레이어의 IA_Player를 UI 매니저도 공유합니다.
         this.playerInput = player.GetPlayerInput();
 
@@ -416,7 +416,6 @@ public class OnlineMenu_UIManager : MonoBehaviour
                     }
                 }
 
-
                 break;
             case UIState.Title:
                 // 1. 만약 "Press Enter" 글자가 켜져 있는 상태라면? -> 메뉴 패널을 연다.
@@ -513,7 +512,9 @@ public class OnlineMenu_UIManager : MonoBehaviour
             this.state = UIState.Title;
             Lobby.SetActive(true);
             titleMenuController.SetPressButtonActive(true);
-        }else if (state.Equals(3))
+            titleMenuController.SetHeadActive();
+        }
+        else if (state.Equals(3))
         {
             this.state = UIState.StageSelect;
             StageSelectPanel.SetActive(true);
@@ -522,14 +523,24 @@ public class OnlineMenu_UIManager : MonoBehaviour
 
     private void EnableUIMode()
     {
-        playerInput.Player.Disable(); // 캐릭터 이동 맵 끄기
+        if (_localPlayerController != null)
+            _localPlayerController.enabled = false;
+
         playerInput.MenuUI.Enable();  // UI 조작 맵 켜기
     }
 
     private void EnablePlayerMode()
     {
+        if (_localPlayerController != null)
+            _localPlayerController.enabled = true;
         playerInput.MenuUI.Disable(); // UI 조작 맵 끄기
-        playerInput.Player.Enable();  // 캐릭터 이동 맵 켜기
+
+        if (state == UIState.Title)
+        {
+            playerInput.MenuUI.Enter.Enable(); //
+            playerInput.MenuUI.Space.Enable(); //
+            playerInput.MenuUI.ESC.Enable();   // 다시 닫고 열 수 있도록
+        }
     }
     public void RestorePlayerMode()
     {

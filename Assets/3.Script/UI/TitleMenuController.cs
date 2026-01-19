@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem;
 using Mirror;
+using TMPro;
 
 public class TitleMenuController : MonoBehaviour
 {
@@ -20,6 +21,10 @@ public class TitleMenuController : MonoBehaviour
 
     [Header("Press Button")]
     [SerializeField] public GameObject pressbutton;
+
+    [Header("Head")]
+    [SerializeField] private GameObject Head;
+    [SerializeField] private TMP_Text HeadCount;
 
     [Header("´ÙÀ½ ¾À")]
     // ÀüÈ¯¿ë ¾À ÀÌ¸§
@@ -143,6 +148,22 @@ public class TitleMenuController : MonoBehaviour
         return window != null && window.activeSelf;
     }
 
+    public void SetHeadActive()
+    {
+        if (Head == null || HeadCount == null) return;
+
+        Head.SetActive(true);
+
+        int current = NetworkManager.singleton.numPlayers;
+        int max = NetworkManager.singleton.maxConnections;
+
+        HeadCount.text = $"{current} / {max}";
+    }
+
+    public void SetheadCountText(string headCount)
+    {
+        HeadCount.text = headCount;
+    }
 
     public void ExecuteSelection()
     {
