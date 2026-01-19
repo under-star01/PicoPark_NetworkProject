@@ -403,7 +403,6 @@ public class PlayerMove : NetworkBehaviour
         // Rigidbody를 Kinematic으로 변경
         rb.bodyType = RigidbodyType2D.Kinematic;
         rb.linearVelocity = Vector2.zero;
-        SetMove(Vector2.zero);
 
         // 다른 애니메이션 파라미터 초기화
         animator.SetBool("IsGround", true);
