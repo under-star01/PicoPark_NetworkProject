@@ -196,7 +196,7 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
-  shootSpeed: 10
+  shootSpeed: 20
   pushVelocity: {x: 5, y: 0}
 --- !u!114 &2569495989922634812
 MonoBehaviour:
