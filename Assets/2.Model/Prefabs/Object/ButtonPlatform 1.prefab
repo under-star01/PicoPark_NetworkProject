@@ -217,6 +217,11 @@ MonoBehaviour:
   syncInterval: 0
   targetPos: {fileID: 8536071812951995550}
   moveSpeed: 2
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  detectionDistance: 0.5
+  detectionSize: {x: 1, y: 0.3}
 --- !u!114 &249745780679372416
 MonoBehaviour:
   m_ObjectHideFlags: 0

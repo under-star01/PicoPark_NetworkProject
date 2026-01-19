@@ -44,6 +44,9 @@ public class PlayerMove : NetworkBehaviour
     [SyncVar(hook = nameof(OnHatChanged))]
     private int hatIndex;
 
+    [SyncVar]
+    public bool inputLocked; // UI표시
+
     [Header("리턴 위치")]
     [SerializeField] private Transform returnPos;
 
@@ -55,6 +58,8 @@ public class PlayerMove : NetworkBehaviour
 
     [Header("죽음")]
     private bool isDead = false;
+
+
 
     private Rigidbody2D rb;
     private Animator animator;
@@ -88,6 +93,7 @@ public class PlayerMove : NetworkBehaviour
         base.OnStartLocalPlayer();
 
         var data = LobbyCustomCache.Instance.myCustomizeData;
+        OnlineMenu_UIManager.Instance?.RegisterLocalPlayer(this);
         CmdSetAppearance(data.colorIndex, data.hatIndex);
     }
 
@@ -117,6 +123,7 @@ public class PlayerMove : NetworkBehaviour
     [ServerCallback]
     private void FixedUpdate()
     {
+
         if (isServer)
         {
             ServerMove();
@@ -130,6 +137,7 @@ public class PlayerMove : NetworkBehaviour
     [Server]
     private void ServerMove()
     {
+        if (inputLocked) return;
         if (isDead) return;
 
         if (knockbackCoroutine != null || isInsideDoor) return;
@@ -147,6 +155,14 @@ public class PlayerMove : NetworkBehaviour
         {
             syncFlipDir = (moveInput.x > 0) ? 1 : -1;
         }
+    }
+
+    [Command]
+    public void CmdLockInput(bool locked)
+    {
+        inputLocked = locked;
+        if (locked)
+            moveInput = Vector2.zero;
     }
 
     private void ClientPredictMove()
@@ -266,6 +282,17 @@ public class PlayerMove : NetworkBehaviour
         }
     }
 
+    public bool IsMoving()
+    {
+        // 입력 체크
+        bool hasInput = Mathf.Abs(moveInput.x) > 0.01f || Mathf.Abs(moveInput.y) > 0.01f;
+
+        // 실제 이동 속도 체크 (관성으로 움직이는 것도 포함)
+        bool isMoving = rb.linearVelocity.magnitude > 0.1f;
+
+        return hasInput || isMoving;
+    }
+
     [Server]
     //밀기 체크
     private void CheckPush()
@@ -376,7 +403,6 @@ public class PlayerMove : NetworkBehaviour
         // Rigidbody를 Kinematic으로 변경
         rb.bodyType = RigidbodyType2D.Kinematic;
         rb.linearVelocity = Vector2.zero;
-        SetMove(Vector2.zero);
 
         // 다른 애니메이션 파라미터 초기화
         animator.SetBool("IsGround", true);

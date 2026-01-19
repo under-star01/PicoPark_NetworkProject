@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem;
 using Mirror;
+using TMPro;
 
 public class TitleMenuController : MonoBehaviour
 {
@@ -20,6 +21,10 @@ public class TitleMenuController : MonoBehaviour
 
     [Header("Press Button")]
     [SerializeField] public GameObject pressbutton;
+
+    [Header("Head")]
+    [SerializeField] private GameObject Head;
+    [SerializeField] private TMP_Text HeadCount;
 
     [Header("다음 씬")]
     // 전환용 씬 이름
@@ -143,6 +148,18 @@ public class TitleMenuController : MonoBehaviour
         return window != null && window.activeSelf;
     }
 
+    public void SetHeadActive()
+    {
+        if (Head == null) return;
+
+        Head.SetActive(true);
+
+    }
+
+    public void SetheadCountText(string headCount)
+    {
+        HeadCount.text = headCount;
+    }
 
     public void ExecuteSelection()
     {
@@ -165,7 +182,7 @@ public class TitleMenuController : MonoBehaviour
                 {
                     NetworkManager.singleton.StopClient();
                 }
-                SceneManager.LoadScene("Scene_1.Title");
+                Online();
                 break;
 
             case 2: // Start Game (게임 시작)

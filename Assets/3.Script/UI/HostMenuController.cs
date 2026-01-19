@@ -155,4 +155,9 @@ public class HostMenuController : MonoBehaviour
     {
         gameObject.SetActive(isActive);
     }
+
+    public int getMaxPlayerCount()
+    {
+        return maxPlayers;
+    }
 }

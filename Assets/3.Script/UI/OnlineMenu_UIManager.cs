@@ -7,9 +7,7 @@ public class OnlineMenu_UIManager : MonoBehaviour
 {
     private IA_Player playerInput;
 
-    // 기존 변수들 아래에 추가
-    private PlayerInput _localPlayerController;
-
+    private PlayerMove localPlayerMove;
 
     private enum UIState
     {
@@ -48,6 +46,7 @@ public class OnlineMenu_UIManager : MonoBehaviour
     public static OnlineMenu_UIManager Instance = null;
 
     private bool isBound = false;
+    
 
     private void Awake()
     {
@@ -72,12 +71,15 @@ public class OnlineMenu_UIManager : MonoBehaviour
 
     public void RegisterLocalPlayer(PlayerInput player)
     {
-        _localPlayerController = player;
         // 이제 플레이어의 IA_Player를 UI 매니저도 공유합니다.
         this.playerInput = player.GetPlayerInput();
-
         // UI 이벤트 연결 (기존 OnEnable에 있던 로직을 함수로 빼서 호출하면 좋습니다)
         BindUIEvents();
+    }
+
+    public void RegisterLocalPlayer(PlayerMove player)
+    {
+        localPlayerMove = player;
     }
 
     private void BindUIEvents()
@@ -416,7 +418,6 @@ public class OnlineMenu_UIManager : MonoBehaviour
                     }
                 }
 
-
                 break;
             case UIState.Title:
                 // 1. 만약 "Press Enter" 글자가 켜져 있는 상태라면? -> 메뉴 패널을 연다.
@@ -513,7 +514,10 @@ public class OnlineMenu_UIManager : MonoBehaviour
             this.state = UIState.Title;
             Lobby.SetActive(true);
             titleMenuController.SetPressButtonActive(true);
-        }else if (state.Equals(3))
+            titleMenuController.SetHeadActive();
+            titleMenuController.SetheadCountText(string.Format("{0}/{1}", NetworkServer.connections.Count, hostMenuController.getMaxPlayerCount()));
+        }
+        else if (state.Equals(3))
         {
             this.state = UIState.StageSelect;
             StageSelectPanel.SetActive(true);
@@ -522,14 +526,14 @@ public class OnlineMenu_UIManager : MonoBehaviour
 
     private void EnableUIMode()
     {
-        playerInput.Player.Disable(); // 캐릭터 이동 맵 끄기
-        playerInput.MenuUI.Enable();  // UI 조작 맵 켜기
+        if (localPlayerMove != null)
+            localPlayerMove.CmdLockInput(true);
     }
 
     private void EnablePlayerMode()
     {
-        playerInput.MenuUI.Disable(); // UI 조작 맵 끄기
-        playerInput.Player.Enable();  // 캐릭터 이동 맵 켜기
+        if (localPlayerMove != null)
+            localPlayerMove.CmdLockInput(false);
     }
     public void RestorePlayerMode()
     {
