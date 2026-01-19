@@ -231,8 +231,9 @@ public class PlayerMove : NetworkBehaviour
     {
         if (collision.gameObject.CompareTag("DeadLine"))
         {
-            if (returnPos != null)
-                transform.position = returnPos.position;
+            Vector3 respawnPos = StageCheckpointManager.Instance.GetRespawnPosition();
+
+            transform.position = respawnPos;
         }
 
         if (collision.gameObject.CompareTag("FlatForm") && collision.contacts[0].normal.y > 0.7f)
@@ -242,6 +243,24 @@ public class PlayerMove : NetworkBehaviour
             {
                 platform.AddRider(this);
             }
+        }
+    }
+
+    [ServerCallback]
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (!isServer) return;
+
+        if (collision.CompareTag("SavePoint"))
+        {
+            SavePoint savePoint = collision.GetComponent<SavePoint>();
+            if (savePoint == null) return;
+
+            if (!savePoint.TryActivate())
+                return;
+
+            // 최초 도달한 경우만 갱신
+            StageCheckpointManager.Instance.SetCheckpoint(savePoint.returnPos);
         }
     }
 
@@ -280,6 +299,12 @@ public class PlayerMove : NetworkBehaviour
                 platform.RemoveRider(this);
             }
         }
+    }
+
+    [Server]
+    public void SetReturnPos(Transform newReturnPos)
+    {
+        returnPos = newReturnPos;
     }
 
     public bool IsMoving()
