@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using Mirror;
+using UnityEngine.SceneManagement;
 
 public class OnlineMenu_UIManager : MonoBehaviour
 {
@@ -40,6 +41,8 @@ public class OnlineMenu_UIManager : MonoBehaviour
     [SerializeField] private StageMenuController stageMenuController;
     [SerializeField] private GameObject StageSelectPanel;
 
+    public static bool shouldShowStageSelect = false; //스테이지에서 돌아왔을 때 필요한 변수
+
     private int panelIndex = 0;   // 옵션 - 사운드 패널 수직 인덱스 번호 (0: Master, 1: BGM, 2: SE, 3: OK/Cancel 등)
     private const int STAGE_COLUMNS = 3;
 
@@ -64,9 +67,34 @@ public class OnlineMenu_UIManager : MonoBehaviour
 
     }
 
+    private void OnDestroy()
+    {
+        if (playerInput != null)
+        {
+            try
+            {
+                UnbindUIEvents();
+            }
+            catch
+            {
+                // 종료 시점의 에러는 무시하여 콘솔을 깨끗하게 유지
+            }
+            playerInput.Dispose(); // 메모리 해제
+            playerInput = null;
+        }
+    }
     void Start()
     {
-        SetEntryState(); // Press Enter 상태로 시작하도록 설정
+        // 씬이 시작될 때 이 값이 true라면 자동으로 스테이지 선택창을 켭니다.
+        if (shouldShowStageSelect)
+        {
+            changeState(3);
+            shouldShowStageSelect = false; // 한 번 실행 후 다시 꺼줌
+        }
+        else
+        {
+            SetEntryState(); // 기본 시작 상태
+        }
     }
 
     public void RegisterLocalPlayer(PlayerInput player)
@@ -101,13 +129,9 @@ public class OnlineMenu_UIManager : MonoBehaviour
         playerInput.Enable();
     }
 
-    private void OnEnable()
+    private void UnbindUIEvents()
     {
-        BindUIEvents();
-    }
-
-    private void OnDisable()
-    {
+        if (playerInput == null ) return;
 
         playerInput.MenuUI.Left.performed -= MoveLeft;
         playerInput.MenuUI.Right.performed -= MoveRight;
@@ -121,6 +145,16 @@ public class OnlineMenu_UIManager : MonoBehaviour
         playerInput.MenuUI.ESC.performed -= ESC;
 
         playerInput.Disable();
+    }
+
+    private void OnEnable()
+    {
+        BindUIEvents();
+    }
+
+    private void OnDisable()
+    {
+        UnbindUIEvents();
     }
 
     // ========== 상태 전환 ==========
@@ -176,6 +210,8 @@ public class OnlineMenu_UIManager : MonoBehaviour
 
     private void MoveLeft(InputAction.CallbackContext context)
     {
+        // 현재 씬이 스테이지라면(로비가 아니라면) 동작하지 않도록 방어
+        if (SceneManager.GetActiveScene().name.Contains("Stage")) return;
 
         switch (state)
         {
@@ -245,6 +281,8 @@ public class OnlineMenu_UIManager : MonoBehaviour
 
     private void MoveRight(InputAction.CallbackContext context)
     {
+        // 현재 씬이 스테이지라면(로비가 아니라면) 동작하지 않도록 방어
+        if (SceneManager.GetActiveScene().name.Contains("Stage")) return;
 
         switch (state)
         {
@@ -309,7 +347,11 @@ public class OnlineMenu_UIManager : MonoBehaviour
 
     private void MoveUp(InputAction.CallbackContext context)
     {
+        // 현재 씬이 스테이지라면(로비가 아니라면) 동작하지 않도록 방어
+        if (SceneManager.GetActiveScene().name.Contains("Stage")) return;
+
         if (state != UIState.LobbyEntry && state != UIState.StageSelect) return;
+
         panelIndex--;
         switch (state)
         {
@@ -345,6 +387,9 @@ public class OnlineMenu_UIManager : MonoBehaviour
 
     private void MoveDown(InputAction.CallbackContext context)
     {
+        // 현재 씬이 스테이지라면(로비가 아니라면) 동작하지 않도록 방어
+        if (SceneManager.GetActiveScene().name.Contains("Stage")) return;
+
         if (state != UIState.LobbyEntry && state != UIState.StageSelect) return;
 
         panelIndex++;
@@ -382,6 +427,9 @@ public class OnlineMenu_UIManager : MonoBehaviour
 
     private void Select(InputAction.CallbackContext context)
     {
+        // 현재 씬이 스테이지라면(로비가 아니라면) 동작하지 않도록 방어
+        if (SceneManager.GetActiveScene().name.Contains("Stage")) return;
+
         switch (state)
         {
             case UIState.Entry:
@@ -442,6 +490,9 @@ public class OnlineMenu_UIManager : MonoBehaviour
 
     private void ESC(InputAction.CallbackContext context)
     {
+                // 현재 씬이 스테이지라면(로비가 아니라면) 동작하지 않도록 방어
+        if (SceneManager.GetActiveScene().name.Contains("Stage")) return;
+
         //TitleMenu에서 뒤로가기 등 기능 추가
         switch (state)
         {
@@ -521,6 +572,10 @@ public class OnlineMenu_UIManager : MonoBehaviour
         {
             this.state = UIState.StageSelect;
             StageSelectPanel.SetActive(true);
+            if (Entry.activeSelf)
+            {
+                Entry.SetActive(false);
+            }
         }
     }
 

@@ -19,6 +19,7 @@ GameObject:
   - component: {fileID: 4026308688082644733}
   - component: {fileID: 7634458753017272158}
   - component: {fileID: 3746403909291097395}
+  - component: {fileID: 7788780580615787173}
   m_Layer: 6
   m_Name: Player
   m_TagString: Player
@@ -164,6 +165,7 @@ MonoBehaviour:
   isContributingPush: 0
   frontPlayer: {fileID: 0}
   ceilCheck: {fileID: 0}
+  inputLocked: 0
   returnPos: {fileID: 0}
 --- !u!50 &6797068560288179526
 Rigidbody2D:
@@ -345,6 +347,21 @@ MonoBehaviour:
   - {fileID: 6286595657586805340, guid: d49ac906d939db74b8a1598fa2a738bb, type: 3}
   - {fileID: 6358040702757662528, guid: 2e5418d0099f75c498ef641991ed6c8f, type: 3}
   selectColor: 3
+--- !u!114 &7788780580615787173
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 459922248547352802}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 574deb4f890bff643aea6d7dcb4e130c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerStageController
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
 --- !u!1 &2323101840052430765
 GameObject:
   m_ObjectHideFlags: 0
