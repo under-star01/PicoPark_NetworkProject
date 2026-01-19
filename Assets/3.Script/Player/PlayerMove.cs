@@ -44,6 +44,9 @@ public class PlayerMove : NetworkBehaviour
     [SyncVar(hook = nameof(OnHatChanged))]
     private int hatIndex;
 
+    [SyncVar]
+    public bool inputLocked; // UI표시
+
     [Header("리턴 위치")]
     [SerializeField] private Transform returnPos;
 
@@ -55,6 +58,8 @@ public class PlayerMove : NetworkBehaviour
 
     [Header("죽음")]
     private bool isDead = false;
+
+
 
     private Rigidbody2D rb;
     private Animator animator;
@@ -88,6 +93,7 @@ public class PlayerMove : NetworkBehaviour
         base.OnStartLocalPlayer();
 
         var data = LobbyCustomCache.Instance.myCustomizeData;
+        OnlineMenu_UIManager.Instance?.RegisterLocalPlayer(this);
         CmdSetAppearance(data.colorIndex, data.hatIndex);
     }
 
@@ -117,6 +123,7 @@ public class PlayerMove : NetworkBehaviour
     [ServerCallback]
     private void FixedUpdate()
     {
+
         if (isServer)
         {
             ServerMove();
@@ -130,6 +137,7 @@ public class PlayerMove : NetworkBehaviour
     [Server]
     private void ServerMove()
     {
+        if (inputLocked) return;
         if (isDead) return;
 
         if (knockbackCoroutine != null || isInsideDoor) return;
@@ -147,6 +155,14 @@ public class PlayerMove : NetworkBehaviour
         {
             syncFlipDir = (moveInput.x > 0) ? 1 : -1;
         }
+    }
+
+    [Command]
+    public void CmdLockInput(bool locked)
+    {
+        inputLocked = locked;
+        if (locked)
+            moveInput = Vector2.zero;
     }
 
     private void ClientPredictMove()

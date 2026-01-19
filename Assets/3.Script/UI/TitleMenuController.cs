@@ -150,14 +150,10 @@ public class TitleMenuController : MonoBehaviour
 
     public void SetHeadActive()
     {
-        if (Head == null || HeadCount == null) return;
+        if (Head == null) return;
 
         Head.SetActive(true);
 
-        int current = NetworkManager.singleton.numPlayers;
-        int max = NetworkManager.singleton.maxConnections;
-
-        HeadCount.text = $"{current} / {max}";
     }
 
     public void SetheadCountText(string headCount)
