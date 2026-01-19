@@ -11,7 +11,9 @@ public class Door : NetworkBehaviour
     [SerializeField] private Sprite openedSprite; // 열린 문
 
     [Header("클리어 설정")]
-    [SerializeField] private int totalPlayerCount = 2; // 총 플레이어 수
+    [SerializeField] private bool useAutoPlayerCount = true; // 자동으로 플레이어 수 감지
+    [SerializeField] private int manualPlayerCount = 2; // 수동 설정 (useAutoPlayerCount가 false일 때)
+
     private bool isStageCleared = false;
 
     [SyncVar(hook = nameof(OnDoorOpenedChanged))]
@@ -22,6 +24,19 @@ public class Door : NetworkBehaviour
 
     private HashSet<PlayerMove> enteredPlayers = new HashSet<PlayerMove>(); // 들어간 플레이어들
     private HashSet<PlayerMove> playersInRange = new HashSet<PlayerMove>(); // 문 범위 안 플레이어들
+
+    // 총 플레이어 수를 동적으로 계산
+    private int TotalPlayerCount
+    {
+        get
+        {
+            if (useAutoPlayerCount && NetworkManager.singleton != null)
+            {
+                return NetworkManager.singleton.numPlayers;
+            }
+            return manualPlayerCount;
+        }
+    }
 
     private void Awake()
     {
@@ -83,6 +98,13 @@ public class Door : NetworkBehaviour
         if (!isOpened) return;
         if (!playersInRange.Contains(player)) return;
 
+        // 클리어 후에는 문에서 나올 수 없음
+        if (isStageCleared)
+        {
+            Debug.Log("Stage cleared! Cannot exit door.");
+            return;
+        }
+
         if (enteredPlayers.Contains(player))
         {
             ExitDoorServer(player);
@@ -103,7 +125,10 @@ public class Door : NetworkBehaviour
 
         RpcHidePlayer(player.netIdentity, true);
 
-        if (enteredPlayers.Count >= totalPlayerCount)
+        // 동적으로 계산된 플레이어 수 사용
+        Debug.Log($"Players entered: {enteredPlayers.Count} / {TotalPlayerCount}");
+
+        if (enteredPlayers.Count >= TotalPlayerCount)
         {
             StageClearServer();
         }
@@ -112,6 +137,13 @@ public class Door : NetworkBehaviour
     [Server]
     private void ExitDoorServer(PlayerMove player)
     {
+        // 클리어 후에는 나갈 수 없음
+        if (isStageCleared)
+        {
+            Debug.Log("Cannot exit door after stage clear!");
+            return;
+        }
+
         enteredPlayers.Remove(player);
 
         player.SetInsideDoor(false);
@@ -185,10 +217,40 @@ public class Door : NetworkBehaviour
         Debug.Log("스테이지 클리어!");
         AudioManager.Instance.StopBGM();
         AudioManager.Instance.RpcPlayClearOnce();
+
+        // 모든 플레이어 입력 잠금
+        LockAllPlayers();
+
+        // 클라이언트에 클리어 알림
+        RpcStageClear();
+
         // 여기서
-        // - 모든 플레이어 입력 Lock
         // - 일정 시간 대기
         // - RpcFadeOut
         // - NetworkManager로 로비 씬 이동
+    }
+
+    [Server]
+    private void LockAllPlayers()
+    {
+        // NetworkServer에서 관리하는 모든 플레이어 찾기
+        foreach (var conn in NetworkServer.connections.Values)
+        {
+            if (conn.identity != null)
+            {
+                PlayerMove player = conn.identity.GetComponent<PlayerMove>();
+                if (player != null)
+                {
+                    player.CmdLockInput(true);
+                }
+            }
+        }
+    }
+
+    [ClientRpc]
+    private void RpcStageClear()
+    {
+        Debug.Log("Stage Clear!");
+        // 여기에 UI 표시, 이펙트 등 추가
     }
 }
