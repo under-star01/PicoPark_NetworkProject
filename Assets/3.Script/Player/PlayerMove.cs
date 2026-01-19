@@ -282,6 +282,17 @@ public class PlayerMove : NetworkBehaviour
         }
     }
 
+    public bool IsMoving()
+    {
+        // 입력 체크
+        bool hasInput = Mathf.Abs(moveInput.x) > 0.01f || Mathf.Abs(moveInput.y) > 0.01f;
+
+        // 실제 이동 속도 체크 (관성으로 움직이는 것도 포함)
+        bool isMoving = rb.linearVelocity.magnitude > 0.1f;
+
+        return hasInput || isMoving;
+    }
+
     [Server]
     //밀기 체크
     private void CheckPush()
