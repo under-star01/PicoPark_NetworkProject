@@ -182,7 +182,7 @@ public class TitleMenuController : MonoBehaviour
                 {
                     NetworkManager.singleton.StopClient();
                 }
-                SceneManager.LoadScene("Scene_1.Title");
+                Online();
                 break;
 
             case 2: // Start Game (게임 시작)
