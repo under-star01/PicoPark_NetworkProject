@@ -35,6 +35,24 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/1.Scene/2.1 Lobby.unity
     guid: 0a8c91500a0cd944c8cd0fd04e23054f
+  - enabled: 1
+    path: Assets/1.Scene/3.1 Stage_1.unity
+    guid: 6a5b736c874073b4c882092ad37aae24
+  - enabled: 1
+    path: Assets/1.Scene/3.1 Stage_2.unity
+    guid: 5c3d6762da2fee847ae1aa41ecab7bfa
+  - enabled: 1
+    path: Assets/1.Scene/3.1 Stage_3.unity
+    guid: ddcf39b8b5d4d384d96e72ad3e1738ee
+  - enabled: 1
+    path: Assets/1.Scene/3.1 Stage_4.unity
+    guid: cfcc1aa6986677643aa9f9ca4e605758
+  - enabled: 1
+    path: Assets/1.Scene/3.1 Stage_5.unity
+    guid: ffa02cad76fd66a43aa42a9a8b0e35c0
+  - enabled: 1
+    path: Assets/1.Scene/3.1 Stage_6.unity
+    guid: b204ebccd0de1eb4399cc9552926ba01
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: d97639a23019bdf40926a22c24d515dc, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
