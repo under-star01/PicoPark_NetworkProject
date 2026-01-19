@@ -16,7 +16,6 @@ public class Door : NetworkBehaviour
 
     [SyncVar(hook = nameof(OnDoorOpenedChanged))]
     private bool isOpened = false;
-    public bool IsOpened => isOpened;
 
     private SpriteRenderer spriteRenderer;
 
@@ -183,8 +182,7 @@ public class Door : NetworkBehaviour
         isStageCleared = true;
 
         Debug.Log("스테이지 클리어!");
-        AudioManager.Instance.RpcPlayClearOnce();
-        AudioManager.Instance.StopBGM();
+
         // 여기서
         // - 모든 플레이어 입력 Lock
         // - 일정 시간 대기

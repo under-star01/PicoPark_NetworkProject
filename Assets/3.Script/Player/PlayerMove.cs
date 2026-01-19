@@ -188,7 +188,7 @@ public class PlayerMove : NetworkBehaviour
     public void JumpStart()
     {
         if (!groundCheck.IsGround) return;
-        if (isDead ) return;
+        if (isDead || isInsideDoor) return;
 
         AudioManager.Instance.PlaySFX("Jump");
         rb.linearVelocityY = jumpForce;
@@ -362,14 +362,14 @@ public class PlayerMove : NetworkBehaviour
         if (isDead) return;
         isDead = true;
 
-        AudioManager.Instance.PlaySFX("Dead");
-
         RpcDie();
     }
 
     [ClientRpc]
     public void RpcDie()
     {
+        AudioManager.Instance.PlaySFX("Dead");
+
         isInputPushing = false;
         moveInput = Vector2.zero;
 
@@ -421,6 +421,14 @@ public class PlayerMove : NetworkBehaviour
         Vector3 topPos = transform.position;
         rb.bodyType = RigidbodyType2D.Dynamic;
         rb.gravityScale = 10f;
+
+        //time = 0f;
+        //while (time < 4f)
+        //{
+        //    time += Time.deltaTime;
+        //    transform.position = topPos - Vector3.up * (time / 5f) * 30f; // 초 동안 30만큼 내려감
+        //    yield return null;
+        //}
 
         // (여기에 게임오버 넣으면 됩니다)
         Debug.Log("게임오버!");

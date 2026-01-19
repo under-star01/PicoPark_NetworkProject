@@ -177,11 +177,6 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
-  onoff: 0
-  onDuration: 2
-  offDuration: 2
-  spriteR: {fileID: 403647905545885530}
-  laserCollider: {fileID: 230053674291026402}
 --- !u!114 &4611311826754503463
 MonoBehaviour:
   m_ObjectHideFlags: 0

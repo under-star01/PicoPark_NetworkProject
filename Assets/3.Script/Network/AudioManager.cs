@@ -83,21 +83,6 @@ public class AudioManager : NetworkBehaviour
             bgmSource.Play();
     }
 
-    public void StopBGM()
-    {
-        bgmSource.Stop();
-    }
-
-    public void PauseBGM()
-    {
-        bgmSource.Pause();
-    }
-
-    public void ResumeBGM()
-    {
-        bgmSource.UnPause();
-    }
-
     #endregion
     //SFX (¸ÖÆ¼)
     #region SFX (Network)
