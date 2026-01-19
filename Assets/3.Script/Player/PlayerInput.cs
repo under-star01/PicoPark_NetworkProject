@@ -111,14 +111,14 @@ public class PlayerInput : NetworkBehaviour
     {
         if (playerMove == null) return;
 
-
-        // 문이 우선
-        if (nearDoor != null)
+        // 문이 열려있고 범위 안에 있으면 문 입장 시도
+        if (nearDoor != null && nearDoor.IsOpened) // IsOpened 체크 추가
         {
             nearDoor.TryEnterDoor(playerMove);
             return;
         }
-        // 문 없으면 점프
+
+        // 그 외에는 점프
         playerMove.JumpStart();
     }
 
