@@ -32,6 +32,7 @@ public class Door : NetworkBehaviour
         // ¿­¼è
         if (!isOpened && collision.CompareTag("Key"))
         {
+            AudioManager.Instance.PlayUI();
             OpenDoorServer();
             NetworkServer.Destroy(collision.gameObject);
             return;
