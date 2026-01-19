@@ -50,7 +50,7 @@ public class AudioManager : NetworkBehaviour
     private void Start()
     {
         ApplyVolumes();
-        AudioManager.Instance.PlayBGM("Lobby");
+        PlayBGM("Title");
     }
 
     private void InitSFX()
