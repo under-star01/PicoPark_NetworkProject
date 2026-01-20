@@ -59,8 +59,22 @@ public class StageManager : MonoBehaviour
         playerInput.MenuUI.Space.performed -= Select;
 
         playerInput.MenuUI.ESC.performed -= ESC;
-    }
 
+        playerInput.Disable();
+    }
+    private void OnDestroy()
+    {
+        if (playerInput != null)
+        {
+            // 1. 혹시 안 꺼졌을지 모르니 다시 한번 비활성화
+            playerInput.Disable();
+
+            // 2. 비관리 리소스 해제 (이게 없으면 Leak 경고가 뜸)
+            playerInput.Dispose();
+
+            playerInput = null;
+        }
+    }
 
     private void Select(InputAction.CallbackContext context)
     {

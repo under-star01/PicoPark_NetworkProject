@@ -16,10 +16,8 @@ public class PlayerInput : NetworkBehaviour
 
     private void Awake()
     {
-        playerInput = new IA_Player();
         TryGetComponent(out playerMove);
 
-        playerInput.Disable();
     }
 
     public IA_Player GetPlayerInput() => playerInput;
@@ -28,6 +26,11 @@ public class PlayerInput : NetworkBehaviour
 
     public override void OnStartLocalPlayer()
     {
+        // [추가] 오직 조작이 필요한 로컬 플레이어만 인스턴스를 생성합니다.
+        if (playerInput == null)
+        {
+            playerInput = new IA_Player();
+        }
         EnableInput();
     }
 
@@ -57,8 +60,26 @@ public class PlayerInput : NetworkBehaviour
         playerInput.Enable();
     }
 
+    private void OnDestroy()
+    {
+        if (playerInput != null)
+        {
+
+            playerInput.Disable(); // 모든 액션 맵 비활성화
+
+            // 이벤트 구독 해제 (이미 DisableInput에서 했겠지만 안전을 위해 체크)
+            DisableInput();
+
+            // 메모리 해제
+            playerInput.Dispose();
+            playerInput = null;
+        }
+    }
+
     private void DisableInput()
     {
+        if (playerInput == null) return;
+
         if (isWASD)
         {
             playerInput.Player.Move.performed -= Move;

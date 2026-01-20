@@ -71,6 +71,8 @@ public class OnlineMenu_UIManager : MonoBehaviour
     {
         if (playerInput != null)
         {
+            playerInput.Disable();
+
             try
             {
                 UnbindUIEvents();
