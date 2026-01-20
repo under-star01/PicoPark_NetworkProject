@@ -1424,6 +1424,7 @@ MonoBehaviour:
   evaluationInterval: 3
   timeInterpolationGui: 0
   isGameStarted: 0
+  isFirstStart: 1
   lobbyStatusManager: {fileID: 4951738280904539452}
   hostMenuController: {fileID: 3456770524366497860}
 --- !u!222 &8134947146667723
