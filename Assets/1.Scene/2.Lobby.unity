@@ -1470,6 +1470,8 @@ MonoBehaviour:
   evaluationInterval: 3
   timeInterpolationGui: 0
   isGameStarted: 0
+  lobbyStatusManager: {fileID: 4951738280904539452}
+  hostMenuController: {fileID: 3456770524366497860}
 --- !u!222 &8134947146667723
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -6849,6 +6851,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4951738280904539450}
+  - component: {fileID: 4951738280904539452}
+  - component: {fileID: 4951738280904539451}
   m_Layer: 5
   m_Name: Lobby
   m_TagString: Untagged
@@ -9873,6 +9877,39 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 1000, y: 800}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &4951738280904539451
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3247198353037941344}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Mirror::Mirror.NetworkIdentity
+  sceneId: 259024393
+  _assetId: 0
+  serverOnly: 0
+  visibility: 0
+  hasSpawned: 0
+--- !u!114 &4951738280904539452
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3247198353037941344}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ccc21be06c1c8bb4f91aa488aa08c511, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LobbyStatusManager
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
+  titleMenuController: {fileID: 6334105628057350615}
 --- !u!114 &4961353798096353898
 MonoBehaviour:
   m_ObjectHideFlags: 0

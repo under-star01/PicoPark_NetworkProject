@@ -588,7 +588,6 @@ public class OnlineMenu_UIManager : MonoBehaviour
             Lobby.SetActive(true);
             titleMenuController.SetPressButtonActive(true);
             titleMenuController.SetHeadActive();
-            titleMenuController.SetheadCountText(string.Format("{0}/{1}", NetworkServer.connections.Count, hostMenuController.getMaxPlayerCount()));
         }
         else if (state.Equals(3))
         {

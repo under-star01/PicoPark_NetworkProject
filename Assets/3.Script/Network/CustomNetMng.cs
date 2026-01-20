@@ -12,6 +12,9 @@ public class CustomNetMng : NetworkManager
     // 닉네임 관리 (서버 전용)
     public Dictionary<int, string> playerInfoMap = new Dictionary<int, string>();
 
+    [SerializeField] private LobbyStatusManager lobbyStatusManager;
+    [SerializeField] private HostMenuController hostMenuController;
+
     // 플레이어 입장 시
     public override void OnServerAddPlayer(NetworkConnectionToClient conn)
     {
@@ -47,6 +50,8 @@ public class CustomNetMng : NetworkManager
         waitingConnections.Remove(conn);
 
         base.OnServerDisconnect(conn);
+
+        RefreshLobbyStatus();
     }
 
     public override void OnStopServer()
@@ -68,6 +73,24 @@ public class CustomNetMng : NetworkManager
 
         if (GameSystemManager.Instance != null)
             GameSystemManager.Instance.RpcNotifySystemMessage("신규 플레이어가 합류했습니다!");
+    }
+
+    public override void OnServerConnect(NetworkConnectionToClient conn)
+    {
+        base.OnServerConnect(conn);
+        RefreshLobbyStatus();
+    }
+
+    private void RefreshLobbyStatus()
+    {
+        if (lobbyStatusManager != null)
+        {
+            // 서버가 인원수를 세서 SyncVar를 업데이트함 -> 클라들한테 자동 전달
+            lobbyStatusManager.UpdateStatus(
+                NetworkServer.connections.Count,
+                hostMenuController.getMaxPlayerCount()
+            );
+        }
     }
 
     // 4번: 호스트(서버)가 끊겼을 때 클라이언트 처리
