@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
@@ -7,6 +8,8 @@ public class CustomNetMng : NetworkManager
 {
     [Header("게임 상태 관리")]
     public bool isGameStarted = false; // 3번: 게임 진행 중 여부
+    public bool isFirstStart = true;
+
     private List<NetworkConnectionToClient> waitingConnections = new List<NetworkConnectionToClient>();
 
     // 닉네임 관리 (서버 전용)
@@ -110,15 +113,26 @@ public class CustomNetMng : NetworkManager
     {
         base.OnServerSceneChanged(sceneName);
 
-        // 실제 게임 스테이지(MintNyang)에 도착했을 때만 true로 변경
-        if (sceneName == "Scene_MintNyang")
+        // 씬 이름에 "Stage_"가 포함되어 있는지 체크 (코드 간소화)
+        if (sceneName.Contains("Stage_"))
         {
-            //isGameStarted = true;
-            Debug.Log("스테이지 로드 완료 - 이제부터 오는 유저는 대기열로 갑니다.");
+            // 일단 false로 시작하여 기존 인원들의 입장을 허용합니다.
+            isGameStarted = false;
+            isFirstStart = false;
+
+            // 3초 뒤에 게임을 잠그는 코루틴 시작
+            StartCoroutine(LockGameAfterDelay(3.0f));
         }
-        else if (sceneName == "Scene_4.StageSelect")
+        else if (sceneName.Contains("Lobby"))
         {
-            isGameStarted = false; // 셀렉트 화면에서는 난입 허용
+            isGameStarted = false;
         }
+    }
+
+    private IEnumerator LockGameAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay); // 플레이어들이 스폰될 시간을 벌어줍니다.
+        isGameStarted = true;
+        Debug.Log($"[Server] 유예 시간 종료 - 이제부터 오는 유저는 대기열로 갑니다.");
     }
 }
