@@ -8134,6 +8134,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 9
       objectReference: {fileID: 0}
+    - target: {fileID: 921266552902000754, guid: 77115e284b3245f4d9c03440a875d3c2, type: 3}
+      propertyPath: m_SortingOrder
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 922237216702904019, guid: 77115e284b3245f4d9c03440a875d3c2, type: 3}
       propertyPath: sceneId
       value: 1095945317

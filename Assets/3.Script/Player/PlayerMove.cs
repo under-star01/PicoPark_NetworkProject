@@ -59,8 +59,9 @@ public class PlayerMove : NetworkBehaviour
     [Header("죽음")]
     private bool isDead = false;
 
-
-
+    private NetworkTransformUnreliable netTransform;
+    private NetworkRigidbodyUnreliable2D netRb;
+    
     private Rigidbody2D rb;
     private Animator animator;
     private SpriteRenderer spriteRenderer;
@@ -73,6 +74,9 @@ public class PlayerMove : NetworkBehaviour
         TryGetComponent(out animator);
         TryGetComponent(out spriteRenderer);
         TryGetComponent(out playerCustom);
+
+        TryGetComponent(out netTransform);
+        TryGetComponent(out netRb);
 
         groundCheck = GetComponentInChildren<GroundCheck>();
         ceilCheck = GetComponentInChildren<CeilCheck>();
@@ -123,15 +127,13 @@ public class PlayerMove : NetworkBehaviour
     [ServerCallback]
     private void FixedUpdate()
     {
+        if (isDead) return;
 
         if (isServer)
-        {
             ServerMove();
-        }
-        else if (isClient && isOwned)
-        {
+
+        if (isClient && isOwned)
             ClientPredictMove();
-        }
     }
 
     [Server]
@@ -337,16 +339,22 @@ public class PlayerMove : NetworkBehaviour
 
     private void OnRunChanged(bool _, bool newValue)
     {
+        if (isDead) return;
+
         animator.SetBool("IsRun", newValue);
     }
 
     private void OnPushChanged(bool _, bool newValue)
     {
+        if (isDead) return;
+
         animator.SetBool("IsPush", newValue);
     }
 
     private void OnGroundChanged(bool _, bool newValue)
     {
+        if (isDead) return;
+
         animator.SetBool("IsGround", newValue);
     }
 
@@ -411,38 +419,44 @@ public class PlayerMove : NetworkBehaviour
     [ClientRpc]
     public void RpcDie()
     {
-        if (isDead) return;
+        if (!isClient) return;
+
+        PlayDeathVisual();
+    }
+
+    private void PlayDeathVisual()
+    {
         isDead = true;
-        AudioManager.Instance.PlaySFX("Dead");
 
-        isInputPushing = false;
-        moveInput = Vector2.zero;
+        // 사운드 / UI / 카메라는 로컬 플레이어만
+        if (isLocalPlayer)
+        {
+            AudioManager.Instance.PlaySFX("Dead");
+        }
 
-        // Rigidbody를 Kinematic으로 변경
-        rb.bodyType = RigidbodyType2D.Kinematic;
+        // 위치 연출 / 애니메이션은 모두에게
+        if (netTransform != null)
+            netTransform.enabled = false;
+
+        if (netRb != null)
+            netRb.enabled = false;
+
         rb.linearVelocity = Vector2.zero;
+        rb.angularVelocity = 0f;
+        rb.simulated = false;
 
-        // 다른 애니메이션 파라미터 초기화
         animator.SetBool("IsGround", true);
         animator.SetBool("IsRun", false);
         animator.SetBool("IsPush", false);
-        animator.SetTrigger("Dead"); // Dead 트리거
+        animator.SetTrigger("Dead");
 
-        // 콜라이더 끄기
-        Collider2D[] allColliders = GetComponentsInChildren<Collider2D>();
-        foreach (var col in allColliders)
-        {
+        foreach (var col in GetComponentsInChildren<Collider2D>())
             col.enabled = false;
-        }
 
-        // 모자 끄기
         PlayerCustom custom = GetComponent<PlayerCustom>();
         if (custom != null)
-        {
             custom.HideHat();
-        }
 
-        // 죽는 애니메이션
         StartCoroutine(DeathAnimation());
     }
 
@@ -462,7 +476,7 @@ public class PlayerMove : NetworkBehaviour
             yield return null;
         }
 
-        Vector3 topPos = transform.position;
+        rb.simulated = true;
         rb.bodyType = RigidbodyType2D.Dynamic;
         rb.gravityScale = 10f;
     }
@@ -473,20 +487,18 @@ public class PlayerMove : NetworkBehaviour
         if (isDead) return;
         isDead = true;
 
-        AudioManager.Instance.PlaySFX("Dead");
+        rb.linearVelocity = Vector2.zero;
+        rb.angularVelocity = 0f;
+        rb.simulated = false;
 
         RpcDie();
-
-        if (isServer && connectionToClient == NetworkServer.localConnection)
-        {
-            StartCoroutine(ServerGameOverRoutine());
-        }
+        StartCoroutine(ServerGameOverRoutine());
     }
 
     [Server]
     private IEnumerator ServerGameOverRoutine()
     {
-        yield return new WaitForSeconds(1.8f); // 죽는 애니메이션 대기
+        yield return new WaitForSeconds(1.8f); 
 
         RpcStartWhiteOut();
         yield return new WaitForSeconds(1f);
