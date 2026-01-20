@@ -408,19 +408,12 @@ public class PlayerMove : NetworkBehaviour
         isInsideDoor = inside;
     }
 
-    [Server]
-    public void Die()
+    [ClientRpc]
+    public void RpcDie()
     {
         if (isDead) return;
         isDead = true;
         AudioManager.Instance.PlaySFX("Dead");
-
-        RpcDie();
-    }
-
-    [ClientRpc]
-    public void RpcDie()
-    {
 
         isInputPushing = false;
         moveInput = Vector2.zero;
@@ -473,4 +466,38 @@ public class PlayerMove : NetworkBehaviour
         rb.bodyType = RigidbodyType2D.Dynamic;
         rb.gravityScale = 10f;
     }
+
+    [Server]
+    public void Die()
+    {
+        if (isDead) return;
+        isDead = true;
+
+        AudioManager.Instance.PlaySFX("Dead");
+
+        RpcDie();
+
+        if (isServer && connectionToClient == NetworkServer.localConnection)
+        {
+            StartCoroutine(ServerGameOverRoutine());
+        }
+    }
+
+    [Server]
+    private IEnumerator ServerGameOverRoutine()
+    {
+        yield return new WaitForSeconds(1.8f); // 죽는 애니메이션 대기
+
+        RpcStartWhiteOut();
+        yield return new WaitForSeconds(1f);
+
+        NetworkManager.singleton.ServerChangeScene("2.Lobby");
+    }
+
+    [ClientRpc]
+    private void RpcStartWhiteOut()
+    {
+        GameSystemManager.Instance.StartWhiteOut();
+    }
+
 }

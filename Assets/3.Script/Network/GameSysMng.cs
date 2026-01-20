@@ -30,7 +30,7 @@ public class GameSystemManager : NetworkBehaviour
         StartCoroutine(WhiteOutRoutine());
     }
 
-    private IEnumerator WhiteOutRoutine()
+    public IEnumerator WhiteOutRoutine()
     {
         // UI È°¼ºÈ­
         whiteOutImage.gameObject.SetActive(true);
