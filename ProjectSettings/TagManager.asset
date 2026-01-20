@@ -10,6 +10,7 @@ TagManager:
   - CanonBall
   - Key
   - FlatForm
+  - SavePoint
   layers:
   - Default
   - TransparentFX
