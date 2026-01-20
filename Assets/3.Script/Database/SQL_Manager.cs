@@ -56,12 +56,7 @@ public class SQL_Manager : MonoBehaviour
         {
             instance = this;
         }
-        else
-        {
-            Destroy(gameObject);
-            return;
-        }
-        DontDestroyOnLoad(gameObject);
+
     }
 
     //DB서버 연결
@@ -167,7 +162,7 @@ public class SQL_Manager : MonoBehaviour
         {
             List<JsonItem> items = new List<JsonItem>();
             items.Add(new JsonItem
-                ("127.0.0.0", "programming", "root", "250930", "3306"));
+                ("43.201.115.162", "programming", "root", "250930", "3306"));
             JsonData data = JsonMapper.ToJson(items);
             File.WriteAllText(jsonPath, data.ToString());
         }
