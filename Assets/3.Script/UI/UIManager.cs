@@ -48,7 +48,6 @@ public class UIMANAGER : MonoBehaviour
     void Start()
     {
         SetPressEnterState(); // Press Enter 상태로 시작하도록 설정
-        AudioManager.Instance.PlayBGM("Title");
     }
 
     private void OnEnable()

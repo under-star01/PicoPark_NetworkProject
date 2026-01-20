@@ -18,20 +18,27 @@ public class RelayManager : MonoBehaviour
 
     async void Start()
     {
+        if (NetworkManager.singleton != null)
+        {
+            transport = NetworkManager.singleton.GetComponent<UTPTransport>();
+        }
         Log.SetActive(false);
         await UnityServices.InitializeAsync();
-        if (!AuthenticationService.Instance.IsSignedIn) await AuthenticationService.Instance.SignInAnonymouslyAsync();
-        transport = NetworkManager.singleton.GetComponent<UTPTransport>();
+        if (!AuthenticationService.Instance.IsSignedIn)
+            await AuthenticationService.Instance.SignInAnonymouslyAsync();
     }
 
     public async void StartRelayHost(int maxPlayers = 6)
     {
-        try 
+        if (transport == null)
+            transport = NetworkManager.singleton.GetComponent<Mirror.Transports.Utp.UTPTransport>();
+
+        try
         {
             Allocation allocation = await RelayService.Instance.CreateAllocationAsync(maxPlayers);
             string code = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
             Debug.Log($"방 생성 성공! 코드: {code}");
-            hostID.text = string.Format("ID : {0}",code);
+            hostID.text = string.Format("ID : {0}", code);
 
             // [교정된 순서] 반드시 이 순서를 지켜야 합니다.
             // 1. Host, 2. Port, 3. AllocationId, 4. ConnectionData, 5. HostConnectionData, 6. Key, 7. IsSecure
@@ -83,7 +90,8 @@ public class RelayManager : MonoBehaviour
             NetworkManager.singleton.StartClient();
             OnlineMenu_UIManager.Instance.changeState(2);
         }
-        catch (RelayServiceException e) {
+        catch (RelayServiceException e)
+        {
             Log.SetActive(true);
             Log.GetComponent<TMP_Text>().text = "입력하신 ROOM CODE는\n존재하지 않습니다.";
         }
