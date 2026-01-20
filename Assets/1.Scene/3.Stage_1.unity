@@ -8079,7 +8079,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1904596361521603327, guid: 77115e284b3245f4d9c03440a875d3c2, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 5.4
+      value: 4.62
       objectReference: {fileID: 0}
     - target: {fileID: 1988137888991222114, guid: 77115e284b3245f4d9c03440a875d3c2, type: 3}
       propertyPath: onoff
@@ -8255,7 +8255,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4410799181762314721, guid: 77115e284b3245f4d9c03440a875d3c2, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 7.4
+      value: 6.54
       objectReference: {fileID: 0}
     - target: {fileID: 4479570832260193981, guid: 77115e284b3245f4d9c03440a875d3c2, type: 3}
       propertyPath: sceneId
