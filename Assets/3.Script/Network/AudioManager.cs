@@ -50,7 +50,6 @@ public class AudioManager : NetworkBehaviour
     private void Start()
     {
         ApplyVolumes();
-        PlayBGM("Title");
     }
 
     private void InitSFX()
