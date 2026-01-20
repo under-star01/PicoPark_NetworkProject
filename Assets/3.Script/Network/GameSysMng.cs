@@ -1,18 +1,60 @@
 using Mirror;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+using System.Collections;
 
 public class GameSystemManager : NetworkBehaviour
 {
     public static GameSystemManager Instance;
 
+    [Header("White Out UI")]
+    [SerializeField] private Image whiteOutImage;
+    [SerializeField] private float fadeDuration = 1.0f;
+
     private void Awake()
     {
-        if (Instance == null) Instance = this;
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
-    [ClientRpc] // 모든 클라이언트에게 시스템 메시지 전송
+    public void StartWhiteOut()
+    {
+        StartCoroutine(WhiteOutRoutine());
+    }
+
+    private IEnumerator WhiteOutRoutine()
+    {
+        // UI 활성화
+        whiteOutImage.gameObject.SetActive(true);
+
+        Color c = whiteOutImage.color;
+        c.a = 0f;
+        whiteOutImage.color = c;
+
+        float time = 0f;
+        while (time < fadeDuration)
+        {
+            time += Time.deltaTime;
+            c.a = Mathf.Clamp01(time / fadeDuration);
+            whiteOutImage.color = c;
+            yield return null;
+        }
+
+        c.a = 1f;
+        whiteOutImage.color = c;
+    }
+
+    [ClientRpc]
     public void RpcNotifySystemMessage(string message)
     {
-        //구현 시 UIManager.Instance.ShowAlert(message) 등으로 대체
+        // UIManager.Instance.ShowAlert(message);
     }
 }
