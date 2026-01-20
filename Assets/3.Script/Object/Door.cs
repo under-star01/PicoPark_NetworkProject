@@ -224,10 +224,22 @@ public class Door : NetworkBehaviour
         // 클라이언트에 클리어 알림
         RpcStageClear();
 
-        // 여기서
-        // - 일정 시간 대기
-        // - RpcFadeOut
-        // - NetworkManager로 로비 씬 이동
+        // 서버 씬 이동
+        StartCoroutine(ServerReturnToLobbyRoutine());
+    }
+
+    [Server]
+    private IEnumerator ServerReturnToLobbyRoutine()
+    {
+        yield return new WaitForSeconds(2.0f); // 화이트아웃 시간과 맞추기
+        NetworkManager.singleton.ServerChangeScene("2.Lobby");
+    }
+
+    [ClientRpc]
+    private void RpcStageClear()
+    {
+        Debug.Log("Stage Clear!");
+        GameSystemManager.Instance.StartWhiteOut();
     }
 
     [Server]
@@ -245,12 +257,5 @@ public class Door : NetworkBehaviour
                 }
             }
         }
-    }
-
-    [ClientRpc]
-    private void RpcStageClear()
-    {
-        Debug.Log("Stage Clear!");
-        // 여기에 UI 표시, 이펙트 등 추가
     }
 }
