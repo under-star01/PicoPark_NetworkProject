@@ -133,7 +133,7 @@ public class PlayerInput : NetworkBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (!isLocalPlayer) return;
+        //if (!isLocalPlayer) return;
 
         // 문 근처에 도착
         if (collision.gameObject.TryGetComponent(out Door door))
@@ -144,7 +144,7 @@ public class PlayerInput : NetworkBehaviour
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (!isLocalPlayer) return;
+        //if (!isLocalPlayer) return;
 
         // 문에서 멀어짐
         if (collision.gameObject.TryGetComponent(out Door door))
