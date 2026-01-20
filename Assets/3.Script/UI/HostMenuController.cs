@@ -16,7 +16,7 @@ public class HostMenuController : MonoBehaviour
 
     // 메뉴 항목의 value 초기화(기본값)
     [Header("Settings")]
-    private int maxPlayers = 2;
+    private int maxPlayers = 6;
     private bool joinInProgress = true;
     private int hatIndex = 0;
     private int colorIndex = 0;
