@@ -5737,6 +5737,14 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6507985135497652441, guid: a3d2a89cb3ac476498bf9ee765d8ea6b, type: 3}
+      propertyPath: maxY
+      value: 5.45
+      objectReference: {fileID: 0}
+    - target: {fileID: 6507985135497652441, guid: a3d2a89cb3ac476498bf9ee765d8ea6b, type: 3}
+      propertyPath: minY
+      value: -7.4
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -8337,6 +8345,10 @@ PrefabInstance:
     - target: {fileID: 2985404636151432671, guid: 77115e284b3245f4d9c03440a875d3c2, type: 3}
       propertyPath: sceneId
       value: 2778861950
+      objectReference: {fileID: 0}
+    - target: {fileID: 3176888818528749967, guid: 77115e284b3245f4d9c03440a875d3c2, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 11.17
       objectReference: {fileID: 0}
     - target: {fileID: 3438186120099603891, guid: 77115e284b3245f4d9c03440a875d3c2, type: 3}
       propertyPath: sceneId
@@ -11694,15 +11706,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4961704190793327536, guid: a3d2a89cb3ac476498bf9ee765d8ea6b, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4961704190793327536, guid: a3d2a89cb3ac476498bf9ee765d8ea6b, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4961704190793327536, guid: a3d2a89cb3ac476498bf9ee765d8ea6b, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4961704190793327536, guid: a3d2a89cb3ac476498bf9ee765d8ea6b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -11719,6 +11731,14 @@ PrefabInstance:
     - target: {fileID: 4961704190793327536, guid: a3d2a89cb3ac476498bf9ee765d8ea6b, type: 3}
       propertyPath: m_ConstrainProportionsScale
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6507985135497652441, guid: a3d2a89cb3ac476498bf9ee765d8ea6b, type: 3}
+      propertyPath: maxY
+      value: -6.86
+      objectReference: {fileID: 0}
+    - target: {fileID: 6507985135497652441, guid: a3d2a89cb3ac476498bf9ee765d8ea6b, type: 3}
+      propertyPath: minY
+      value: 0.839
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
