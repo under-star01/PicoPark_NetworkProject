@@ -1323,9 +1323,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2067517728}
-  - component: {fileID: 2067517727}
-  - component: {fileID: 2067517726}
   - component: {fileID: 2067517725}
+  - component: {fileID: 2067517729}
   m_Layer: 0
   m_Name: NetworkManager
   m_TagString: Untagged
@@ -1345,21 +1344,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2140a3bb211a554ebb6f9604c391ce0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Mirror.Transports.Utp.UTPTransport
---- !u!114 &2067517726
-MonoBehaviour:
+--- !u!4 &2067517728
+Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2067517724}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6442dc8070ceb41f094e44de0bf87274, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Mirror::Mirror.NetworkManagerHUD
-  offsetX: 0
-  offsetY: 0
---- !u!114 &2067517727
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2067517729
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1368,9 +1368,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 2067517724}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8aab4c8111b7c411b9b92cf3dbc5bd4e, type: 3}
+  m_Script: {fileID: 11500000, guid: 7b1bac6b7363fe940acf4084bd487bee, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Mirror::Mirror.NetworkManager
+  m_EditorClassIdentifier: Assembly-CSharp::CustomNetMng
   dontDestroyOnLoad: 1
   runInBackground: 1
   headlessStartMode: 0
@@ -1390,12 +1390,10 @@ MonoBehaviour:
   playerSpawnMethod: 0
   spawnPrefabs:
   - {fileID: 6813856348222151652, guid: 64df613497128ab4bbeac832dcc985be, type: 3}
-  - {fileID: 7661767510235680721, guid: 42496d56c3ba1d240b6f5b9f1622c2b1, type: 3}
   - {fileID: 2895637794913843298, guid: edbd204b6cd402b4abf0e15a2ef7b71b, type: 3}
-  - {fileID: 8682397364925781635, guid: b3cfd66ca3dc18c4082a3a94f0f16b8d, type: 3}
   - {fileID: 8682397364925781635, guid: 52e7990ad9dc1ae42983a969a1090313, type: 3}
   - {fileID: 8682397364925781635, guid: 0fe091d2065bbbe449bce2b46146544c, type: 3}
-  - {fileID: 2820895821949587249, guid: 3647fea0ba76d304c8e1e3298492ee29, type: 3}
+  - {fileID: 8682397364925781635, guid: b3cfd66ca3dc18c4082a3a94f0f16b8d, type: 3}
   - {fileID: 1024156907348895572, guid: 858a91f1d60691e4481a6842fea9c6ca, type: 3}
   - {fileID: 8256551358351774673, guid: 3d158fa84ae61ff46988fd6ada270b9a, type: 3}
   - {fileID: 8388508766787811552, guid: c2c5ad9170add40418270c074c6e0487, type: 3}
@@ -1405,9 +1403,11 @@ MonoBehaviour:
   - {fileID: 8835598428880081341, guid: f0b444a1685a182409b294d7fd6a0b74, type: 3}
   - {fileID: 6216941352845595406, guid: 41f94573459ba9b43a7c680e267a2405, type: 3}
   - {fileID: 895642227466479077, guid: a3d2a89cb3ac476498bf9ee765d8ea6b, type: 3}
+  - {fileID: 7621999982350382268, guid: 7b461ca4978641040890b66a80c4d846, type: 3}
+  - {fileID: 7661767510235680721, guid: 42496d56c3ba1d240b6f5b9f1622c2b1, type: 3}
+  - {fileID: 2820895821949587249, guid: 3647fea0ba76d304c8e1e3298492ee29, type: 3}
   - {fileID: 459922248547352802, guid: edb1d0a2cbec1c944aba03ede2be5612, type: 3}
   - {fileID: 459922248547352802, guid: 98b8ed5a87136174fa98f63491d8b02d, type: 3}
-  - {fileID: 7621999982350382268, guid: 7b461ca4978641040890b66a80c4d846, type: 3}
   exceptionsDisconnect: 1
   snapshotSettings:
     bufferTimeMultiplier: 2
@@ -1423,21 +1423,7 @@ MonoBehaviour:
   evaluationMethod: 0
   evaluationInterval: 3
   timeInterpolationGui: 0
---- !u!4 &2067517728
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2067517724}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  isGameStarted: 0
 --- !u!222 &8134947146667723
 CanvasRenderer:
   m_ObjectHideFlags: 0
