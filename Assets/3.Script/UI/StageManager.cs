@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class StageManager : MonoBehaviour
 {
     [SerializeField] private GameObject menuPanel;
-    [SerializeField] private Button[] buttons;
+    [SerializeField] private GameObject[] buttons;
 
     private IA_Player playerInput;
 
@@ -15,8 +15,11 @@ public class StageManager : MonoBehaviour
 
     private int panelIndex = 0;
 
+    private bool isHost;
+
     private void Start()
     {
+        isHost = NetworkServer.active;
         // 만약 전 씬의 UI 매니저가 살아있다면 이벤트를 일시적으로 꺼버림
         if (OnlineMenu_UIManager.Instance != null)
         {
@@ -64,7 +67,14 @@ public class StageManager : MonoBehaviour
 
         if (!menuPanel.activeSelf) return;
 
-        buttons[panelIndex].onClick.Invoke();
+        if (!isHost)
+        {
+
+            panelIndex = 2;
+        }
+
+
+        buttons[panelIndex].GetComponent<Button>().onClick.Invoke();
         
     }
 
@@ -76,6 +86,14 @@ public class StageManager : MonoBehaviour
         if (!menuPanel.activeSelf)
         {
             menuPanel.SetActive(true);
+
+            buttons[0].SetActive(isHost);
+            buttons[1].SetActive(isHost);
+
+            // [중요] 클라이언트는 메뉴 열자마자 '타이틀' 버튼에 불이 들어오게 함
+            panelIndex = isHost ? 0 : 2;
+            buttons[panelIndex].GetComponent<ButtonHover>().OnFocus();
+
             EnableUIMode();
         }
         else
@@ -89,6 +107,8 @@ public class StageManager : MonoBehaviour
     {
         if (!menuPanel.activeSelf) return;
 
+        if (!isHost) return;
+
         panelIndex--;
 
         if (panelIndex < 0)
@@ -101,6 +121,8 @@ public class StageManager : MonoBehaviour
     private void MoveDown(InputAction.CallbackContext context)
     {
         if (!menuPanel.activeSelf) return;
+
+        if (!isHost) return;
 
         panelIndex++;
 

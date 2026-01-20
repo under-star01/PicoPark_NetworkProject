@@ -85,7 +85,12 @@ public class OnlineMenu_UIManager : MonoBehaviour
     }
     void Start()
     {
-
+        if (NetworkClient.isConnected && !NetworkServer.active)
+        {
+            Entry.SetActive(false);
+            changeState(2);
+            return;
+        }
         // 씬이 시작될 때 이 값이 true라면 자동으로 스테이지 선택창을 켭니다.
         if (shouldShowStageSelect)
         {
