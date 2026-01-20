@@ -87,22 +87,31 @@ public class OnlineMenu_UIManager : MonoBehaviour
     }
     void Start()
     {
-        if (NetworkClient.isConnected && !NetworkServer.active)
+        if (((CustomNetMng)CustomNetMng.singleton).isFirstStart)
         {
-            Entry.SetActive(false);
-            changeState(2);
-            return;
-        }
-        // 씬이 시작될 때 이 값이 true라면 자동으로 스테이지 선택창을 켭니다.
-        if (shouldShowStageSelect)
-        {
-            changeState(3);
-            shouldShowStageSelect = false; // 한 번 실행 후 다시 꺼줌
+            if (NetworkClient.isConnected && !NetworkServer.active)
+            {
+                Entry.SetActive(false);
+                changeState(2);
+                return;
+            }
+            // 씬이 시작될 때 이 값이 true라면 자동으로 스테이지 선택창을 켭니다.
+            if (shouldShowStageSelect)
+            {
+                changeState(3);
+                shouldShowStageSelect = false; // 한 번 실행 후 다시 꺼줌
+            }
+            else
+            {
+                SetEntryState(); // 기본 시작 상태
+            }
         }
         else
         {
-            SetEntryState(); // 기본 시작 상태
+            changeState(3);
         }
+
+        
     }
 
     public void OnStageClick(int stageNum)
