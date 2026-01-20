@@ -116,7 +116,7 @@ public class OnlineMenu_UIManager : MonoBehaviour
 
     public void OnStageClick(int stageNum)
     {
-        string sceneName = "3.Stage_" + stageNum + "_1";
+        string sceneName = "3.Stage_" + stageNum;
         Debug.Log($"씬 전환 시도: {sceneName}");
 
         if (NetworkManager.singleton != null)
