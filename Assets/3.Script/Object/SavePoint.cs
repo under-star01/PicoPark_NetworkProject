@@ -5,16 +5,13 @@ public class SavePoint : NetworkBehaviour
 {
     public Transform returnPos;
 
-    [SyncVar]
-    private bool isActivated = false;
-
-    [Server]
-    public bool TryActivate()
+    private void OnTriggerEnter2D(Collider2D other)
     {
-        if (isActivated)
-            return false;
+        if (!isServer) return;
 
-        isActivated = true;
-        return true;
+        if (!other.TryGetComponent<PlayerMove>(out var player))
+            return;
+
+        player.SetReturnPos(returnPos);
     }
 }

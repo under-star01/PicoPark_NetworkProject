@@ -233,9 +233,7 @@ public class PlayerMove : NetworkBehaviour
     {
         if (collision.gameObject.CompareTag("DeadLine"))
         {
-            Vector3 respawnPos = StageCheckpointManager.Instance.GetRespawnPosition();
-
-            transform.position = respawnPos;
+            transform.position = returnPos.position;
         }
 
         if (collision.gameObject.CompareTag("FlatForm") && collision.contacts[0].normal.y > 0.7f)
@@ -245,24 +243,6 @@ public class PlayerMove : NetworkBehaviour
             {
                 platform.AddRider(this);
             }
-        }
-    }
-
-    [ServerCallback]
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (!isServer) return;
-
-        if (collision.CompareTag("SavePoint"))
-        {
-            SavePoint savePoint = collision.GetComponent<SavePoint>();
-            if (savePoint == null) return;
-
-            if (!savePoint.TryActivate())
-                return;
-
-            // 최초 도달한 경우만 갱신
-            StageCheckpointManager.Instance.SetCheckpoint(savePoint.returnPos);
         }
     }
 
@@ -428,13 +408,11 @@ public class PlayerMove : NetworkBehaviour
     {
         isDead = true;
 
-        // 사운드 / UI / 카메라는 로컬 플레이어만
         if (isLocalPlayer)
         {
             AudioManager.Instance.PlaySFX("Dead");
         }
 
-        // 위치 연출 / 애니메이션은 모두에게
         if (netTransform != null)
             netTransform.enabled = false;
 
