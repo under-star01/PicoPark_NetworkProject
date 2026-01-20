@@ -4961,7 +4961,7 @@ MonoBehaviour:
   ExitCancelButton: {fileID: 6303122171968311784}
   selectedColor: {r: 0, g: 0, b: 0, a: 1}
   normalColor: {r: 1, g: 1, b: 1, a: 1}
-  nextSceneName: Scene_2.OnlineMenu
+  nextSceneName: Scene_gimmick2
 --- !u!1 &1818532538
 GameObject:
   m_ObjectHideFlags: 0

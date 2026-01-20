@@ -9,8 +9,14 @@ EditorBuildSettings:
     path: Assets/1.Scene/Scene_1.Title.unity
     guid: c10063a268184244ba614be10ab02668
   - enabled: 1
-    path: Assets/1.Scene/Scene_gimmick1.unity
-    guid: 65f89fef62fe8214b84ca6e6253e01d5
+    path: Assets/1.Scene/Scene_gimmick2.unity
+    guid: c9e8562a21beb0044b3f64dfc9db709b
+  - enabled: 1
+    path: Assets/1.Scene/Scene_4.StageSelect.unity
+    guid: a34be9b6ac8d63a498df8e5bc3f0682f
+  - enabled: 1
+    path: Assets/1.Scene/Scene_MintNyang.unity
+    guid: 2c9d9f878ac7f7346b114ef72cb0fc0c
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: d97639a23019bdf40926a22c24d515dc, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
