@@ -8246,6 +8246,10 @@ PrefabInstance:
       propertyPath: m_LocalPosition.y
       value: 5.4
       objectReference: {fileID: 0}
+    - target: {fileID: 1933113388553107968, guid: 77115e284b3245f4d9c03440a875d3c2, type: 3}
+      propertyPath: detectionDistance
+      value: 0.73
+      objectReference: {fileID: 0}
     - target: {fileID: 1988137888991222114, guid: 77115e284b3245f4d9c03440a875d3c2, type: 3}
       propertyPath: onoff
       value: 1
@@ -8731,6 +8735,7 @@ PrefabInstance:
     - {fileID: 4487443686022310742, guid: 77115e284b3245f4d9c03440a875d3c2, type: 3}
     - {fileID: 5581764795921071500, guid: 77115e284b3245f4d9c03440a875d3c2, type: 3}
     - {fileID: 2509664991606845186, guid: 77115e284b3245f4d9c03440a875d3c2, type: 3}
+    - {fileID: 3628738460636172960, guid: 77115e284b3245f4d9c03440a875d3c2, type: 3}
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 1339521704736464515, guid: 77115e284b3245f4d9c03440a875d3c2, type: 3}
       insertIndex: 7
@@ -8744,10 +8749,7 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1339521704736464515, guid: 77115e284b3245f4d9c03440a875d3c2, type: 3}
       insertIndex: -1
       addedObject: {fileID: 40915399}
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 3628738460636172960, guid: 77115e284b3245f4d9c03440a875d3c2, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 2091743217}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 77115e284b3245f4d9c03440a875d3c2, type: 3}
 --- !u!4 &1127322170 stripped
 Transform:
@@ -15722,38 +15724,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2080444751}
   m_CullTransparentMesh: 1
---- !u!1 &2091743213 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3628738460636172960, guid: 77115e284b3245f4d9c03440a875d3c2, type: 3}
-  m_PrefabInstance: {fileID: 1127322166}
-  m_PrefabAsset: {fileID: 0}
---- !u!50 &2091743217
-Rigidbody2D:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2091743213}
-  m_BodyType: 0
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_GravityScale: 0
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 7
 --- !u!1 &2102840605
 GameObject:
   m_ObjectHideFlags: 0
