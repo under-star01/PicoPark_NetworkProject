@@ -137,6 +137,14 @@ public class PlayerMove : NetworkBehaviour
             ClientPredictMove();
     }
 
+    [ServerCallback]
+    private void LateUpdate()
+    {
+        if (!isServer || isDead) return;
+
+        CheckPush(); // 충돌 정보가 모두 반영된 뒤, 밀고 있는지 체크
+    }
+
     [Server]
     private void ServerMove()
     {
@@ -148,7 +156,6 @@ public class PlayerMove : NetworkBehaviour
 
         if (knockbackCoroutine != null || isInsideDoor) return;
 
-        CheckPush();
         Move();
 
         // 서버에서 애니메이션 상태 계산
@@ -257,6 +264,12 @@ public class PlayerMove : NetworkBehaviour
         {
             // 벽과 실제로 맞닿아 있음
             touchingWall = true;
+
+            MovingWall wall = collision.gameObject.GetComponent<MovingWall>();
+            if (wall != null)
+            {
+                wall.AddTouchingPlayer(this);
+            }
         }
         if (collision.gameObject.CompareTag("Player"))
         {
@@ -299,6 +312,15 @@ public class PlayerMove : NetworkBehaviour
             if (other == frontPlayer)
             {
                 frontPlayer = null;
+            }
+        }
+
+        if (collision.gameObject.CompareTag("MovingWall"))
+        {
+            MovingWall wall = collision.gameObject.GetComponent<MovingWall>();
+            if (wall != null)
+            {
+                wall.RemoveTouchingPlayer(this);
             }
         }
     }
