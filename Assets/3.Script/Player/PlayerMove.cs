@@ -19,7 +19,6 @@ public class PlayerMove : NetworkBehaviour
     public bool isInputPushing; // 밀려고 입력 중인 상태
     public bool isContributingPush; // 벽 밀기에 기여중인지 상태
     public PlayerMove frontPlayer;
-    public bool pushingFrontPlayer => isInputPushing && frontPlayer != null && frontPlayer.isContributingPush;
     private bool touchingWall;
 
     [Header("플랫폼 관련 변수")]
@@ -130,26 +129,19 @@ public class PlayerMove : NetworkBehaviour
     {
         if (isDead) return;
 
-        if (isServer)
-            ServerMove();
+        CheckPush();
+
+        ServerMove();
 
         if (isClient && isOwned)
             ClientPredictMove();
     }
 
-    [ServerCallback]
-    private void LateUpdate()
-    {
-        if (!isServer || isDead) return;
-
-        CheckPush(); // 충돌 정보가 모두 반영된 뒤, 밀고 있는지 체크
-    }
-
     [Server]
     private void ServerMove()
     {
-        frontPlayer = null;
         touchingWall = false;
+        frontPlayer = null;
 
         if (inputLocked) return;
         if (isDead) return;
@@ -271,50 +263,11 @@ public class PlayerMove : NetworkBehaviour
                 wall.AddTouchingPlayer(this);
             }
         }
-        if (collision.gameObject.CompareTag("Player"))
-        {
-            PlayerMove other = collision.gameObject.GetComponent<PlayerMove>();
-            if (other == null) return;
-
-            // 둘 다 착지 상태에서만 판별
-            if (!groundCheck.IsGround) return;
-            if (!other.groundCheck.IsGround) return;
-
-            // 이동 방향 기준 앞 플레이어 판별
-            float dir = Mathf.Sign(moveInput.x);
-            if (dir == 0) return;
-
-            // 가장 가까운 플레이어를 frontPlayer로 설정
-            if (Mathf.Sign(other.transform.position.x - transform.position.x) == dir)
-            {
-                if (frontPlayer == null)
-                {
-                    frontPlayer = other;
-                }
-                else
-                {
-                    float curDist = Mathf.Abs(frontPlayer.transform.position.x - transform.position.x);
-                    float newDist = Mathf.Abs(other.transform.position.x - transform.position.x);
-
-                    if (newDist < curDist)
-                        frontPlayer = other;
-                }
-            }
-        }
     }
 
     [ServerCallback]
     private void OnCollisionExit2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Player"))
-        {
-            PlayerMove other = collision.gameObject.GetComponent<PlayerMove>();
-            if (other == frontPlayer)
-            {
-                frontPlayer = null;
-            }
-        }
-
         if (collision.gameObject.CompareTag("MovingWall"))
         {
             MovingWall wall = collision.gameObject.GetComponent<MovingWall>();
@@ -325,15 +278,39 @@ public class PlayerMove : NetworkBehaviour
         }
     }
 
-    private void OnTriggerExit2D(Collider2D collision)
+    [ServerCallback]
+    private void OnTriggerStay2D(Collider2D collision)
     {
-        if (!isServer) return;
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            PlayerMove otherPlayer = collision.GetComponentInParent<PlayerMove>();
+            if (otherPlayer == null || otherPlayer == this) return;
 
-        HandleTriggerExitServer(collision);
+            // 둘 다 착지 상태일 때만
+            if (!groundCheck.IsGround || !otherPlayer.groundCheck.IsGround)
+                return;
+
+            // 위치 기준으로 앞에 있는 플레이어 판단
+            float dirToOther = Mathf.Sign(otherPlayer.transform.position.x - transform.position.x);
+
+            // 내가 바라보는 방향 기준
+            float myDir = Mathf.Sign(moveInput.x);
+            if (myDir == 0) return;
+
+            if (dirToOther == myDir)
+            {
+                if (frontPlayer == null ||
+                    Mathf.Abs(otherPlayer.transform.position.x - transform.position.x) <
+                    Mathf.Abs(frontPlayer.transform.position.x - transform.position.x))
+                {
+                    frontPlayer = otherPlayer;
+                }
+            }
+        }
     }
 
-    [Server]
-    private void HandleTriggerExitServer(Collider2D collision)
+    [ServerCallback]
+    private void OnTriggerExit2D(Collider2D collision)
     {
         if (collision.CompareTag("FlatForm"))
         {
@@ -341,6 +318,14 @@ public class PlayerMove : NetworkBehaviour
             if (platform != null)
             {
                 platform.RemoveRider(this);
+            }
+        }
+        if (collision.CompareTag("Player"))
+        {
+            PlayerMove otherPlayer = collision.GetComponentInParent<PlayerMove>();
+            if (otherPlayer == frontPlayer)
+            {
+                frontPlayer = null;
             }
         }
     }
@@ -367,13 +352,13 @@ public class PlayerMove : NetworkBehaviour
     private void CheckPush()
     {
         // 밀기 의도 (입력 + 착지) 판정
-        isInputPushing = groundCheck.IsGround && Mathf.Abs(moveInput.x) > 0.01f;
+        isInputPushing = groundCheck.IsGround && Mathf.Abs(moveInput.x) > 0.01f && (touchingWall || frontPlayer != null);
 
         // 직접 벽을 밀고 있는지 확인
         bool pushingWall = isInputPushing && touchingWall;
 
         // 앞 사람을 밀고 있고, 앞 사람이 이미 힘을 전달 중인지 확인
-        bool pushingFrontPlayer = isInputPushing && frontPlayer != null && frontPlayer.isContributingPush;
+        bool pushingFrontPlayer = frontPlayer != null && frontPlayer.isContributingPush;
 
         // 최종적으로 힘 전달 여부 결정
         isContributingPush = pushingWall || pushingFrontPlayer;
