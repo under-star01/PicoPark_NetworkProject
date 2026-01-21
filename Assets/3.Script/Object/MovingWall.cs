@@ -48,26 +48,31 @@ public class MovingWall : NetworkBehaviour
     {
         if (!isServer) return;
 
-        // 방향 결정 (첫 명 기준)
-        if (pushers.Count > 0)
+        pushers.Clear();
+
+        foreach (var p in touchingPlayers)
         {
-            foreach (var p in pushers)
+            if (p == null || !p.isContributingPush) continue;
+        
+            pushers.Add(p);
+
+            // 첫 명 기준으로 방향 결정
+            if (pushers.Count == 1)
             {
                 pushDir = Mathf.Sign(transform.position.x - p.transform.position.x);
-                break;
             }
         }
 
         int newRemaining = Mathf.Max(0, targetMoveCnt - pushers.Count);
         if (remainingCnt != newRemaining)
+        {
             remainingCnt = newRemaining;
+        }
 
         bool shouldMove = pushers.Count >= targetMoveCnt;
 
         rb.bodyType = shouldMove ? RigidbodyType2D.Dynamic : RigidbodyType2D.Kinematic;
-        rb.linearVelocity = shouldMove
-            ? new Vector2(pushDir * moveSpeed, rb.linearVelocity.y)
-            : new Vector2(0f, rb.linearVelocity.y);
+        rb.linearVelocity = shouldMove ? new Vector2(pushDir * moveSpeed, rb.linearVelocity.y) : new Vector2(0f, rb.linearVelocity.y);
     }
 
     // SyncVar Hook 설정
@@ -98,14 +103,5 @@ public class MovingWall : NetworkBehaviour
     public void RemoveTouchingPlayer(PlayerMove p)
     {
         touchingPlayers.Remove(p);
-    }
-
-    [Server]
-    public void UpdateContributor(PlayerMove p, bool isContributing)
-    {
-        if (isContributing)
-            pushers.Add(p);
-        else
-            pushers.Remove(p);
     }
 }
