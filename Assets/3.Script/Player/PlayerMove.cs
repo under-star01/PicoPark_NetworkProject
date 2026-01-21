@@ -19,6 +19,7 @@ public class PlayerMove : NetworkBehaviour
     public bool isInputPushing; // 밀려고 입력 중인 상태
     public bool isContributingPush; // 벽 밀기에 기여중인지 상태
     public PlayerMove frontPlayer;
+    public bool pushingFrontPlayer => isInputPushing && frontPlayer != null && frontPlayer.isContributingPush;
     private bool touchingWall;
 
     [Header("플랫폼 관련 변수")]
@@ -139,6 +140,9 @@ public class PlayerMove : NetworkBehaviour
     [Server]
     private void ServerMove()
     {
+        frontPlayer = null;
+        touchingWall = false;
+
         if (inputLocked) return;
         if (isDead) return;
 
@@ -249,18 +253,54 @@ public class PlayerMove : NetworkBehaviour
     [ServerCallback]
     private void OnCollisionStay2D(Collision2D collision)
     {
-        if (!collision.gameObject.CompareTag("MovingWall")) return;
+        if (collision.gameObject.CompareTag("MovingWall"))
+        {
+            // 벽과 실제로 맞닿아 있음
+            touchingWall = true;
+        }
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            PlayerMove other = collision.gameObject.GetComponent<PlayerMove>();
+            if (other == null) return;
 
-        // 벽과 실제로 맞닿아 있음
-        touchingWall = true;
+            // 둘 다 착지 상태에서만 판별
+            if (!groundCheck.IsGround) return;
+            if (!other.groundCheck.IsGround) return;
+
+            // 이동 방향 기준 앞 플레이어 판별
+            float dir = Mathf.Sign(moveInput.x);
+            if (dir == 0) return;
+
+            // 가장 가까운 플레이어를 frontPlayer로 설정
+            if (Mathf.Sign(other.transform.position.x - transform.position.x) == dir)
+            {
+                if (frontPlayer == null)
+                {
+                    frontPlayer = other;
+                }
+                else
+                {
+                    float curDist = Mathf.Abs(frontPlayer.transform.position.x - transform.position.x);
+                    float newDist = Mathf.Abs(other.transform.position.x - transform.position.x);
+
+                    if (newDist < curDist)
+                        frontPlayer = other;
+                }
+            }
+        }
     }
 
     [ServerCallback]
     private void OnCollisionExit2D(Collision2D collision)
     {
-        if (!collision.gameObject.CompareTag("MovingWall")) return;
-
-        touchingWall = false;
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            PlayerMove other = collision.gameObject.GetComponent<PlayerMove>();
+            if (other == frontPlayer)
+            {
+                frontPlayer = null;
+            }
+        }
     }
 
     private void OnTriggerExit2D(Collider2D collision)
