@@ -16,12 +16,10 @@ public class MovingWall : NetworkBehaviour
 
     [Header("미는 플레이어 관련 설정")]
     public HashSet<PlayerMove> pushers = new HashSet<PlayerMove>();
-    private HashSet<PlayerMove> touchingPlayers = new HashSet<PlayerMove>();
 
     [SyncVar(hook = nameof(OnRemainingCntChanged))]
     private int remainingCnt;
     private float pushDir; 
-    private bool canMove = false;
     
     private Rigidbody2D rb;
 
@@ -38,29 +36,18 @@ public class MovingWall : NetworkBehaviour
         remainingCnt = targetMoveCnt;
     }
 
-    public override void OnStopServer()
-    {
-        pushers.Clear();
-    }
-
     [ServerCallback]
     private void FixedUpdate()
     {
-        if (!isServer) return;
+        // null 값 정리!
+        pushers.RemoveWhere(p => p == null);
 
-        pushers.Clear();
-
-        foreach (var p in touchingPlayers)
+        // 방향 결정 (첫 명 기준)
+        if (pushers.Count > 0)
         {
-            if (p == null || !p.isContributingPush) continue;
-        
-            pushers.Add(p);
-
-            // 첫 명 기준으로 방향 결정
-            if (pushers.Count == 1)
-            {
-                pushDir = Mathf.Sign(transform.position.x - p.transform.position.x);
-            }
+            PlayerMove first = GetAnyPusher();
+            float dir = transform.position.x - first.transform.position.x;
+            pushDir = dir >= 0 ? 1f : -1f;
         }
 
         int newRemaining = Mathf.Max(0, targetMoveCnt - pushers.Count);
@@ -93,15 +80,20 @@ public class MovingWall : NetworkBehaviour
         }
     }
 
-    [Server]
-    public void AddTouchingPlayer(PlayerMove p)
+    private PlayerMove GetAnyPusher()
     {
-        touchingPlayers.Add(p);
+        foreach (var p in pushers)
+            return p;
+
+        return null;
     }
 
     [Server]
-    public void RemoveTouchingPlayer(PlayerMove p)
+    public void UpdateContributor(PlayerMove player, bool isContributing)
     {
-        touchingPlayers.Remove(p);
+        if (isContributing)
+            pushers.Add(player);
+        else
+            pushers.Remove(player);
     }
 }

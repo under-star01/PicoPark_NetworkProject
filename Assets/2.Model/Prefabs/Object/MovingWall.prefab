@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 7603153013038710324}
   - component: {fileID: 4600202034142527622}
-  - component: {fileID: 8896740941414416059}
   m_Layer: 9
   m_Name: 'PushTrigger '
   m_TagString: Untagged
@@ -79,21 +78,6 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!114 &8896740941414416059
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5108568826232486020}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 024f2900c9b1285428d57d0ac43cc082, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MovingWallTrigger
-  syncDirection: 0
-  syncMode: 0
-  syncInterval: 0
 --- !u!1 &6160175347313667229
 GameObject:
   m_ObjectHideFlags: 0

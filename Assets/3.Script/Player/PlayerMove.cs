@@ -16,10 +16,12 @@ public class PlayerMove : NetworkBehaviour
     public GroundCheck groundCheck;
 
     [Header("벽 밀기 관련 변수")]
+    public PlayerMove frontPlayer;
+    private MovingWall currentWall;
     public bool isInputPushing; // 밀려고 입력 중인 상태
     public bool isContributingPush; // 벽 밀기에 기여중인지 상태
-    public PlayerMove frontPlayer;
     private bool touchingWall;
+    private bool prevIsContributingPush;
 
     [Header("플랫폼 관련 변수")]
     public CeilCheck ceilCheck;
@@ -130,7 +132,7 @@ public class PlayerMove : NetworkBehaviour
         if (isDead) return;
 
         CheckPush();
-
+        UpdateWallContribution();
         ServerMove();
 
         if (isClient && isOwned)
@@ -140,9 +142,6 @@ public class PlayerMove : NetworkBehaviour
     [Server]
     private void ServerMove()
     {
-        touchingWall = false;
-        frontPlayer = null;
-
         if (inputLocked) return;
         if (isDead) return;
 
@@ -160,6 +159,20 @@ public class PlayerMove : NetworkBehaviour
         {
             syncFlipDir = (moveInput.x > 0) ? 1 : -1;
         }
+    }
+
+    [Server]
+    private void UpdateWallContribution()
+    {
+        if (isContributingPush == prevIsContributingPush)
+            return;
+
+        if (currentWall != null)
+        {
+            currentWall.UpdateContributor(this, isContributingPush);
+        }
+
+        prevIsContributingPush = isContributingPush;
     }
 
     [Command]
@@ -256,12 +269,7 @@ public class PlayerMove : NetworkBehaviour
         {
             // 벽과 실제로 맞닿아 있음
             touchingWall = true;
-
-            MovingWall wall = collision.gameObject.GetComponent<MovingWall>();
-            if (wall != null)
-            {
-                wall.AddTouchingPlayer(this);
-            }
+            currentWall = collision.gameObject.GetComponent<MovingWall>();
         }
     }
 
@@ -270,11 +278,14 @@ public class PlayerMove : NetworkBehaviour
     {
         if (collision.gameObject.CompareTag("MovingWall"))
         {
-            MovingWall wall = collision.gameObject.GetComponent<MovingWall>();
-            if (wall != null)
+            if (currentWall != null && prevIsContributingPush)
             {
-                wall.RemoveTouchingPlayer(this);
+                currentWall.UpdateContributor(this, false);
+                prevIsContributingPush = false;
             }
+
+            touchingWall = false;
+            currentWall = null;
         }
     }
 
@@ -352,16 +363,17 @@ public class PlayerMove : NetworkBehaviour
     private void CheckPush()
     {
         // 밀기 의도 (입력 + 착지) 판정
-        isInputPushing = groundCheck.IsGround && Mathf.Abs(moveInput.x) > 0.01f && (touchingWall || frontPlayer != null);
+        isInputPushing = groundCheck.IsGround && Mathf.Abs(moveInput.x) > 0.01f;
 
         // 직접 벽을 밀고 있는지 확인
         bool pushingWall = isInputPushing && touchingWall;
 
         // 앞 사람을 밀고 있고, 앞 사람이 이미 힘을 전달 중인지 확인
-        bool pushingFrontPlayer = frontPlayer != null && frontPlayer.isContributingPush;
+        bool pushingFrontPlayer = isInputPushing && frontPlayer != null && frontPlayer.isContributingPush;
 
         // 최종적으로 힘 전달 여부 결정
-        isContributingPush = pushingWall || pushingFrontPlayer;
+        isContributingPush = 
+            isInputPushing && (pushingWall || (frontPlayer != null && frontPlayer.isContributingPush));
     }
 
     private void OnRunChanged(bool _, bool newValue)
