@@ -16,10 +16,12 @@ public class PlayerMove : NetworkBehaviour
     public GroundCheck groundCheck;
 
     [Header("벽 밀기 관련 변수")]
+    public PlayerMove frontPlayer;
+    private MovingWall currentWall;
     public bool isInputPushing; // 밀려고 입력 중인 상태
     public bool isContributingPush; // 벽 밀기에 기여중인지 상태
-    public PlayerMove frontPlayer;
     private bool touchingWall;
+    private bool prevIsContributingPush;
 
     [Header("플랫폼 관련 변수")]
     public CeilCheck ceilCheck;
@@ -130,6 +132,16 @@ public class PlayerMove : NetworkBehaviour
         if (isDead) return;
 
         CheckPush();
+
+        if (isContributingPush != prevIsContributingPush)
+        {
+            if (currentWall != null)
+            {
+                currentWall.UpdateContributor(this, isContributingPush);
+            }
+
+            prevIsContributingPush = isContributingPush;
+        }
 
         ServerMove();
 
@@ -257,11 +269,10 @@ public class PlayerMove : NetworkBehaviour
             // 벽과 실제로 맞닿아 있음
             touchingWall = true;
 
-            MovingWall wall = collision.gameObject.GetComponent<MovingWall>();
-            if (wall != null)
-            {
-                wall.AddTouchingPlayer(this);
-            }
+            currentWall = collision.gameObject.GetComponent<MovingWall>();
+
+            if (currentWall != null)
+                currentWall.AddTouchingPlayer(this);
         }
     }
 
@@ -274,7 +285,11 @@ public class PlayerMove : NetworkBehaviour
             if (wall != null)
             {
                 wall.RemoveTouchingPlayer(this);
+                wall.UpdateContributor(this, false);
             }
+
+            if (currentWall == wall)
+                currentWall = null;
         }
     }
 
