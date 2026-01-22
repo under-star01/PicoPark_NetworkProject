@@ -32,7 +32,6 @@ public class MovingWall : NetworkBehaviour
     {
         base.OnStartServer();
 
-        rb.bodyType = RigidbodyType2D.Kinematic;
         remainingCnt = targetMoveCnt;
     }
 

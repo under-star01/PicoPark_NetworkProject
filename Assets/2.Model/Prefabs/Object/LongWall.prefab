@@ -166,7 +166,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 1, y: 6.17}
   m_EdgeRadius: 0
 --- !u!1 &5686704107654306340
 GameObject:
@@ -331,7 +331,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Mirror::Mirror.NetworkIdentity
   sceneId: 0
-  _assetId: 3808495348
+  _assetId: 3868621089
   serverOnly: 0
   visibility: 0
   hasSpawned: 0
