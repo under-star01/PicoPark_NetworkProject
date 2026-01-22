@@ -30,6 +30,8 @@ public class RelayManager : MonoBehaviour
 
     public async void StartRelayHost(int maxPlayers = 6)
     {
+        Debug.Log($"¹æ ÀÎ¿ø : {maxPlayers}");
+
         if (transport == null)
             transport = NetworkManager.singleton.GetComponent<Mirror.Transports.Utp.UTPTransport>();
 
