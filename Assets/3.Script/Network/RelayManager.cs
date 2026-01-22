@@ -15,6 +15,7 @@ public class RelayManager : MonoBehaviour
     [SerializeField] private GameObject Log;
     [SerializeField] private TMP_Text hostID;
     private UTPTransport transport;
+    //public int maxPlayers = 2;
 
     async void Start()
     {
@@ -30,6 +31,9 @@ public class RelayManager : MonoBehaviour
 
     public async void StartRelayHost(int maxPlayers = 6)
     {
+        Log.SetActive(true);
+        Log.GetComponent<TMP_Text>().text = ($"[Critical Check] Relay 서버에 요청하는 총 인원수: {maxPlayers}");
+
         if (transport == null)
             transport = NetworkManager.singleton.GetComponent<Mirror.Transports.Utp.UTPTransport>();
 

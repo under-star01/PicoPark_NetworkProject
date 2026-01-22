@@ -1507,7 +1507,7 @@ MonoBehaviour:
   offlineSceneLoadDelay: 0
   transport: {fileID: 2067517725}
   networkAddress: localhost
-  maxConnections: 100
+  maxConnections: 6
   disconnectInactiveConnections: 0
   disconnectInactiveTimeout: 60
   authenticator: {fileID: 0}
@@ -3979,10 +3979,10 @@ MonoBehaviour:
   - {fileID: 8509658781267455378}
   Lobby: {fileID: 3247198353037941344}
   LobbyEntryPanels:
-  - {fileID: 0}
-  - {fileID: 0}
-  hostMenuController: {fileID: 0}
-  joinMenuController: {fileID: 0}
+  - {fileID: 742368242331161454}
+  - {fileID: 8775825819553537960}
+  hostMenuController: {fileID: 2426666537338106465}
+  joinMenuController: {fileID: 5065125478045158987}
   titleMenuController: {fileID: 6334105628057350615}
   stageMenuController: {fileID: 327888651069374420}
   StageSelectPanel: {fileID: 3349620316793218505}
@@ -13858,8 +13858,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UIManager
   mainMenuUI: {fileID: 6358573082688140926}
-  hostMenuUI: {fileID: 0}
-  clientMenuUI: {fileID: 0}
+  hostMenuUI: {fileID: 742368242331161454}
+  clientMenuUI: {fileID: 8775825819553537960}
 --- !u!114 &7381596130414819698
 MonoBehaviour:
   m_ObjectHideFlags: 0

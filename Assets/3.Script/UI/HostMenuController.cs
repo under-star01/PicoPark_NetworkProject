@@ -16,7 +16,7 @@ public class HostMenuController : MonoBehaviour
 
     // 메뉴 항목의 value 초기화(기본값)
     [Header("Settings")]
-    private int maxPlayers = 2;
+    private int maxPlayers = 6;
     private bool joinInProgress = true;
     private int hatIndex = 0;
     private int colorIndex = 0;
@@ -159,5 +159,14 @@ public class HostMenuController : MonoBehaviour
     public int getMaxPlayerCount()
     {
         return maxPlayers;
+    }
+
+    public void OnClickCreateRoom()
+    {
+        // HostMenuController에서 유저가 설정한 숫자를 가져옵니다.
+        int players = getMaxPlayerCount();
+
+        // 이 숫자를 Relay 할당 시 인자로 넘깁니다.
+       GetComponent<RelayManager>().StartRelayHost(players);
     }
 }
