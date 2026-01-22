@@ -343,6 +343,21 @@ public class PlayerMove : NetworkBehaviour
             if (otherPlayer == frontPlayer)
             {
                 frontPlayer = null;
+
+                if (prevIsContributingPush && !touchingWall)
+                {
+                    if (currentWall != null)
+                    {
+                        currentWall.UpdateContributor(this, false);
+                    }
+                    else if (otherPlayer.currentWall != null)
+                    {
+                        otherPlayer.currentWall.UpdateContributor(this, false);
+                    }
+
+                    prevIsContributingPush = false;
+                    isContributingPush = false;
+                }
             }
         }
     }
