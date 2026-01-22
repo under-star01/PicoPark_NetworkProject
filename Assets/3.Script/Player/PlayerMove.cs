@@ -135,7 +135,7 @@ public class PlayerMove : NetworkBehaviour
         UpdateWallContribution();
         ServerMove();
 
-        if (isClient && isOwned)
+        if (isClient && isOwned && !isServer)
             ClientPredictMove();
     }
 
