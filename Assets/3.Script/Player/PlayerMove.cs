@@ -167,9 +167,15 @@ public class PlayerMove : NetworkBehaviour
         if (isContributingPush == prevIsContributingPush)
             return;
 
+        // 직접 벽을 밀고 있는 경우
         if (currentWall != null)
         {
             currentWall.UpdateContributor(this, isContributingPush);
+        }
+        // 앞 사람이 벽을 밀고 있는 경우 -> 벽을 공유!
+        else if (frontPlayer != null && frontPlayer.currentWall != null)
+        {
+            frontPlayer.currentWall.UpdateContributor(this, isContributingPush);
         }
 
         prevIsContributingPush = isContributingPush;
