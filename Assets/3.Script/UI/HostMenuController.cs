@@ -160,4 +160,23 @@ public class HostMenuController : MonoBehaviour
     {
         return maxPlayers;
     }
+
+    public void OnClickCreateRoom()
+    {
+        // HostMenuController에서 유저가 설정한 숫자를 가져옵니다.
+        int players = getMaxPlayerCount();
+        Debug.Log($"[Check] UI에서 결정된 최종 인원수: {players}");
+
+        // 2. 씬에 있는 RelayManager를 찾아서 호출합니다.
+        RelayManager relayMgr = FindAnyObjectByType<RelayManager>();
+
+        if (relayMgr != null)
+        {
+            relayMgr.StartRelayHost(players);
+        }
+        else
+        {
+            Debug.LogError("RelayManager를 찾을 수 없습니다! 인스펙터 연결을 확인하세요.");
+        }
+    }
 }
