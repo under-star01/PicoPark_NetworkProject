@@ -7856,6 +7856,14 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6507985135497652441, guid: a3d2a89cb3ac476498bf9ee765d8ea6b, type: 3}
+      propertyPath: startYPos
+      value: -3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6507985135497652441, guid: a3d2a89cb3ac476498bf9ee765d8ea6b, type: 3}
+      propertyPath: targetYPos
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6507985135497652441, guid: a3d2a89cb3ac476498bf9ee765d8ea6b, type: 3}
       propertyPath: targetMoveCnt
       value: 2
       objectReference: {fileID: 0}
