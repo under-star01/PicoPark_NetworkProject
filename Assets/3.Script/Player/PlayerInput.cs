@@ -1,0 +1,179 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.InputSystem;
+using Mirror;
+
+public class PlayerInput : NetworkBehaviour
+{
+    [Header("플레이어 조작 방식")]
+    [SerializeField] private bool isWASD;
+
+    private IA_Player playerInput;
+    private PlayerMove playerMove;
+    private Door nearDoor; // 근처 문
+
+    private void Awake()
+    {
+        TryGetComponent(out playerMove);
+
+    }
+
+    public IA_Player GetPlayerInput() => playerInput;
+
+    // * Network Lifecycle
+
+    public override void OnStartLocalPlayer()
+    {
+        // [추가] 오직 조작이 필요한 로컬 플레이어만 인스턴스를 생성합니다.
+        if (playerInput == null)
+        {
+            playerInput = new IA_Player();
+        }
+        EnableInput();
+    }
+
+    public override void OnStopLocalPlayer()
+    {
+        DisableInput();
+    }
+
+    // * Input Enable / Disable
+    private void EnableInput()
+    {
+        if (isWASD)
+        {
+            playerInput.Player.Move.performed += Move;
+            playerInput.Player.Move.canceled += Move;
+            playerInput.Player.Jump.performed += JumpStart;
+            playerInput.Player.Jump.canceled += JumpEnd;
+        }
+        else
+        {
+            playerInput.SubPlayer.Move.performed += Move;
+            playerInput.SubPlayer.Move.canceled += Move;
+            playerInput.SubPlayer.Jump.performed += JumpStart;
+            playerInput.SubPlayer.Jump.canceled += JumpEnd;
+        }
+
+        playerInput.Enable();
+    }
+
+    private void OnDestroy()
+    {
+        if (playerInput != null)
+        {
+
+            playerInput.Disable(); // 모든 액션 맵 비활성화
+
+            // 이벤트 구독 해제 (이미 DisableInput에서 했겠지만 안전을 위해 체크)
+            DisableInput();
+
+            // 메모리 해제
+            playerInput.Dispose();
+            playerInput = null;
+        }
+    }
+
+    private void DisableInput()
+    {
+        if (playerInput == null) return;
+
+        if (isWASD)
+        {
+            playerInput.Player.Move.performed -= Move;
+            playerInput.Player.Move.canceled -= Move;
+            playerInput.Player.Jump.performed -= JumpStart;
+            playerInput.Player.Jump.canceled -= JumpEnd;
+        }
+        else
+        {
+            playerInput.SubPlayer.Move.performed -= Move;
+            playerInput.SubPlayer.Move.canceled -= Move;
+            playerInput.SubPlayer.Jump.performed -= JumpStart;
+            playerInput.SubPlayer.Jump.canceled -= JumpEnd;
+        }
+
+        playerInput.Disable();
+    }
+
+    // * Input Callbacks (Client)
+
+    private void Move(InputAction.CallbackContext context)
+    {
+        if (!isLocalPlayer) return;
+
+        Vector2 input = context.ReadValue<Vector2>();
+        CmdSetMove(input);
+    }
+
+    private void JumpStart(InputAction.CallbackContext context)
+    {
+        if (!isLocalPlayer) return;
+        CmdJumpStart();
+    }
+
+    private void JumpEnd(InputAction.CallbackContext context)
+    {
+        if (!isLocalPlayer) return;
+        CmdJumpEnd();
+    }
+
+    // * Commands (Client → Server)
+
+    [Command]
+    private void CmdSetMove(Vector2 input)
+    {
+        if (playerMove == null) return;
+        playerMove.SetMove(input); // 서버에서 실행됨
+    }
+
+    [Command]
+    private void CmdJumpStart()
+    {
+        if (playerMove == null) return;
+
+        // 문이 열려있고 범위 안에 있으면 문 입장 시도
+        if (nearDoor != null && nearDoor.IsOpened) // IsOpened 체크 추가
+        {
+            nearDoor.TryEnterDoor(playerMove);
+            return;
+        }
+
+        // 그 외에는 점프
+        playerMove.JumpStart();
+    }
+
+    [Command]
+    private void CmdJumpEnd()
+    {
+        if (playerMove == null) return;
+        playerMove.JumpStop();
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        //if (!isLocalPlayer) return;
+
+        // 문 근처에 도착
+        if (collision.gameObject.TryGetComponent(out Door door))
+        {
+            nearDoor = door;
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        //if (!isLocalPlayer) return;
+
+        // 문에서 멀어짐
+        if (collision.gameObject.TryGetComponent(out Door door))
+        {
+            if (nearDoor == door)
+            {
+                nearDoor = null;
+            }
+        }
+    }
+}

@@ -1,0 +1,630 @@
+using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.UI;
+using Mirror;
+using UnityEngine.SceneManagement;
+
+public class OnlineMenu_UIManager : MonoBehaviour
+{
+    private IA_Player playerInput;
+
+    private PlayerMove localPlayerMove;
+
+    private enum UIState
+    {
+        Entry,          // 엔트리 화면(Enter만 허용)
+        LobbyEntry,     // 로비 엔트리 화면(Enter/Space 둘 다 허용, 로그인 실행)
+        Title,          // 타이틀 화면
+        StageSelect,    // 스테이지 선택 메뉴(Enter/Space 둘 다 허용, 선택 실행)
+    }
+
+    [SerializeField]
+    private UIState state = UIState.Entry; // 시작 상태 초기화
+
+    [Header("Entry")]
+    [SerializeField] private GameObject Entry;
+
+    [Header("Panel")] // Host, Join
+    [SerializeField] private GameObject[] OnlineMenuButtons;
+
+    [Header("LobbyEntry")] // HostMenu, JoinMenu
+    [SerializeField] private GameObject Lobby;
+    [SerializeField] private GameObject[] LobbyEntryPanels;
+    [SerializeField] private HostMenuController hostMenuController;
+    [SerializeField] private JoinMenuController joinMenuController;
+
+    [Header("Title")] //Start Game, Return, Finish Game
+    [SerializeField] private TitleMenuController titleMenuController;
+
+
+    [Header("StagePanel")] // Stage1 ~ 6
+    [SerializeField] private StageMenuController stageMenuController;
+    [SerializeField] private GameObject StageSelectPanel;
+
+    public static bool shouldShowStageSelect = false; //스테이지에서 돌아왔을 때 필요한 변수
+
+    private int panelIndex = 0;   // 옵션 - 사운드 패널 수직 인덱스 번호 (0: Master, 1: BGM, 2: SE, 3: OK/Cancel 등)
+    private const int STAGE_COLUMNS = 3;
+
+    public static OnlineMenu_UIManager Instance = null;
+
+    private bool isBound = false;
+    
+
+    private void Awake()
+    {
+        if(Instance == null)
+        {
+            Instance = this;
+            playerInput = new IA_Player(); // 뉴인풋받기
+        }
+        else
+        {
+            Destroy(gameObject); // 중복된 매니저 삭제
+            return;
+        }
+
+
+    }
+
+    private void OnDestroy()
+    {
+        if (playerInput != null)
+        {
+            playerInput.Disable();
+
+            try
+            {
+                UnbindUIEvents();
+            }
+            catch
+            {
+                // 종료 시점의 에러는 무시하여 콘솔을 깨끗하게 유지
+            }
+            playerInput.Dispose(); // 메모리 해제
+            playerInput = null;
+        }
+    }
+    void Start()
+    {
+        if (((CustomNetMng)CustomNetMng.singleton).isFirstStart)
+        {
+            if (NetworkClient.isConnected && !NetworkServer.active)
+            {
+                Entry.SetActive(false);
+                changeState(2);
+                return;
+            }
+            // 씬이 시작될 때 이 값이 true라면 자동으로 스테이지 선택창을 켭니다.
+            if (shouldShowStageSelect)
+            {
+                changeState(3);
+                shouldShowStageSelect = false; // 한 번 실행 후 다시 꺼줌
+            }
+            else
+            {
+                SetEntryState(); // 기본 시작 상태
+            }
+        }
+        else
+        {
+            changeState(3);
+        }
+
+        
+    }
+
+    public void OnStageClick(int stageNum)
+    {
+        string sceneName = "3.Stage_" + stageNum;
+        Debug.Log($"씬 전환 시도: {sceneName}");
+
+        if (NetworkManager.singleton != null)
+        {
+            // NetworkManager를 직접 연결하지 않아도 singleton으로 접근 가능
+            NetworkManager.singleton.ServerChangeScene(sceneName);
+        }
+        else
+        {
+            Debug.LogError("NetworkManager를 못 찾겠네 도령!");
+        }
+    }
+
+    public void RegisterLocalPlayer(PlayerInput player)
+    {
+        // 이제 플레이어의 IA_Player를 UI 매니저도 공유합니다.
+        this.playerInput = player.GetPlayerInput();
+        // UI 이벤트 연결 (기존 OnEnable에 있던 로직을 함수로 빼서 호출하면 좋습니다)
+        BindUIEvents();
+    }
+
+    public void RegisterLocalPlayer(PlayerMove player)
+    {
+        localPlayerMove = player;
+    }
+
+    private void BindUIEvents()
+    {
+        if (isBound) return;
+        isBound = true;
+
+        playerInput.MenuUI.Left.performed += MoveLeft;
+        playerInput.MenuUI.Right.performed += MoveRight;
+
+        playerInput.MenuUI.Up.performed += MoveUp;
+        playerInput.MenuUI.Down.performed += MoveDown;
+
+        playerInput.MenuUI.Enter.performed += Select;
+        playerInput.MenuUI.Space.performed += Select;
+
+        playerInput.MenuUI.ESC.performed += ESC;
+
+        playerInput.Enable();
+    }
+
+    private void UnbindUIEvents()
+    {
+        if (playerInput == null ) return;
+
+        playerInput.MenuUI.Left.performed -= MoveLeft;
+        playerInput.MenuUI.Right.performed -= MoveRight;
+
+        playerInput.MenuUI.Up.performed -= MoveUp;
+        playerInput.MenuUI.Down.performed -= MoveDown;
+
+        playerInput.MenuUI.Enter.performed -= Select;
+        playerInput.MenuUI.Space.performed -= Select;
+
+        playerInput.MenuUI.ESC.performed -= ESC;
+
+        playerInput.Disable();
+    }
+
+    private void OnEnable()
+    {
+        BindUIEvents();
+    }
+
+    private void OnDisable()
+    {
+        UnbindUIEvents();
+    }
+
+    // ========== 상태 전환 ==========
+
+    private void SetEntryState()
+    {
+        state = UIState.Entry; // Press Enter 상태일 때
+
+        foreach (GameObject Panel in LobbyEntryPanels)
+        {
+            Panel.SetActive(false);
+        }
+        titleMenuController.HideAllPanels();
+        if (StageSelectPanel != null)
+        {
+            StageSelectPanel.SetActive(false);
+        }
+        panelIndex = 0;
+        OnlineMenuButtons[panelIndex].GetComponent<ButtonHover>().OnFocus();
+    }
+
+    public void ShowLobbyEntryPanelUI(int panelIdx)
+    {
+
+        panelIndex = 0; // 항상 처음 항목부터 시작
+        //DisablePanel();
+        LobbyEntryPanels[panelIdx].SetActive(true);
+        if (panelIdx.Equals(0))
+        {
+            hostMenuController.UpdateHostPanelSelection(panelIndex);
+        }
+        else
+        {
+            joinMenuController.UpdateJoinPanelSelection(panelIndex);
+        }
+        state = UIState.LobbyEntry;
+    }
+
+    private void DisablePanel()
+    {
+        if (LobbyEntryPanels != null)
+        {
+            foreach (GameObject Panel in LobbyEntryPanels)
+            {
+                Panel.SetActive(false);
+            }
+        }
+    }
+
+
+
+    // ========== 입력 처리 ==========
+
+    private void MoveLeft(InputAction.CallbackContext context)
+    {
+        // 현재 씬이 스테이지라면(로비가 아니라면) 동작하지 않도록 방어
+        if (SceneManager.GetActiveScene().name.Contains("Stage")) return;
+
+        switch (state)
+        {
+            case UIState.Entry:
+                if (panelIndex == 1)
+                {
+                    panelIndex = 0;
+                    OnlineMenuButtons[panelIndex].GetComponent<ButtonHover>().OnFocus();
+                }
+                break;
+            case UIState.LobbyEntry:
+                if (LobbyEntryPanels[0].activeSelf) // 호스트 패널이 켜져 있으면
+                {
+                    if (panelIndex.Equals(0)) // MaxPlayer
+                    {
+                        hostMenuController.OnMaxPlayerLeft();
+                    }
+                    else if (panelIndex.Equals(1)) // Join
+                    {
+                        hostMenuController.OnJoinProgress();
+                    }
+                    else if (panelIndex.Equals(2)) // Hat
+                    {
+                        hostMenuController.OnHatLeft();
+                    }
+                    else if (panelIndex.Equals(3)) // Color
+                    {
+                        hostMenuController.OnColorLeft();
+                    }
+                    else if (panelIndex.Equals(5))
+                    {
+                        panelIndex = 4;
+                        hostMenuController.UpdateHostPanelSelection(panelIndex);
+                    }
+                }
+                else
+                {
+                    if (panelIndex.Equals(1)) // Hat
+                    {
+                        joinMenuController.OnHatLeft();
+                    }
+                    else if (panelIndex.Equals(2)) // Color
+                    {
+                        joinMenuController.OnColorLeft();
+                    }
+                    else if (panelIndex.Equals(4))
+                    {
+                        panelIndex = 3;
+                        joinMenuController.UpdateJoinPanelSelection(panelIndex);
+                    }
+                }
+                break;
+            case UIState.Title:
+                titleMenuController.MoveLeft();
+                break;
+            case UIState.StageSelect:
+                if (panelIndex % STAGE_COLUMNS > 0)
+                    panelIndex--;
+
+                stageMenuController.UpdateSelection(panelIndex);
+                break;
+        }
+
+
+    }
+
+
+    private void MoveRight(InputAction.CallbackContext context)
+    {
+        // 현재 씬이 스테이지라면(로비가 아니라면) 동작하지 않도록 방어
+        if (SceneManager.GetActiveScene().name.Contains("Stage")) return;
+
+        switch (state)
+        {
+            case UIState.Entry:
+                if (panelIndex.Equals(0))
+                {
+                    panelIndex = 1;
+                    OnlineMenuButtons[panelIndex].GetComponent<ButtonHover>().OnFocus();
+                }
+                break;
+            case UIState.LobbyEntry:
+                if (LobbyEntryPanels[0].activeSelf) // 호스트 패널이 켜져 있으면
+                {
+                    if (panelIndex.Equals(0)) // MaxPlayer
+                    {
+                        hostMenuController.OnMaxPlayerRight();
+                    }
+                    else if (panelIndex.Equals(1)) // Join
+                    {
+                        hostMenuController.OnJoinProgress();
+                    }
+                    else if (panelIndex.Equals(2)) // Hat
+                    {
+                        hostMenuController.OnHatRight();
+                    }
+                    else if (panelIndex.Equals(3)) // Color
+                    {
+                        hostMenuController.OnColorRight();
+                    }else if (panelIndex.Equals(4)){
+                        panelIndex = 5;
+                        hostMenuController.UpdateHostPanelSelection(panelIndex);
+                    }
+                }
+                else
+                {
+                    if (panelIndex.Equals(1)) // Hat
+                    {
+                        joinMenuController.OnHatRight();
+                    }
+                    else if (panelIndex.Equals(2)) // Color
+                    {
+                        joinMenuController.OnColorRight();
+                    }else if (panelIndex.Equals(3))
+                    {
+                        panelIndex = 4;
+                        joinMenuController.UpdateJoinPanelSelection(panelIndex);
+                    }
+                }
+                break;
+            case UIState.Title:
+                titleMenuController.MoveRight();
+                break;
+            case UIState.StageSelect:
+                if (panelIndex % STAGE_COLUMNS < STAGE_COLUMNS - 1 &&
+                  panelIndex + 1 < stageMenuController.GetTotalStages())
+                    panelIndex++;
+
+                stageMenuController.UpdateSelection(panelIndex);
+                break;
+        }
+    }
+
+    private void MoveUp(InputAction.CallbackContext context)
+    {
+        // 현재 씬이 스테이지라면(로비가 아니라면) 동작하지 않도록 방어
+        if (SceneManager.GetActiveScene().name.Contains("Stage")) return;
+
+        if (state != UIState.LobbyEntry && state != UIState.StageSelect) return;
+
+        panelIndex--;
+        switch (state)
+        {
+            case UIState.LobbyEntry:
+                if (LobbyEntryPanels[0].activeSelf)
+                {
+                    if (panelIndex < 0)
+                    {
+                        panelIndex = 5;
+                    }
+                    hostMenuController.UpdateHostPanelSelection(panelIndex);
+
+                }
+                else
+                {
+                    if (panelIndex < 0)
+                    {
+                        panelIndex = 4;
+                    }
+                    joinMenuController.UpdateJoinPanelSelection(panelIndex);
+                }
+                break;
+            case UIState.StageSelect:
+                int next = panelIndex - STAGE_COLUMNS;
+                if (next >= 0)
+                    panelIndex = next;
+
+                stageMenuController.UpdateSelection(panelIndex);
+                break;
+        }
+
+    }
+
+    private void MoveDown(InputAction.CallbackContext context)
+    {
+        // 현재 씬이 스테이지라면(로비가 아니라면) 동작하지 않도록 방어
+        if (SceneManager.GetActiveScene().name.Contains("Stage")) return;
+
+        if (state != UIState.LobbyEntry && state != UIState.StageSelect) return;
+
+        panelIndex++;
+
+        switch (state)
+        {
+            case UIState.LobbyEntry:
+                if (LobbyEntryPanels[0].activeSelf)
+                {
+                    if (panelIndex >= 6)
+                    {
+                        panelIndex = 0;
+                    }
+                    hostMenuController.UpdateHostPanelSelection(panelIndex);
+
+                }else
+                {
+                    if (panelIndex > 4)
+                    {
+                        panelIndex = 0;
+                    }
+                    joinMenuController.UpdateJoinPanelSelection(panelIndex);
+                }
+                break;
+            case UIState.StageSelect:
+                int next = panelIndex + STAGE_COLUMNS;
+                if (next < stageMenuController.GetTotalStages())
+                    panelIndex = next;
+
+                stageMenuController.UpdateSelection(panelIndex);
+                break;
+        }
+
+    }
+
+    private void Select(InputAction.CallbackContext context)
+    {
+        // 현재 씬이 스테이지라면(로비가 아니라면) 동작하지 않도록 방어
+        if (SceneManager.GetActiveScene().name.Contains("Stage")) return;
+
+        switch (state)
+        {
+            case UIState.Entry:
+                OnlineMenuButtons[panelIndex].GetComponent<Button>().onClick.Invoke();
+                break;
+
+            case UIState.LobbyEntry:
+                if (LobbyEntryPanels[0].activeSelf)
+                {
+                    if (panelIndex.Equals(4))
+                    {
+                        hostMenuController.InvokeCreate();
+
+                    }
+                    else if (panelIndex.Equals(5))
+                    {
+                        hostMenuController.InvokeCancel();
+                        SetEntryState();
+                    }
+                }
+                else
+                {
+                    if (panelIndex.Equals(0))
+                    {
+                        joinMenuController.FocusInputField();
+                    }
+                    else if (panelIndex.Equals(3))
+                    {
+                        joinMenuController.InvokeJoin();
+                    }
+                    else if (panelIndex.Equals(4))
+                    {
+                        joinMenuController.InvokeCancel();
+                    }
+                }
+
+                break;
+            case UIState.Title:
+                // 1. 만약 "Press Enter" 글자가 켜져 있는 상태라면? -> 메뉴 패널을 연다.
+                if (titleMenuController.pressbutton.activeSelf)
+                {
+                    titleMenuController.SetPressButtonActive(false);
+                    titleMenuController.InitTitleMenu();
+                    EnableUIMode();
+                    return;
+                }
+                // 2. 이미 메뉴 패널이 열려 있는 상태라면? -> 현재 인덱스의 기능을 실행한다.
+                else
+                {
+                    titleMenuController.ExecuteSelection();
+                }
+                break;
+            case UIState.StageSelect:
+                stageMenuController.ExecuteSelection();
+                break;
+        }
+    }
+
+    private void ESC(InputAction.CallbackContext context)
+    {
+                // 현재 씬이 스테이지라면(로비가 아니라면) 동작하지 않도록 방어
+        if (SceneManager.GetActiveScene().name.Contains("Stage")) return;
+
+        //TitleMenu에서 뒤로가기 등 기능 추가
+        switch (state)
+        {
+            case UIState.Entry:
+                break;
+            case UIState.LobbyEntry:
+                if (hostMenuController.gameObject.activeSelf)
+                {
+                    hostMenuController.SetActive(false);
+                    hostMenuController.InvokeCancel();
+
+                }
+                else if (joinMenuController.gameObject.activeSelf)
+                {
+                    joinMenuController.SetActive(false);
+                    joinMenuController.InvokeCancel();
+                }
+                SetEntryState();
+                break;
+            case UIState.Title:
+                if (titleMenuController.IsUIActive())
+                {
+                    // 패널이 켜져 있다면: 패널을 끄고, PressButton을 다시 활성화
+                    titleMenuController.SetActive(false);
+                    titleMenuController.SetPressButtonActive(true);
+
+                    //캐릭터 움직이기
+                    EnablePlayerMode();
+                }
+                else
+                {
+                    // 2. 패널이 꺼져 있다면(즉, PressButton이 켜져 있는 상태라면)
+                    titleMenuController.SetPressButtonActive(false);
+                    titleMenuController.SetActive(true);
+
+                    //UI 조작
+                    EnableUIMode();
+                }
+                break;
+            case UIState.StageSelect:
+                StageSelectPanel.SetActive(false);
+                changeState(2); // Title 상태로 복귀
+                break;
+        }
+
+    }
+
+    public void ShowStageSelect()
+    {
+        state = UIState.StageSelect;
+        StageSelectPanel.SetActive(true);
+        panelIndex = 0;
+        stageMenuController.UpdateSelection(panelIndex);
+        EnableUIMode(); // 캐릭터 조작 대신 UI 조작 활성화
+    }
+
+    public void changeState(int state)
+    {
+        if (state.Equals(0))
+        {
+            SetEntryState();
+            if (!Entry.activeSelf)
+            {
+                Entry.SetActive(true);
+            }
+        }else if (state.Equals(2))
+        {
+            hostMenuController.SetActive(false);
+            joinMenuController.SetActive(false);
+            this.state = UIState.Title;
+            Lobby.SetActive(true);
+            titleMenuController.SetPressButtonActive(true);
+            titleMenuController.SetHeadActive();
+        }
+        else if (state.Equals(3))
+        {
+            this.state = UIState.StageSelect;
+            StageSelectPanel.SetActive(true);
+            if (Entry.activeSelf)
+            {
+                Entry.SetActive(false);
+            }
+        }
+    }
+
+    private void EnableUIMode()
+    {
+        if (localPlayerMove != null)
+            localPlayerMove.CmdLockInput(true);
+    }
+
+    private void EnablePlayerMode()
+    {
+        if (localPlayerMove != null)
+            localPlayerMove.CmdLockInput(false);
+    }
+    public void RestorePlayerMode()
+    {
+        this.state = UIState.Title; // 상태는 유지하되
+        EnablePlayerMode();        // 조작만 캐릭터로 변경
+    }
+}
