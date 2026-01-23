@@ -9,6 +9,7 @@ public class HostMenuController : MonoBehaviour
 {
     // 호스트 메뉴 항목
     [Header("UI References")]
+    public Image publicRoomSetText;
     public Image maxPlayerText;
     public Image joinProgressText;
     public Image hatImage;
@@ -16,6 +17,7 @@ public class HostMenuController : MonoBehaviour
 
     // 메뉴 항목의 value 초기화(기본값)
     [Header("Settings")]
+    private bool publicRoomSet = true;
     private int maxPlayers = 6;
     private bool joinInProgress = true;
     private int hatIndex = 0;
@@ -26,6 +28,8 @@ public class HostMenuController : MonoBehaviour
     public Sprite[] numberSprites; // 2,3,4,5,6 순서대로 5개
     public Sprite yesSprite;
     public Sprite noSprite;
+    public Sprite publicSprite;
+    public Sprite privateSprite;
     public Sprite[] hatSprites; // 5개
     public Sprite[] playerColors; // 6개
 
@@ -56,6 +60,12 @@ public class HostMenuController : MonoBehaviour
             maxPlayers++;
             UpdateMaxPlayerUI();
         }
+    }
+
+    public void OnPublicRoomSet()
+    {
+        publicRoomSet = !publicRoomSet;
+        UpdatePublicRoomSetUI();
     }
 
     // 중도참여 상태 버튼에 따라 전환해주기(참/거짓)
@@ -95,6 +105,11 @@ public class HostMenuController : MonoBehaviour
     private void UpdateMaxPlayerUI()
     {
         maxPlayerText.sprite = numberSprites[maxPlayers - 2];
+    }
+
+    private void UpdatePublicRoomSetUI()
+    {
+        joinProgressText.sprite = joinInProgress ? yesSprite : noSprite;
     }
 
     private void UpdateJoinProgressUI()
