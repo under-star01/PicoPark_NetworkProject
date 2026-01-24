@@ -230,7 +230,7 @@ public class PlayerMove : NetworkBehaviour
         if (!groundCheck.IsGround) return;
         if (isDead || isInsideDoor) return;
 
-        AudioManager.Instance.PlaySFX("Jump");
+        NetworkAudio.Instance.PlaySharedSFX("Jump");
         rb.linearVelocityY = jumpForce;
     }
 
@@ -490,7 +490,7 @@ public class PlayerMove : NetworkBehaviour
 
         if (isLocalPlayer)
         {
-            AudioManager.Instance.PlaySFX("Dead");
+            NetworkAudio.Instance.PlaySharedSFX("Dead");
         }
 
         if (netTransform != null)

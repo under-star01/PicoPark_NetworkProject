@@ -216,7 +216,7 @@ public class Door : NetworkBehaviour
 
         Debug.Log("스테이지 클리어!");
         AudioManager.Instance.StopBGM();
-        AudioManager.Instance.RpcPlayClearOnce();
+        NetworkAudio.Instance.RpcPlayClearOnce();
 
         // 모든 플레이어 입력 잠금
         LockAllPlayers();

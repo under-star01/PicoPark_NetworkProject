@@ -32,7 +32,7 @@ public class DeathButton : NetworkBehaviour
     {
         if (isPressed) return;
 
-        AudioManager.Instance.PlaySFX("Button");
+        NetworkAudio.Instance.PlaySharedSFX("Button");
 
         isPressed = true;
 

@@ -52,7 +52,7 @@ public class CanonBall : NetworkBehaviour
         // 플레이어 충돌
         if (collision.CompareTag("Player"))
         {
-            AudioManager.Instance.PlaySFX("CanonHit");
+            NetworkAudio.Instance.PlaySharedSFX("CanonHit");
             PlayerMove player = collision.GetComponent<PlayerMove>();
             if (player != null)
             {
@@ -69,7 +69,7 @@ public class CanonBall : NetworkBehaviour
         // 벽 충돌
         if (collision.gameObject.layer == LayerMask.NameToLayer("Wall"))
         {
-            AudioManager.Instance.PlaySFX("CanonHit");
+            NetworkAudio.Instance.PlaySharedSFX("CanonHit");
 
             HitServer();
         }

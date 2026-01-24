@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
 
-public class AudioManager : NetworkBehaviour
+public class AudioManager : MonoBehaviour
 {
     public static AudioManager Instance;
 
@@ -45,10 +45,6 @@ public class AudioManager : NetworkBehaviour
 
         bgmSource.loop = true;
         InitSFX();
-    }
-
-    private void Start()
-    {
         ApplyVolumes();
     }
 
@@ -98,31 +94,17 @@ public class AudioManager : NetworkBehaviour
     }
 
     #endregion
-    //SFX (멀티)
-    #region SFX (Network)
 
-    // 클라이언트가 호출
-    public void PlaySFX(string name) => CmdPlaySFX(name);
+    #region LocalSFX (Local)
 
-    [Command(requiresAuthority = false)]
-    void CmdPlaySFX(string name) => RpcPlaySFX(name);
-
-    [ClientRpc]
-    void RpcPlaySFX(string name)
+    public void PlayLocalSFX(string name)
     {
         if (!sfxMap.TryGetValue(name, out var clip)) return;
         sfxSource.PlayOneShot(clip);
     }
 
-    // 클리어 전용 (서버 1회)
-    [ClientRpc]
-    public void RpcPlayClearOnce()
-    {
-        sfxSource.PlayOneShot(clearSFX);
-    }
-
     #endregion
-    //시스템 (로컬)
+
     #region System (Local)
 
     public void PlayUI() =>
